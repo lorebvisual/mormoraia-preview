@@ -436,8 +436,17 @@
   #n1051 #booking-dates {position:fixed;inset:8px auto auto 8px}
 }
 
-@media (721px <= width <= 1024px) {
+@media (720px < width <= 1024px) {
   #n1761 {padding-bottom:0}
+  #n1761 .wine-stage > div {
+    display:grid;grid-template-columns:400px 219px;justify-content:center;align-items:center
+  }
+  .wine-stage .layout236 {
+    position:relative;inset:auto;transform:none;width:auto;min-height:385px;padding:32px;grid-column:1;grid-row:1
+  }
+  .wine-stage .bottle-view {
+    position:relative;inset:auto;transform:none;max-width:none;grid-column:2;grid-row:1
+  }
 }
 
 @media (width > 1024px) {
