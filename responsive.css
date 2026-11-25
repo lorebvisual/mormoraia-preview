@@ -53,7 +53,7 @@
   /* The cropped frames also apply to the copies used by the infinite carousel. */
   #n1725 > .layout82 {width:calc(480 * var(--u));height:auto;aspect-ratio:8 / 5}
   #n1725 > .layout85 {width:calc(320 * var(--u));height:auto;aspect-ratio:4 / 5}
-  #n1725 .layout84 {left:calc(-143 * var(--u));top:calc(-567 * var(--u))}
+  #n1725 .layout84 {width:calc(623 * var(--u));height:calc(934 * var(--u));left:calc(-91 * var(--u));top:calc(-392 * var(--u))}
   #n1725 .layout87 {width:100%;height:120%;top:calc(-8 * var(--u))}
   #n1725 .layout88 {width:100%;height:240%;top:calc(-248 * var(--u))}
   #n1725 .layout89 {width:187.5%;height:100%;left:calc(-186 * var(--u))}
