@@ -122,8 +122,11 @@ const experiences=[
  ['A dinner for two','Settle in for a private dinner with a tasting menu from our chef and wines from the estate.','Enquire about dinner','Discover Il Fienile'],
  ['An intimate wedding','Gather in the Tuscan countryside for a private ceremony followed by dinner on the estate.','Enquire about weddings','Explore the estate']
 ];
+const experienceCurrent = document.querySelector('.experience-current');
+document.querySelector('.experience-total').textContent = experiences.length;
 function experienceCopy(index,animate) {
   const content=experiences[index];
+  experienceCurrent.textContent = index + 1;
   node(1747).textContent=content[0];node(1748).textContent=content[1];
   const primary = document.getElementById('ds11-3182');
   const secondary = document.getElementById('ds11-3183');
