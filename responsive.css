@@ -7,6 +7,14 @@
 #n1724,#n1724 .inset-gallery {width:100%}
 .experience-counter {display:none}
 
+@media (max-width:1024px) and (prefers-reduced-motion:no-preference) {
+  #n1139 > .reveal {
+    translate:clamp(-128px,-22vw,-64px) 0;
+    transition:translate 1.25s cubic-bezier(.22,1,.36,1),opacity .9s ease-out
+  }
+  #n1139 > .reveal:is(.seen,:focus-within) {translate:none;opacity:1}
+}
+
 @media (width < 1280px) {
   .masthead {padding:44px 48px 0}
   .mast-rule {margin-top:20px}
