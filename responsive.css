@@ -1,0 +1,418 @@
+/* Shared artwork and booking controls keep their original desktop grid slots. */
+.photo-stack, .editorial-runway, #n1051 > #booking-fields {display:contents}
+#booking-toggle {display:none}
+#booking-fields > div {width:100%;min-width:0;gap:12px}
+#n1688 {height:calc(1271 * var(--u))}
+#n1689 {left:calc(144 * var(--u));top:calc(128 * var(--u))}
+#n1724 {left:calc(144 * var(--u));top:calc(296 * var(--u))}
+#n1724 .inset-gallery {width:calc(100vw - 144 * var(--u))}
+
+@media (width < 1280px) {
+  .masthead {padding:44px 48px 0}
+  .mast-rule {margin-top:20px}
+  #n1050 {inset:auto 0 0;padding:0}
+  #n1051 {max-width:none;border-radius:0;grid-template-columns:repeat(2,minmax(0,1fr));padding:24px 48px;gap:32px}
+  #n1051 [data-name]:not(a) {width:24px;height:24px}
+  #n1051 p {font-size:16px}
+  #n1051 .layout23 {height:24px;gap:8px}
+  #n1051 .layout24 {gap:8px}
+  #n1051 .layout20 {height:0;border-top:1px solid rgba(255,255,255,.8);margin-top:-1px}
+  #n1051 .layout20 img {display:none}
+  #n1051 > a {grid-column:1/-1;width:100%;height:46px}
+}
+
+.sticky-booking {display:none}
+.navigation:not(.is-open) .scrolled .sticky-booking {display:flex}
+@media (width > 1024px) {
+  .navigation:not(.is-open) .scrolled {
+    --sticky-gap:clamp(8px,calc(5vw - 44px),32px);
+    padding-inline:clamp(16px,calc(9vw - 80px),64px);
+    background:white;color:black
+  }
+  .scrolled .mast-row {padding-right:0;gap:var(--sticky-gap,18px)}
+  .navigation:not(.is-open) .scrolled :is(.nav-left,.quick-links,.nav-right) {gap:var(--sticky-gap)}
+  .mast-row {padding-right:clamp(0px,calc((100vw - 1280px)*.134),60px)}
+  .masthead .burger {height:24px}
+  .masthead .language button {min-height:24px}
+  .mast-logo img {width:180px;height:18px}
+  .quick-links a {white-space:nowrap}
+  .utility img {display:block;width:24px;height:24px}
+  .navigation:not(.is-open) .burger {background:url(assets/9fa5f.svg) center no-repeat}
+  .navigation:not(.is-open) .scrolled .burger {background-image:url(assets/81af1.svg)}
+  .navigation:not(.is-open) .burger span {opacity:0}
+}
+@media (width > 1024px) {
+  .native-gallery {overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;overflow-anchor:none}
+  .native-gallery::-webkit-scrollbar {display:none}
+  .section-enter.seen .native-gallery .reveal[aria-hidden="true"] {opacity:1;translate:none}
+  .native-gallery.dragging {cursor:grabbing}
+}
+@media (max-width:1024px) {
+  .masthead,.masthead:not(.scrolled) {transition-property:background-color,color}
+  .navigation:not(.is-open) .masthead.away {opacity:0}
+}
+@media (max-width:1024px) {
+  .mast-row .quick-links,.mast-row .utility {display:none}
+  .navigation:not(.is-open) .masthead.scrolled {
+    --sticky-inset:24px 48px;
+    --sticky-left:92px;
+    --sticky-book-padding:6px 32px;
+    --sticky-book-type:16px;
+    --sticky-book-leading:22px;
+    padding:var(--sticky-inset);background:white;color:black;backdrop-filter:none;-webkit-backdrop-filter:none
+  }
+  .navigation:not(.is-open) .scrolled .mast-row {display:flex;justify-content:space-between;gap:0}
+  .navigation:not(.is-open) .scrolled .nav-left {flex:0 1 var(--sticky-left)}
+  .navigation:not(.is-open) .scrolled .burger {height:24px;background:url(assets/81af1.svg) center no-repeat}
+  .navigation:not(.is-open) .scrolled .burger span,
+  .navigation:not(.is-open) .scrolled .nav-right .language,.sticky-booking .booking-suffix {display:none}
+  .masthead .sticky-booking {padding:var(--sticky-book-padding);min-height:0}
+  .sticky-booking > .layout224:first-child {font-size:var(--sticky-book-type);line-height:var(--sticky-book-leading)}
+  .sticky-booking::before {content:"";position:absolute;inset:-8px 0}
+
+  :root {--gutter:64px;--heading:60px;--u:1px;scrollbar-gutter:auto}
+  .white-sheet {--section-gap:0px;gap:0}
+  #n992 {width:100%;gap:16px}
+  #n993 {font-size:96px}
+  #n993 span {display:block}
+  #n1099,#n1139 {display:flex;flex-direction:column;gap:0}
+  #n1099 {padding:64px var(--gutter);gap:48px}
+  #n1100,#n1123,#n1140,#n1158 {width:100%;height:auto}
+  #n1101,#n1124,#n1134 {position:relative;inset:auto;width:100%;height:auto;padding:0;gap:48px;align-items:start}
+  #n1134,#n1124 {padding:64px var(--gutter)}
+  #n1134,#n1135,#n1136 {text-align:left}
+  #n1101 > *,#n1134 > *,#n1124 > * {width:100%}
+  #n1103 p,#n1136 p,#n1126 p,#n1148 p,#ds11-3180 > p,#n1748,#n1228,#n1233,#n1234,#n1241,#n1662 {font-size:16px;line-height:1.4;letter-spacing:.04em;white-space:normal}
+  :is(#n1102,#n1135,#n1125,#n1689,#n1226,#n1231,#n1677) > p {font-size:var(--heading);line-height:1.4;white-space:normal}
+  #n1136 {gap:32px}
+  #n1099 .intro-photo-slot {width:100%}
+  #n1336 {height:auto;aspect-ratio:864/800}
+  #n1508 {width:138.89%;height:100%}
+  #n1106 {width:100%;height:100%}
+  #n1141,#n1159 {height:650px}
+  #n1143,#n1161 {width:min(348px,92%);gap:32px}
+  #n1143 .layout62,#n1161 .layout62 {font-size:40px}
+  #n1146,#n1164 {font-size:20px}
+  #n1147,#n1165 {padding:64px var(--gutter)}
+  #n1148,#ds11-3180,#n1148 > *,#ds11-3180 > * {max-width:100%}
+  #n1148 .layout222 p,#ds11-3180 .layout222 p {font-size:20px}
+  .ds-button {padding:12px 32px;min-height:46px}
+  .ds-button > span:first-child,.ds-text-link > span:first-child {font-size:16px}
+  #n1688,#n1763 {height:auto;display:flex;flex-direction:column;padding:64px 32px}
+  #n1689,#n1677 {position:relative;inset:auto;order:-1;width:100%;z-index:1}
+  #n1689 > p,#n1226 > p,#n1231 > p {font-size:48px}
+  #n1724,#n1651 {position:relative;inset:auto;width:100%}
+  #n1724 {margin-top:-24px}
+  #n1724 .inset-gallery {width:calc(100% + 32px)}
+  #n1725 {gap:24px}
+  #n1725 > .layout82 {width:250px;height:156px;--u:.3125px}
+  #n1725 > .layout85 {width:167px;height:250px;--u:.417px}
+  #n1745,#n1660 {width:100%;padding:32px 0 0}
+  #n1746,#n1661,#n1746 > p {width:100%}
+  #n1746 {gap:24px}
+  #n1747 {font-size:32px}
+
+  /* The sticky siblings paint in document order, so the next photo covers the
+     previous one. The final runway holds the vineyard for the emblem reveal. */
+  #n1122 {display:block;--photo-height:900px;--final-height:900px}
+  #n1123 {position:relative;inset:auto;opacity:1;z-index:auto}
+  .photo-stack {display:block;position:relative;width:100%;isolation:isolate}
+  #n1129 {display:contents}
+  #n1129 > div {position:sticky;top:0;width:100%;height:var(--photo-height);overflow:clip;background:white;opacity:1;translate:none}
+  #n1129 .layout99 {width:227.5%;height:164%;left:-37%;top:-61%}
+  #n1129 .layout101 {width:138.9%;height:100%;left:-19.4%;top:0}
+  .photo-finale {position:relative;height:calc(var(--final-height) + 68svh)}
+  .photo-stage {position:sticky;top:0;height:var(--final-height);background:white}
+  .photo-window {width:100%;height:100%;transform:none;clip-path:none}
+  .photo-window .vineyard {inset:auto;width:255.65%;height:152.6%;left:-77.82%;top:-38.27%;transform:none}
+  .photo-emblem {width:79.44%;top:46.1%}
+
+  /* The opening tablet frame overlaps the first photo. Each image then travels
+     through the entire window until the right edge of the last slide arrives. */
+  .editorial-runway {display:block;position:relative;width:100%;--stage-height:900px;--lead:min(41.13vw,400px);height:calc(max(var(--stage-height),min(710px,100svh)) + var(--slides) * 90svh);margin:0}
+  .editorial-runway > :is(#n1758,#n1762) {position:sticky;display:grid;align-items:center;width:100%;height:auto;min-height:var(--stage-height);overflow:clip;isolation:isolate}
+  .editorial-runway :is(#n1758,#n1762) > .gallery-window {position:absolute!important;inset:0!important;width:100%!important;height:100%}
+  .editorial-runway .gallery-track {height:100%;margin-left:var(--lead);overflow:visible}
+  .editorial-runway .gallery-track > div {width:100vw;height:100%;flex:none}
+  .editorial-runway .gallery-track > div > [data-name] {inset:0;width:100%;height:100%;transform:none}
+  .editorial-runway .gallery-track img {object-fit:cover}
+  #n1758 .panel-slot,#n1762 .panel-slot {position:relative;inset:auto;margin:0;width:min(60.5vw,450px);z-index:2}
+  #n1225,#n1230 {width:100%;height:auto;padding:clamp(32px,8.6vw,64px);gap:48px}
+  #n1226,#n1231,#n1227,#n1232,#n1227 > *,#n1232 > * {width:100%;white-space:normal}
+  #n1227,#n1232 {gap:32px}
+  #ds11-3189 {flex-direction:column;align-items:start;gap:24px}
+  #ds11-3367,#ds11-3373 {left:var(--gutter);top:32%;width:calc(100% - 2 * var(--gutter));max-width:400px}
+  #n1639,#n1640,#ds11-3376 {font-size:16px}
+  #ds11-3384,#ds11-3382 {top:auto;bottom:0;font-size:clamp(130px,24vw,214px);line-height:1.2}
+  #ds11-3384 {right:0;transform:translateX(50%)}
+  #ds11-3382 {left:0;transform:translateX(-50%)}
+  #n1631.layout147,#n1636.layout152 {width:200%}
+  #n1636.layout152 {left:-100%}
+  .story-mark {display:none}
+
+  #n1759 {--tile:min(100vw,50svh);height:calc(2 * var(--tile) + 120svh)}
+  #n1107 {top:calc((100svh - 2 * var(--tile)) / 2);height:calc(2 * var(--tile));display:flex;flex-direction:column;width:100%;overflow:clip}
+  #n1107 > div {height:var(--tile);width:100%;flex:none;overflow:clip}
+  #n1341 {width:100%;height:100%;inset:0}
+  #n1617,#n1623 {width:100%;height:100%;inset:0;transform:none}
+  #n1617 img,#n1623 img {object-fit:cover}
+  #n1761 {display:flex;align-items:stretch;flex-direction:column;gap:0;height:auto;padding:64px var(--gutter);--u:1px}
+  #n1173,#n1174 {position:relative;inset:auto;width:100%;font-size:var(--heading);line-height:1.4;white-space:normal}
+  #n1239 {position:relative;inset:auto;width:100%;padding:0;margin:48px 0 32px;gap:32px}
+  #n1240 {width:100%;font-size:20px}
+  #n1241 {width:100%;min-width:0}
+  #n1242 {flex-wrap:wrap}
+  #n1761 .wine-pin,#n1761 .wine-stage {position:relative;inset:auto;width:100%;height:auto;min-height:0;overflow:visible}
+  #n1761 .wine-stage {display:flex;flex-direction:column;padding:0;gap:32px}
+  #n1761 .wine-stage > div {--u:1px;position:relative;inset:auto;width:100%;height:596px;transform:none}
+  .wine-stage .layout236 {left:32px;top:50%;width:55%;transform:translateY(-50%)}
+  .wine-stage .bottle-view {height:500px;width:219px;max-width:35%;right:0;top:50%;transform:translateY(-50%)}
+  #ds11-3672 {display:none}
+  #n1011 {height:100svh}
+  #n1016 {width:min(88%,398px);gap:48px}
+  #n1018 {font-size:64px}
+  #n1019 {font-size:16px}
+  .closing-copy {gap:24px}
+  #n1763 {padding:128px var(--gutter) 64px}
+  #n1651 {--inset:var(--gutter);margin-top:-168px}
+  #n1652 {--u:1.21px}
+  #n1662 {white-space:normal}
+  #n1434 {position:relative;inset:auto;width:100%;height:auto;padding:64px 32px;gap:24px}
+  #n1684 {height:auto;min-height:0}
+  .footer-insignia {gap:16px}
+  .footer-insignia img {width:63px}
+  #n1438 {display:flex;justify-content:space-between;gap:20px}
+  #n1438 p {font-size:12px}
+  #n1438 :is(.layout256,.layout259,.layout262) {font-size:12px}
+  #n1439 {max-width:161px;white-space:normal}
+  #n1480 {padding:64px 32px}
+  #n1481 {width:100%;height:auto;aspect-ratio:10}
+  #n1479 {min-height:0}
+  #n1482 {padding:64px 16px 128px;gap:48px}
+  #n1485 {flex-direction:column;gap:16px}
+}
+@media (max-width:720px) {
+  :root {--gutter:32px;--heading:48px}
+  .masthead {padding:24px 24px 0}
+  .masthead.scrolled {padding:24px}
+  .navigation:not(.is-open) .masthead.scrolled {
+    --sticky-inset:24px;
+    --sticky-left:75px;
+    --sticky-book-padding:8px 20px;
+    --sticky-book-type:14px;
+    --sticky-book-leading:19px
+  }
+  .masthead .burger {height:24px}
+  .masthead .mast-logo img {content:url(assets/236ce.svg);max-height:12px}
+  .masthead.scrolled .mast-logo img {filter:brightness(0)}
+  .mast-rule {margin-top:24px}
+  .masthead .language {gap:16px}
+  .masthead .language button {position:relative;width:17px;min-height:24px;font-size:12px;line-height:16px}
+  .masthead .language::after {left:-4px;width:25px;height:20px;box-sizing:border-box}
+  .masthead .language.italian::after {transform:translate(33px,-50%)}
+  .masthead .language button::before,.masthead .burger::before {content:"";position:absolute;inset:-10px -4px}
+  .is-open .masthead .language {visibility:hidden}
+  #n993 {font-size:48px}
+  #n1010 {font-size:16px;line-height:1.6}
+  #n1051 {padding:24px;grid-template-columns:minmax(0,1fr);gap:32px}
+  #n1051:not(.expanded) > #booking-fields,#n1051:not(.expanded) > a {display:none}
+  #n1051:not(.expanded) > #booking-toggle {display:flex}
+  #booking-toggle {border:0;width:100%;height:46px;cursor:pointer;color:black}
+  #n1051.expanded {max-height:calc(100svh - 72px);overflow-y:auto}
+  #n1141,#n1159 {height:650px}
+  #n1143,#n1161 {width:100%}
+  #n1148,#ds11-3180 {gap:32px}
+  :is(#ds11-3164,#ds11-3172,#ds11-3181,#n1242) {flex-direction:column;align-items:start;gap:24px}
+  #n1745 {padding-top:24px}
+  #n1122 {--photo-height:750px;--final-height:750px}
+  .photo-window .vineyard {width:346.93%;height:144.91%;left:-123.47%;top:-36.39%}
+  .photo-emblem {width:100%;top:43.65%}
+  .editorial-runway {
+    --lead:100vw;--stage-height:var(--mobile-stage-height,100svh);
+    height:calc(var(--stage-height) * (1 + var(--slides) * .9))
+  }
+  .editorial-runway > :is(#n1758,#n1762) {height:var(--stage-height);min-height:0;grid-template-rows:minmax(0,1fr)}
+  .editorial-runway :is(#n1758,#n1762) > .gallery-window {top:auto!important;bottom:0!important;height:var(--stage-height)}
+  #n1758 .panel-slot,#n1762 .panel-slot {
+    width:100%;height:100%;overflow-y:auto;display:flex;flex-direction:column
+  }
+  .editorial-runway .panel-mask {flex:none;margin-block:auto}
+  #n1225,#n1230 {padding:64px var(--gutter)}
+  #ds11-3367,#ds11-3373 {max-width:none;gap:32px}
+  #n1639,#n1640,#ds11-3376 {font-size:14px}
+  #n1239 {margin:48px 0}
+  #n1242 {align-items:start;gap:16px}
+  #n1761 .wine-stage {gap:64px}
+  #n1761 .wine-stage > div {--u:1px;height:auto;min-height:288px}
+  .wine-stage .layout236 {position:relative;left:auto;top:auto;width:73%;transform:none;gap:32px}
+  .wine-stage .layout135 {font-size:48px}
+  .wine-stage .layout238 {font-size:12px}
+  .wine-stage .layout239 {font-size:14px;width:90%}
+  .wine-stage .bottle-view {top:auto;bottom:0;transform:none;width:88px;height:200px;max-width:none}
+  #n1016 {width:calc(100% - 64px)}
+  #n1018 {font-size:min(48px,13vw)}
+  #n1019 {font-size:16px}
+  #n1020 {flex-direction:column;align-items:center;gap:24px}
+  #n1763 {padding:64px var(--gutter)}
+  #n1651 {margin-top:0}
+  #n1652 {--u:.676px}
+  #n1660 {padding-top:24px}
+  #n1662 {font-size:16px}
+  #n1438 {flex-direction:column;align-items:start;gap:32px}
+  #n1438 #ds11-3328 {gap:16px}
+  #ds11-3328 a {width:24px;height:24px}
+}
+@media (prefers-reduced-motion:reduce) and (max-width:1024px) {
+  #n1129 > div,.photo-stage {position:relative}
+  .photo-finale,.photo-stage {height:var(--final-height)}
+  #n1759 {height:auto}
+  #n1107 {position:relative;top:auto}
+}
+@media (max-width:1024px) {
+  #n1133 {width:100%}
+  .editorial-runway .gallery-window {cursor:auto}
+}
+@media (max-width:1024px) {
+  #n1759 {--tile:min(107.53vw,800px);--pair:calc(2 * var(--tile));height:calc(var(--pair) + 120svh)}
+  #n1107 {top:max(0px,calc((100svh - var(--pair)) / 2));height:min(100svh,var(--pair));justify-content:flex-start}
+  #n1107 > div {translate:0 var(--tile-pan,0px)}
+}
+@media (max-width:720px) {
+  #n1759 {--tile:100vw}
+  #n1051.expanded > #booking-fields > div {animation:booking-fields-in .46s var(--silk) both}
+  @keyframes booking-fields-in {from {opacity:0;translate:0 7px}to {opacity:1;translate:0}}
+}
+@media (prefers-reduced-motion:reduce) and (max-width:1024px) {
+  #n1759,#n1107 {height:auto}
+  #n1107 > div {translate:none}
+}
+@media (max-width:720px) {
+  .mobile-line {display:block}
+  #n1746 #n1747 {font-size:32px}
+}
+
+@media (max-width:1024px) {
+  /* The menu uses normal document flow so every link stays reachable in landscape. */
+  .estate-menu {display:flex;justify-content:flex-start;padding:0;align-items:center;overflow-y:auto}
+  .menu-items {flex:none;padding:0;gap:24px;margin:max(96px,calc((100dvh - 628px)/2)) 0 0}
+  .menu-items a {font-size:32px;line-height:45px}
+  .menu-socials {position:static;transform:none;flex-direction:row;gap:16px;margin:max(32px,calc((100dvh - 712px)/2)) 0 0;flex:none}
+  .menu-socials img {width:24px;height:24px}
+  .menu-bottom {position:static;flex:none;gap:32px;margin:64px 0 32px;font-size:16px}
+
+  #n1051 {backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:background-color .5s var(--silk)}
+  #n1051:not(.expanded) {display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;padding:64px 48px;background:transparent}
+  #n1051:not(.expanded) > #booking-fields,#n1051:not(.expanded) > a {display:none}
+  #n1051:not(.expanded) > #booking-toggle {display:flex;width:min(335px,100%);height:46px;border:0;color:#111;cursor:pointer}
+  #n1051.expanded > #booking-fields > div {animation:booking-fields-in .52s var(--silk) both}
+  #n1051.expanded {overflow:visible}
+  #n1051 #booking-dates {bottom:calc(100% + 10px)}
+  @keyframes booking-fields-in {from {opacity:0;translate:0 5px}to {opacity:1;translate:0}}
+
+  #n1129 > div,.photo-stage {top:min(0px,calc(100svh - var(--photo-height)))}
+  #n1129 .layout99 {height:1475px;width:max(2212px,100%);left:calc(50% - 875px);top:-548px}
+  #n1129 .layout101 {height:900px;width:max(1350px,100%);left:calc(50% - 675px);top:0}
+  .photo-window .vineyard {width:max(1902px,100%);height:1268px;left:calc(50% - 951px);top:-318px}
+  .photo-emblem {width:min(68.146%,507px);top:41.78%}
+  #n1762 .gallery-track > div {width:max(100vw,1011px)}
+  #n1631.layout147,#n1636.layout152 {width:2274px;height:900px;left:-126px}
+  #n1636.layout152 {left:-1137px}
+  #n1636 .layout7 {display:block;background:rgb(0 0 0 / .2)}
+  #n1631::after {content:"";position:absolute;inset:0;background:rgb(0 0 0 / .2)}
+  #ds11-3367,#ds11-3373 {width:400px;left:417px;top:256px}
+  #ds11-3373 {left:411px}
+  #ds11-3384,#ds11-3382 {top:501px;bottom:auto;left:758px;right:auto;transform:none;font-size:213px;line-height:1.4}
+  #ds11-3382 {left:-253px}
+  #n1594 img {object-position:32.18% center}
+  #n1605 img,#n1607 img {object-position:center bottom}
+  #n1724 .native-gallery,#n1651 .native-gallery {
+    overflow-x:auto;overflow-y:hidden;touch-action:pan-x pan-y pinch-zoom;
+    overscroll-behavior-x:contain;overflow-anchor:none;scrollbar-width:none;cursor:grab
+  }
+  #n1724 {--gallery-inset:32px}
+  #n1651 {--gallery-inset:var(--gutter)}
+  #n1724 .native-gallery,#n1651 .native-gallery {
+    width:calc(100% + 2 * var(--gallery-inset))!important;
+    margin-inline-start:calc(-1 * var(--gallery-inset));translate:none;transition:none;
+    clip-path:inset(0 0 0 var(--initial-clip,var(--gallery-inset)))
+  }
+  .native-gallery::-webkit-scrollbar {display:none}
+  .native-gallery .gallery-track > .reveal {opacity:1;translate:none;transition:none}
+  .editorial-runway > :is(#n1758,#n1762) {opacity:1;transition:none}
+  #n1758 .panel-slot,#n1762 .panel-slot {align-self:start}
+  .editorial-runway .panel-mask::before {transform:none;transition:none}
+  .editorial-runway .panel-mask > .reveal {transition:none;translate:none}
+  #n1226,#n1231 {opacity:var(--title-visibility,1)}
+  #n1227,#n1232 {opacity:var(--copy-visibility,1)}
+  #n1433 {--footer-type:12px;--footer-leading:14px;--caption-type:12px;--caption-leading:16px}
+  #n1434 {padding:64px 32px;gap:24px}
+  #n1438 {gap:24px;justify-content:space-between}
+  #n1439 {max-width:none}
+  #ds11-3328,#n1438 #ds11-3328 {gap:16px;flex-wrap:nowrap}
+  #ds11-3328 a {width:16px;height:16px}
+  #n1480 {padding:64px 32px}
+  #n1482 .layout266 {font-size:14px;line-height:17px}
+  #n1481 img {content:url(assets/footer-wordmark-tablet.svg)}
+}
+@media (max-width:720px) {
+  .menu-items {margin:96px 0 0;gap:16px}
+  .menu-items a {font-size:24px;line-height:34px}
+  .menu-language {display:flex;align-items:center;flex:none;gap:16px;margin:max(24px,calc((100dvh - 590px)/3)) 0 0}
+  .menu-language button {color:white;background:none;border:0;padding:0;min-height:22px}
+  .menu-socials {margin:max(24px,calc((100dvh - 590px)/3)) 0 0}
+  .menu-bottom {margin:max(24px,calc((100dvh - 590px)/3)) 0 48px;gap:16px;font-size:12px}
+  #n1051:not(.expanded) {padding:24px;backdrop-filter:none;-webkit-backdrop-filter:none}
+  #n1051:not(.expanded) > #booking-toggle {width:100%}
+  #n1051.expanded {max-height:calc(100svh - 56px)}
+  #n1051.expanded:has(#booking-dates:not([hidden])) {z-index:2}
+  #n1129 .layout99 {width:max(1844px,100%);height:1229px;left:calc(50% - 921.5px);top:-457px}
+  #n1129 .layout101 {width:max(1125px,100%);height:750px;left:calc(50% - 721.5px)}
+  .photo-window .vineyard {width:max(1301px,100%);height:868px;left:calc(50% - 658.5px);top:-118px}
+  .photo-emblem {width:min(calc(100% - 32px),510px);top:47.2%}
+  #n1762 .gallery-track > div {width:100vw}
+  #n1762 {
+    --panorama-width:max(200vw,calc(2.52667 * var(--stage-height)));
+    --panorama-left:clamp(calc(200vw - var(--panorama-width)),calc(50vw - var(--panorama-width) * .357),0px)
+  }
+  #n1631.layout147,#n1636.layout152 {width:var(--panorama-width);height:100%;left:var(--panorama-left)}
+  #n1636.layout152 {left:calc(var(--panorama-left) - 100vw)}
+  #ds11-3367,#ds11-3373 {left:32px;top:16.667%;width:calc(100% - 64px)}
+  #ds11-3384,#ds11-3382 {top:52%;left:calc(100% - 222px);font-size:187.5px}
+  #ds11-3382 {left:-222px}
+  #n1594 img {object-position:46.67% center}
+  #n1607 img {object-position:76.44% center}
+  #n1597 img {object-position:33.87% center}
+
+  #n1242 .ds-text-link {min-height:22px}
+  .closing-break {display:inline}
+  #n1438 {gap:32px}
+  #n1482 .layout266 {font:400 14px/19px "Satoshi UI",sans-serif}
+  #n1481 img {content:url(assets/footer-wordmark-mobile.svg)}
+}
+@media (max-height:560px) and (max-width:1024px) {
+  .menu-items {margin-top:76px;gap:8px}
+  .menu-socials,.menu-language,.menu-bottom {margin-top:24px}
+  #n1051.expanded {overflow-y:auto}
+  #n1051 #booking-dates {position:fixed;inset:8px auto auto 8px}
+}
+
+@media (721px <= width <= 1024px) {
+  #n1761 {padding-bottom:0}
+}
+
+@media (width > 1024px) {
+  #n1135 .mobile-line {display:block}
+}
+
+@media (width > 1024px) and (prefers-reduced-motion:no-preference) {
+  #n1133.section-enter {opacity:1;transition:none}
+  #n1134 .reveal,.stay-detail-fade {
+    translate:none;
+    transition:opacity .65s var(--ease) var(--fade-start,var(--delay,0s))
+  }
+  #n1137 {--fade-start:.65s}
+  #n1138 {--fade-start:.9s}
+  .stay-detail-fade {opacity:0}
+  .stay-detail-fade.seen,.stay-detail-fade:focus-within {opacity:1}
+  .stay-detail-fade:focus-within {transition:none}
+}
