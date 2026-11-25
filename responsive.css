@@ -42,6 +42,15 @@
   .navigation:not(.is-open) .burger span {opacity:0}
 }
 @media (width > 1024px) {
+  /* The cropped frames also apply to the copies used by the infinite carousel. */
+  #n1725 > .layout82 {width:calc(640 * var(--u));height:auto;aspect-ratio:8 / 5}
+  #n1725 > .layout85 {width:calc(400 * var(--u));height:auto;aspect-ratio:4 / 5}
+  #n1725 .layout84 {left:calc(-143 * var(--u));top:calc(-567 * var(--u))}
+  #n1725 .layout87 {top:calc(-32 * var(--u))}
+  #n1725 .layout88 {width:100%;height:240%;top:-70%}
+  #n1725 .layout89 {width:187.5%;height:100%;left:-65.25%}
+  #n1725 .layout91 {width:100%;height:106.5%;inset:0 auto auto 0}
+  #n1725 .layout92 {width:100%;height:100%;left:0}
   .native-gallery {overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;overflow-anchor:none}
   .native-gallery::-webkit-scrollbar {display:none}
   .section-enter.seen .native-gallery .reveal[aria-hidden="true"] {opacity:1;translate:none}
