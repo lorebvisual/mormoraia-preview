@@ -10,7 +10,7 @@
 @media (max-width:1024px) and (prefers-reduced-motion:no-preference) {
   #n1139 > .reveal {
     translate:clamp(-128px,-22vw,-64px) 0;
-    transition:translate 1.25s cubic-bezier(.22,1,.36,1),opacity .9s ease-out
+    transition:translate 1.8s cubic-bezier(.22,1,.36,1),opacity 1.3s ease-out
   }
   #n1139 > .reveal:is(.seen,:focus-within) {translate:none;opacity:1}
 }
