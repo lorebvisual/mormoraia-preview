@@ -2,10 +2,9 @@
 .photo-stack, .editorial-runway, #n1051 > #booking-fields {display:contents}
 #booking-toggle {display:none}
 #booking-fields > div {width:100%;min-width:0;gap:12px}
-#n1688 {height:calc(1271 * var(--u))}
-#n1689 {left:calc(144 * var(--u));top:calc(128 * var(--u))}
-#n1724 {left:calc(144 * var(--u));top:calc(296 * var(--u))}
-#n1724 .inset-gallery {width:calc(100vw - 144 * var(--u))}
+#n1688 {display:flex;flex-direction:column;height:auto;padding:calc(128 * var(--u)) 0 calc(128 * var(--u)) calc(144 * var(--u))}
+#n1689,#n1724 {position:relative;inset:auto}
+#n1724,#n1724 .inset-gallery {width:100%}
 .experience-counter {display:none}
 
 @media (width < 1280px) {
@@ -54,7 +53,7 @@
   #n1725 > .layout82 {width:calc(480 * var(--u));height:auto;aspect-ratio:8 / 5}
   #n1725 > .layout85 {width:calc(320 * var(--u));height:auto;aspect-ratio:4 / 5}
   #n1725 .layout84 {width:calc(623 * var(--u));height:calc(934 * var(--u));left:calc(-91 * var(--u));top:calc(-392 * var(--u))}
-  #n1725 .layout87 {width:100%;height:120%;top:calc(-8 * var(--u))}
+  #n1725 .layout87 {width:100%;height:120%;top:-10%}
   #n1725 .layout88 {width:100%;height:240%;top:calc(-248 * var(--u))}
   #n1725 .layout89 {width:187.5%;height:100%;left:calc(-186 * var(--u))}
   #n1725 .layout91 {width:100%;height:calc(320 * var(--u));inset:0 auto auto 0}
@@ -119,11 +118,19 @@
   #n1689,#n1677 {position:relative;inset:auto;order:-1;width:100%;z-index:1}
   #n1689 > p,#n1226 > p,#n1231 > p {font-size:48px}
   #n1724,#n1651 {position:relative;inset:auto;width:100%}
-  #n1724 {margin-top:-24px}
+  #n1688 {gap:48px}
   #n1724 .inset-gallery {width:calc(100% + 32px)}
   #n1725 {gap:24px}
-  #n1725 > .layout82 {width:250px;height:156px;--u:.3125px}
-  #n1725 > .layout85 {width:167px;height:250px;--u:.417px}
+  #n1725 > .layout82 {width:320px;height:200px}
+  #n1725 > .layout85 {width:200px;height:250px}
+  #n1725 [data-name] {width:auto;left:50%;transform:translateX(-50%)}
+  #n1725 .layout84 {height:263.2%;aspect-ratio:2/3;left:calc(50% - 12.14px);top:-102.8%}
+  #n1725 .layout87 {width:100%;height:301px;top:calc(50% + .13px);transform:translate(-50%,-50%)}
+  #n1725 .layout88 {height:240%;aspect-ratio:2/3;top:-79.8%}
+  #n1725 .layout89 {height:100%;aspect-ratio:3/2;left:calc(50% - 86px)}
+  #n1725 .layout90 {width:800px;left:0;transform:none}
+  #n1725 .layout91 {height:108.8%;aspect-ratio:4096/2731;top:-4.4%}
+  #n1725 .layout92 {height:100%;aspect-ratio:4/5;top:-.15%}
   #n1745,#n1660 {width:100%;padding:32px 0 0}
   #n1746,#n1661,#n1746 > p {width:100%}
   #n1746 {gap:24px}
@@ -241,6 +248,13 @@
   #n1148,#ds11-3180 {gap:32px}
   :is(#ds11-3164,#ds11-3172,#ds11-3181,#n1242) {flex-direction:column;align-items:start;gap:24px}
   #n1745 {padding-top:24px}
+  #n1688 {gap:32px}
+  #n1725 > .layout82 {width:250px;height:156px}
+  #n1725 > .layout85 {width:160px;height:200px}
+  #n1725 .layout87 {height:120%;top:50%}
+  #n1725 .layout89 {left:calc(50% - 35.5px)}
+  #n1725 .layout92 {top:0}
+  #ds11-3181 {gap:32px}
   #n1122 {--photo-height:750px;--final-height:750px}
   .photo-window .vineyard {width:346.93%;height:144.91%;left:-123.47%;top:-36.39%}
   .photo-emblem {width:100%;top:43.65%}
@@ -306,6 +320,7 @@
 @media (max-width:720px) {
   .mobile-line {display:block}
   #n1746 #n1747 {font-size:32px}
+  #n1746 #n1748 {font-size:16px}
 }
 
 @media (max-width:1024px) {
