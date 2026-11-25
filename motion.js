@@ -325,8 +325,9 @@ function nativeFilmstrip(container, track, slides, selection, select, clickDirec
     const x = position(start);
     const stops = [-cycle+offsets.at(-1), ...offsets, cycle, cycle+offsets[1]];
     const next = dir > 0 ? stops.find(stop => stop > x+1) : stops.reverse().find(stop => stop < x-1);
-    if (tabletLayout.matches || reduce.matches) {
-      container.scrollBy({left:next-x,behavior:reduce.matches?'instant':'smooth'});
+    if (reduce.matches) {
+      interrupt();
+      container.scrollTo({left:start+next-x,behavior:'instant'});
       return;
     }
     destination = start + next - x;
@@ -408,6 +409,9 @@ function gallery(id,label,icon,onChange) {
     },direction);
     tabletLayout.addEventListener('change',strip.sync);
     strip.sync();
+    for (const button of document.querySelectorAll('[data-slide-step][aria-controls="'+track.id+'"]')) {
+      button.addEventListener('click',()=>strip.advance(Number(button.dataset.slideStep)));
+    }
     container.onkeydown=e=>{
       if (!['ArrowRight','ArrowLeft','Enter'].includes(e.key)) return;
       e.preventDefault();
