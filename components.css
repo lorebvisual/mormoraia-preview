@@ -186,21 +186,49 @@
 #n1122{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;--photo-height:calc(800 * var(--u));--photo-travel:clamp(800px,180svh,1900px);--photo-inset:25%}
 #n1123{grid-column:1;grid-row:1/3;width:100%;opacity:var(--caption-opacity,1);pointer-events:none}
 #n1129{grid-column:2;grid-row:1;width:100%}
-.photo-finale{grid-column:1/-1;grid-row:2;height:calc(max(100svh,var(--photo-height)) + var(--photo-travel))}
-.photo-stage{height:max(100svh,var(--photo-height));position:sticky;top:0;overflow:clip;pointer-events:none}
-.photo-window{height:var(--photo-height);width:100%;position:relative;transform:translate3d(var(--photo-shift,var(--photo-inset)),0,0);clip-path:inset(0 var(--aperture,var(--photo-inset)));overflow:hidden}
-
-/* The slate cover and emblem sit above the photograph in the pinned aperture. */
+/* The sticky box is the height of the final emblem frame. Its photograph
+   overflows that box until the overlay closes, so the scroll runway is stable. */
+.photo-finale {
+  --photo-exit-height:calc(340 * var(--u));
+  --photo-sticky-height:var(--photo-exit-height);
+  --photo-scroll-length:calc(var(--photo-travel) + max(0px, var(--photo-height) - var(--photo-sticky-height)));
+  grid-column:1/-1;grid-row:2;
+  height:calc(var(--photo-sticky-height) + var(--photo-scroll-length));
+}
+.photo-stage {
+  position:sticky;top:0;height:var(--photo-sticky-height);pointer-events:none;
+}
+.photo-window {
+  position:relative;width:100%;overflow:hidden;background:white;
+  height:calc(var(--photo-height) - var(--photo-collapse,0) * (var(--photo-height) - var(--photo-exit-height)));
+  transform:translate3d(var(--photo-shift,var(--photo-inset)),0,0);
+  clip-path:inset(0 var(--aperture,var(--photo-inset)));
+}
+.photo-finale-surface {
+  position:absolute;inset-inline:0;top:50%;height:var(--photo-height);
+  transform:translateY(-50%);visibility:var(--photo-image-visibility,visible);
+}
 .photo-finale-image {
   position:absolute;width:110.24%;height:158.75%;max-width:none;
-  left:-10.24%;top:-19.62%;object-fit:cover
+  left:-10.24%;top:-19.62%;object-fit:cover;
 }
-.photo-finale-cover {position:absolute;inset:0;background:#43505b;opacity:var(--photo-cover,0)}
+.photo-finale-cover {
+  position:absolute;inset:0;background:var(--ink);opacity:var(--photo-cover,0);
+}
 .photo-emblem {
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:var(--photo-mark-width,24.4213%);height:auto;opacity:var(--emblem-opacity,1);pointer-events:none
+  --photo-mark:url(assets/photo-emblem-20-4038.svg);
+  display:block;position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%) scale(var(--photo-mark-scale,1));
+  width:var(--photo-mark-width,24.4213%);opacity:var(--emblem-opacity,1);pointer-events:none;
 }
-.photo-emblem img {display:block;width:100%;height:auto}
+.photo-emblem img {
+  display:block;width:100%;height:auto;opacity:calc(1 - var(--photo-dark-logo,0));
+}
+.photo-emblem::after {
+  content:"";position:absolute;inset:0;background:var(--ink);
+  mask:var(--photo-mark) center/contain no-repeat;
+  opacity:var(--photo-dark-logo,0);
+}
 @media (prefers-reduced-motion:reduce) {
   .photo-finale-cover {display:none}
   .photo-emblem {opacity:1}
@@ -219,7 +247,7 @@
 @media(prefers-reduced-motion:reduce){
  #n1122{--photo-travel:0px}
  #n1123{grid-row:1}
- .photo-finale,.photo-stage{height:var(--photo-height)}
+ .photo-finale {--photo-sticky-height:var(--photo-height);height:var(--photo-height)}
  .photo-stage{position:relative}
  .photo-window{clip-path:none;transform:none}
 }

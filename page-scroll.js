@@ -65,7 +65,7 @@
   }
   // Hit-test the painted layers beneath the centre of the control. A photo
   // keeps the white variant even where the photograph itself is very bright.
-  const photoSurfaces='.stay-media,#n1141,#n1159,.photo-window,#n1129 > div,.gallery-track > div,#n1108,#n1341,#n1336,#n1011,#n986';
+  const photoSurfaces='.stay-media,#n1141,#n1159,.photo-window:not(.photo-cleared),.room-gallery,.stay-facilities,#n1129 > div,.gallery-track > div,#n1108,#n1341,#n1336,#n1011,#n986';
   function useWhiteVariant(){
     const box=backToTop.getBoundingClientRect();
     for(const el of document.elementsFromPoint(box.left+box.width/2,box.top+box.height/2)){

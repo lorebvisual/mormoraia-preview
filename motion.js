@@ -1,49 +1,8 @@
-const node = id => document.getElementById('n' + id);
-const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-const compact = matchMedia('(max-width:720px)');
-const clamp = value => Math.min(1, Math.max(0, value));
-// Observe the unmasked layout box. A closed clip-path can have no visible intersection.
-const entrances = new Map();
-const observer = new IntersectionObserver(entries => {
-  for (const {target, isIntersecting} of entries) {
-    if (!isIntersecting) continue;
-    for (const element of entrances.get(target)) element.classList.add('seen');
-    observer.unobserve(target);
-    entrances.delete(target);
-  }
-}, {rootMargin: '0px 0px -9% 0px', threshold: 0});
-
-function reveal(element, delay = 0, type = 'reveal', trigger = element) {
-  element.classList.add(type);
-  element.style.setProperty('--delay', delay + 's');
-  if (!entrances.has(trigger)) {
-    entrances.set(trigger, []);
-    observer.observe(trigger);
-  }
-  entrances.get(trigger).push(element);
-}
-function sequence(ids, step, trigger) {
-  ids.forEach((id, i) => reveal(node(id), i * step, 'reveal', trigger));
-}
 const official = 'https://www.mormoraia.it/en/';
 const email = 'mailto:info@mormoraia.it';
 // The first-view timeline is independent of scroll position and clipping.
 const hero = node(986);
 const film = document.getElementById('hero-film');
-function playWhenVisible(video) {
-  let inView = false;
-  function sync() {
-    if (!inView || document.hidden || reduce.matches) video.pause();
-    else if (video.paused) video.play().catch(() => {});
-  }
-  new IntersectionObserver(([entry]) => {
-    inView = entry.isIntersecting;
-    sync();
-  }).observe(video);
-  video.addEventListener('loadeddata',sync);
-  document.addEventListener('visibilitychange', sync);
-  reduce.addEventListener('change', sync);
-}
 const desktopHeroPoster=film.poster;
 function selectHeroPoster(){
   film.poster=compact.matches?'assets/hero-mobile-poster.jpg':desktopHeroPoster;
@@ -102,11 +61,12 @@ reveal(node(1689));
 reveal(node(1745));
 reveal(node(1124));[...node(1129).children].forEach(el=>reveal(el));
 for (const id of [1225,1230]) {
-  const panel=node(id);
-  const anchor=document.createElement('div');anchor.className='panel-slot';
-  panel.before(anchor);anchor.append(panel);
-  reveal(panel,.04,'panel-mask',anchor);
-  [...panel.children].forEach((el,i)=>reveal(el,1.04+i*.25,'reveal',anchor));
+  const panel = node(id);
+  const anchor = document.createElement('div');
+  anchor.className = 'panel-slot';
+  panel.before(anchor);
+  anchor.append(panel);
+  animateEditorialPanel(panel, anchor);
 }
 reveal(node(1239),.12);sequence([1195,1205,1215],.16);
 reveal(node(1677));reveal(node(1660));
@@ -552,7 +512,6 @@ gallery(1725,'Experiences','88087.svg',experienceCopy);gallery(1340,'Dining','18
 const wine=document.createElement('div');wine.className='wine-pin';const stage=document.createElement('div');stage.className='wine-stage';wine.append(stage);node(1761).append(wine);stage.append(node(1195),node(1205),node(1215));
 const closing=node(1011), closingSpace=document.createElement('div');closingSpace.className='pin-space closing-space';closing.before(closingSpace);closingSpace.append(closing,node(1763));
 const inverse=node(1759);
-const smooth = t => t*t*(3-2*t);
 const finale = document.querySelector('.photo-finale');
 const photoStage = finale.querySelector('.photo-stage');
 const photoSection = node(1122);
@@ -564,115 +523,31 @@ const photoWindow = finale.querySelector('.photo-window');
 let previousPhotoState;
 function photographyMotion() {
   const travel = finale.offsetHeight - photoStage.offsetHeight;
-  const stickyTop = parseFloat(getComputedStyle(photoStage).top) || 0;
-  const progress = reduce.matches || travel <= 0 ? 1 :
-    clamp((stickyTop - finale.getBoundingClientRect().top) / travel);
+  const progress = travel <= 0 ? 0 : clamp(-finale.getBoundingClientRect().top / travel);
   const stacked = tabletLayout.matches;
-  const state = [progress, stacked, reduce.matches].join('/');
+  const animated = !reduce.matches;
+  const state = [progress, stacked, animated].join('/');
   if (state === previousPhotoState) return;
   previousPhotoState = state;
 
-  const center = phase(progress, 0, .26);
-  const open = phase(progress, .26, .58);
-  photoSection.style.setProperty('--caption-opacity', reduce.matches ? 1 : 1 - phase(progress, 0, .26));
-  photoWindow.style.setProperty('--photo-shift', stacked ? '0%' : 25 * (1 - center) + '%');
-  photoWindow.style.setProperty('--aperture', stacked ? '0%' : 25 * (1 - open) + '%');
-  photoWindow.style.setProperty('--emblem-opacity', reduce.matches ? 1 :
-    phase(progress, stacked ? .10 : .57, stacked ? .40 : .72));
-  photoWindow.style.setProperty('--photo-cover', reduce.matches ? 0 :
-    phase(progress, stacked ? .48 : .74, .98));
-}
-
-const footer = node(1433);
-const footerStage = footer.firstElementChild;
-new ResizeObserver(() => {
-  footer.style.setProperty('--footer-stage-height', footerStage.getBoundingClientRect().height + 'px');
-  schedule();
-}).observe(footerStage);
-
-// Clip the original artwork along its inter-letter spaces. The diagonal
-// between the reflected R and A follows the actual gap between their strokes.
-const cuts = [[0,0],[229,229],[428,428],[569,569],[806,806],[1002,1002],
-              [1142,1116],[1316,1316],[1409,1409],[1600,1600]];
-const percent = n => (n / 16)+'%';
-const phase = (progress,start,end) => smooth(clamp((progress-start)/(end-start)));
-function createWordmark(mark) {
-  const original = mark.querySelector('picture');
-  const letters = cuts.slice(1).map(([rightTop,rightBottom],index) => {
-    const [leftTop,leftBottom] = cuts[index];
-    const layer = document.createElement('span');
-    layer.className = 'wordmark-glyph';
-    layer.setAttribute('aria-hidden','true');
-    const art = original.cloneNode(true);
-    art.querySelector('img').alt = '';
-    art.style.clipPath = 'polygon('+percent(leftTop)+' 0,'+percent(rightTop)+' 0,'+
-      percent(rightBottom)+' 100%,'+percent(leftBottom)+' 100%)';
-    layer.append(art);
-    mark.append(layer);
-    return layer;
-  });
-  let lastProgress;
-  return progress => {
-    if (progress === lastProgress) return;
-    lastProgress = progress;
-    const opening = phase(progress,.015,.73);
-    const leftShift = 234.18 * (1-opening);
-    const rightShift = -208.67 * (1-opening);
-    const inner = phase(progress,.16,.47), adjacent = phase(progress,.38,.65), outer = phase(progress,.53,.77);
-    const opacity = [outer,adjacent,1,inner,inner,1,adjacent,outer,outer];
-    const shifts = [leftShift,leftShift,leftShift,leftShift*.28,rightShift*.28,
-                    rightShift,rightShift,rightShift,rightShift];
-    const complete = progress >= .77;
-    original.style.opacity = complete ? '1':'0';
-    letters.forEach((letter,i)=>{
-      letter.style.opacity = complete?'0':opacity[i];
-      letter.style.transform = 'translate3d('+percent(shifts[i])+',0,0)';
-    });
-  };
-}
-const drawFooter = createWordmark(node(1481));
-const footerRows = [...footer.querySelectorAll('[data-footer-row]')];
-let footerProgress, footerTarget, footerFrame = 0, footerTime = 0;
-function paintFooter(progress) {
-  footerProgress = progress;
-  footer.style.setProperty('--footer-rise', 1 - phase(progress, .05, .96));
-  footer.style.setProperty('--footer-emblem', phase(progress, 0, .22));
-  footer.style.setProperty('--footer-lines', phase(progress, 0, .29));
-  const wordmarkProgress = clamp((progress - .28) / .32);
-  footer.style.setProperty('--footer-wordmark', phase(progress, .28, .34));
-  drawFooter(wordmarkProgress);
-  footer.style.setProperty('--footer-upper-rule', phase(progress, .58, .66));
-  footer.style.setProperty('--footer-lower-rule', phase(progress, .93, 1));
-  footerRows.forEach((row, index) => {
-    const start = .63 + index * .026;
-    row.style.setProperty('--footer-row', phase(progress, start, start + .13));
-  });
-}
-
-// Keep the footer sequence legible after a fast flick, including in reverse.
-function easeFooter(now) {
-  const elapsed = Math.min(64, now - footerTime);
-  const gap = footerTarget - footerProgress;
-  const advance = Math.min(Math.abs(gap) * (1 - Math.exp(-elapsed / 145)), elapsed / 900);
-  const settled = Math.abs(gap) < .001;
-  paintFooter(settled ? footerTarget : footerProgress + Math.sign(gap) * advance);
-  footerTime = now;
-  footerFrame = settled ? 0 : requestAnimationFrame(easeFooter);
-}
-function footerMotion(viewHeight) {
-  const bounds = footer.getBoundingClientRect();
-  const travel = footer.offsetHeight - footerStage.offsetHeight;
-  const lead = viewHeight * .70;
-  const finish = viewHeight - footer.offsetHeight + 1;
-  footerTarget = reduce.matches ? 1 : clamp((lead - bounds.top) / Math.max(1, lead - finish));
-  if (footerProgress === undefined || reduce.matches || travel <= 0) {
-    cancelAnimationFrame(footerFrame);
-    footerFrame = 0;
-    if (footerProgress !== footerTarget) paintFooter(footerTarget);
-  } else if (!footerFrame && footerProgress !== footerTarget) {
-    footerTime = performance.now();
-    footerFrame = requestAnimationFrame(easeFooter);
-  }
+  const center = phase(progress, 0, .19);
+  const aperture = phase(progress, .19, .43);
+  const shadeStart = stacked ? .37 : .54;
+  const fullyCovered = .80;
+  const collapse = animated ? phase(progress, shadeStart, fullyCovered) : 0;
+  const photoGone = animated && progress >= fullyCovered;
+  const cover = photoGone ? 1 - phase(progress, .84, .99) : phase(progress, shadeStart, fullyCovered);
+  photoSection.style.setProperty('--caption-opacity', animated ? 1 - center : 1);
+  photoWindow.style.setProperty('--photo-shift', stacked || !animated ? '0%' : 25 * (1 - center) + '%');
+  photoWindow.style.setProperty('--aperture', stacked || !animated ? '0%' : 25 * (1 - aperture) + '%');
+  photoWindow.style.setProperty('--emblem-opacity', animated ?
+    phase(progress, stacked ? .06 : .40, stacked ? .28 : .53) : 1);
+  photoWindow.style.setProperty('--photo-cover', animated ? cover : 0);
+  photoWindow.style.setProperty('--photo-collapse', collapse);
+  photoWindow.style.setProperty('--photo-mark-scale', 1 - collapse * (stacked ? .16 : .235));
+  photoWindow.style.setProperty('--photo-dark-logo', animated ? phase(progress, .81, .95) : 0);
+  photoWindow.style.setProperty('--photo-image-visibility', photoGone ? 'hidden' : 'visible');
+  photoWindow.classList.toggle('photo-cleared', photoGone && cover < .48);
 }
 
 // Ease only the foreground offsets. Native page scrolling remains immediate.
@@ -739,7 +614,6 @@ function update(){
  node(1205).style.transform=tabletLayout.matches?'none':'translateY('+(-node(1205).offsetTop*(reduced?1:pinned(wine,stage)))+'px)';
  const zoom=reduced?1:clamp(-closingSpace.getBoundingClientRect().top/(closing.offsetHeight*.8));
  photographyMotion();
- footerMotion(h);
  const startWidth = tabletLayout.matches ? (compact.matches?148:331) : closing.clientWidth*563/1728;
  const startHeight = tabletLayout.matches ? (compact.matches?257:400) : closing.offsetHeight*293/900;
  const hidden = 1-smooth(zoom);
@@ -755,72 +629,3 @@ function update(){
 }
 function schedule(){if(!frame)frame=requestAnimationFrame(update)}
 addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);reduce.addEventListener('change',schedule);update();
-
-const bookingToggle = document.getElementById('booking-toggle');
-const bookingBar = node(1051);
-const bookingLink = bookingBar.querySelector('a.ds-button');
-const bookingLabel = bookingLink.firstElementChild;
-const dateTrigger = bookingBar.querySelector('.date-trigger');
-const dates = document.getElementById('booking-dates');
-const arrival = dates.querySelector('[name=arrival]');
-const departure = dates.querySelector('[name=departure]');
-const counts = [...bookingBar.querySelectorAll('.booking-count')];
-function showDates(open){
-  dates.hidden = !open;
-  dateTrigger.setAttribute('aria-expanded',String(open));
-}
-function setBookingOpen(open,returnFocus=false){
-  const oldHeight=bookingBar.getBoundingClientRect().height;
-  showDates(false);
-  bookingBar.classList.toggle('expanded',open);
-  bookingToggle.setAttribute('aria-expanded',String(open));
-  bookingLabel.textContent=open?'Check availability':'Book now';
-  if(tabletLayout.matches && !reduce.matches){
-    const height=bookingBar.offsetHeight;
-    if(oldHeight!==height)bookingBar.animate([{height:oldHeight+'px'},{height:height+'px'}],{duration:550,easing:'cubic-bezier(.35,0,.18,1)'});
-  }
-  if(open)dateTrigger.focus({preventScroll:true});
-  else if(returnFocus)bookingToggle.focus({preventScroll:true});
-}
-bookingToggle.addEventListener('click',()=>setBookingOpen(true));
-dateTrigger.addEventListener('click',()=>showDates(dates.hidden));
-const localDate = date => new Date(date.getTime()-date.getTimezoneOffset()*60000).toISOString().slice(0,10);
-arrival.min=localDate(new Date());
-function syncDates(){
-  if(arrival.value){
-    const next=new Date(arrival.value+'T12:00:00');
-    next.setDate(next.getDate()+1);
-    departure.min=localDate(next);
-    if(departure.value && departure.value<departure.min)departure.value='';
-  }
-  dateTrigger.textContent=arrival.value && departure.value ? arrival.value+' – '+departure.value : 'Check In & Check Out';
-}
-arrival.addEventListener('change',syncDates);
-departure.addEventListener('change',syncDates);
-dates.querySelector('button').addEventListener('click',()=>{showDates(false);dateTrigger.focus({preventScroll:true})});
-bookingLink.addEventListener('click',event=>{
-  if(counts.some(input=>!input.reportValidity())){event.preventDefault();return}
-  if(arrival.value || departure.value){
-    showDates(true);
-    if(!arrival.value || !departure.value || !arrival.checkValidity() || !departure.checkValidity()){
-      event.preventDefault();
-      (!arrival.value || !arrival.checkValidity()?arrival:departure).focus();return;
-    }
-    showDates(false);
-  }
-  const params=new URLSearchParams();
-  if(arrival.value){params.set('in',arrival.value);params.set('out',departure.value)}
-  const adults=counts[0].valueAsNumber;
-  if(adults>0 && adults<=100 && !(counts[1].valueAsNumber>0) && !(counts[2].valueAsNumber>1))params.set('guests',Array(adults).fill('A').join(','));
-  bookingLink.hash=params.size?'/q&'+params.toString():'';
-});
-document.addEventListener('pointerdown',event=>{
-  if(!dates.contains(event.target) && event.target!==dateTrigger)showDates(false);
-  if(bookingBar.classList.contains('expanded')&&!bookingBar.contains(event.target))setBookingOpen(false);
-});
-document.addEventListener('keydown',event=>{
-  if(event.key!=='Escape')return;
-  if(!dates.hidden){showDates(false);dateTrigger.focus({preventScroll:true})}
-  else if(bookingBar.classList.contains('expanded'))setBookingOpen(false,true);
-});
-tabletLayout.addEventListener('change',()=>setBookingOpen(false));
