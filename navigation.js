@@ -13,6 +13,7 @@
     mast.style.setProperty('--stay-layer-extension', entry.contentRect.height + 'px');
   }).observe(stayMenu);
   const hero = document.getElementById('n986');
+  const sheet = page.querySelector('.white-sheet');
   let stayOpen = false;
 
   function positionStayMenu() {
@@ -71,7 +72,8 @@
   function syncHeader() {
     frame = 0;
     if (open) return;
-    mast.classList.toggle('over-hero', hero.getBoundingClientRect().bottom > mast.offsetHeight);
+    const visibleHeroBottom = Math.min(hero.getBoundingClientRect().bottom, sheet?.getBoundingClientRect().top ?? Infinity);
+    mast.classList.toggle('over-hero', visibleHeroBottom > mast.offsetHeight);
     // Clamp elastic overscroll so releasing at either edge is not a reversal.
     const y = Math.min(Math.max(0, scrollY), Math.max(0,document.scrollingElement.scrollHeight-innerHeight));
     const delta = y - lastScroll;
