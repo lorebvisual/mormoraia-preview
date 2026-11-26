@@ -9,6 +9,8 @@
   const stayMenu = document.getElementById('stay-menu');
   const stayLinks = [...stayMenu.querySelectorAll('a')];
   const desktop = matchMedia('(width > 1024px)');
+  const desktopHeroControlsBottom = 72;
+  const desktopTopZone = 200;
   new ResizeObserver(([entry]) => {
     mast.style.setProperty('--stay-layer-extension', entry.contentRect.height + 'px');
   }).observe(stayMenu);
@@ -73,15 +75,21 @@
     frame = 0;
     if (open) return;
     const visibleHeroBottom = Math.min(hero.getBoundingClientRect().bottom, sheet?.getBoundingClientRect().top ?? Infinity);
-    mast.classList.toggle('over-hero', visibleHeroBottom > mast.offsetHeight);
+    const isDesktop = desktop.matches;
+    // Measure against the hero controls, independently of the current header variant.
+    const overHero = visibleHeroBottom > (isDesktop ? desktopHeroControlsBottom : mast.offsetHeight);
+    mast.classList.toggle('over-hero', overHero);
     // Clamp elastic overscroll so releasing at either edge is not a reversal.
     const y = Math.min(Math.max(0, scrollY), Math.max(0,document.scrollingElement.scrollHeight-innerHeight));
     const delta = y - lastScroll;
-    if (y >= 6 && Math.abs(delta) <= 6) return;
+    const moved = Math.abs(delta) > 6;
+    if (!isDesktop && y >= 6 && !moved) return;
     const wasAway = mast.classList.contains('away');
-    const pastHeader = y > mast.offsetHeight;
-    const away = y >= 6 && delta > 0 && (pastHeader || wasAway);
-    const sticky = y >= 6 && (pastHeader || wasAway || mast.classList.contains('scrolled'));
+    const pastHeader = y > (isDesktop ? desktopTopZone : mast.offsetHeight);
+    const away = isDesktop ? pastHeader && (moved ? delta > 0 : wasAway)
+      : y >= 6 && delta > 0 && (pastHeader || wasAway);
+    const sticky = isDesktop ? !overHero
+      : y >= 6 && (pastHeader || wasAway || mast.classList.contains('scrolled'));
     const animate = gentleHeader.matches && wasAway !== away;
     let from;
     if (animate) {
@@ -103,9 +111,13 @@
         easing:away?'ease-in-out':'cubic-bezier(.42,.02,.32,1)'
       });
     }
-    lastScroll = y;
+    if (!isDesktop || !pastHeader || moved) lastScroll = y;
   }
-  addEventListener('scroll', () => { if (!frame) frame = requestAnimationFrame(syncHeader); }, {passive:true});
+  function scheduleHeader() {
+    if (!frame) frame = requestAnimationFrame(syncHeader);
+  }
+  addEventListener('scroll', scheduleHeader, {passive:true});
+  addEventListener('resize', scheduleHeader);
   syncHeader();
 
   function showMenu(next, returnFocus = true) {
