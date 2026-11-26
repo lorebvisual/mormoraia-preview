@@ -494,7 +494,7 @@
   .footer-contact {flex-wrap:wrap;gap:32px 16px}
   .footer-company {flex-basis:100%}
   .footer-legal {flex-direction:column;gap:32px}
-  .footer-legal-items {width:100%;justify-content:space-between}
+  .footer-legal-items {width:100%;justify-content:space-between;gap:8px}
   .footer-credit {text-align:left}
 }
 @media (max-width:720px) {
@@ -516,9 +516,10 @@
   }
   .photo-emblem {--photo-mark-width:min(74.22%,278.31px)}
   .story-since {top:73.87%;right:auto;left:clamp(48px,19.2vw,72px)}
+  .footer-insignia {height:24px}
   .footer-insignia img {width:47px}
   .footer-insignia {gap:min(48px,12.8vw)}
-  .footer-wordmark {width:calc(100% + 5px)}
+  #n1481.footer-wordmark {width:calc(100% + 5px);height:auto}
   .footer-information,.footer-contact,.footer-legal,.footer-legal-items {gap:24px}
   .footer-contact,.footer-legal-items,.footer-address {flex-direction:column}
   .footer-separator {display:none}
