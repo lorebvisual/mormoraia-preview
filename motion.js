@@ -49,7 +49,7 @@ sequence([1102,1103], .24, node(1100));
 sequence([1135,1137,1138], .22, document.querySelector('.stay-intro-trigger'));
 for (const details of [node(1148), document.getElementById('ds11-3180')]) {
   [...details.children].forEach((item, index) =>
-    reveal(item, index * .65, 'stay-detail-fade', details));
+    reveal(item, .12 + index * .18, 'stay-detail-fade', details));
 }
 sequence([1140,1158], .24);
 for (const id of [1143,1161]) {
@@ -525,37 +525,25 @@ function photographyMotion() {
   const travel = finale.offsetHeight - photoStage.offsetHeight;
   const progress = travel <= 0 ? 0 : clamp(-finale.getBoundingClientRect().top / travel);
   const stacked = tabletLayout.matches;
-  const mobile = compact.matches;
   const animated = !reduce.matches;
-  const state = [progress, stacked, mobile, animated].join('/');
+  const state = [progress, stacked, animated].join('/');
   if (state === previousPhotoState) return;
   previousPhotoState = state;
 
   const center = phase(progress, 0, .19);
   const aperture = phase(progress, .19, .43);
-  const shadeStart = stacked ? .27 : .54;
-  const fullyCovered = stacked ? .60 : .80;
-  const shade = phase(progress, shadeStart, fullyCovered);
-  const wash = stacked ? phase(progress, .60, .98) : phase(progress, .84, .99);
-  const shadedPhoto = stacked ? .5 + .5 * shade : shade;
-  const photoGone = animated && progress >= fullyCovered;
-  const cover = photoGone ? 1 - wash : shadedPhoto;
-  const collapse = stacked ?
-    phase(progress, mobile ? .40 : .56, mobile ? .91 : .96) : shade;
-  const darkLogo = stacked ? phase(wash, .28, .60) : phase(progress, .81, .95);
-
+  const fadeStart = stacked ? .22 : .46;
+  const fadeEnd = stacked ? .66 : .79;
+  const opacity = animated ? 1 - phase(progress, fadeStart, fadeEnd) : 1;
+  const release = animated ? phase(progress, fadeEnd, .995) : 0;
   photoSection.style.setProperty('--caption-opacity', animated ? 1 - center : 1);
-  photoSection.style.setProperty('--earlier-photos', stacked && photoGone ? 'hidden' : 'visible');
+  photoSection.style.setProperty('--earlier-photos', stacked && animated && progress > fadeStart ? 'hidden' : 'visible');
   photoWindow.style.setProperty('--photo-shift', stacked || !animated ? '0%' : 25 * (1 - center) + '%');
   photoWindow.style.setProperty('--aperture', stacked || !animated ? '0%' : 25 * (1 - aperture) + '%');
-  photoWindow.style.setProperty('--emblem-opacity', animated ?
-    phase(progress, stacked ? .06 : .40, stacked ? .26 : .53) : 1);
-  photoWindow.style.setProperty('--photo-cover', animated ? cover : 0);
-  photoWindow.style.setProperty('--photo-collapse', animated ? collapse : 0);
-  photoWindow.style.setProperty('--photo-mark-scale', animated && !stacked ? 1 - collapse * .235 : 1);
-  photoWindow.style.setProperty('--photo-dark-logo', animated ? darkLogo : 0);
-  photoWindow.style.setProperty('--photo-image-visibility', photoGone ? 'hidden' : 'visible');
-  photoWindow.classList.toggle('photo-cleared', photoGone && cover < .48);
+  photoWindow.style.setProperty('--photo-image-opacity', opacity);
+  photoWindow.style.setProperty('--photo-release', release);
+  photoWindow.style.setProperty('--photo-mark-opacity', stacked || !animated || progress >= .43 ? 1 : 0);
+  photoWindow.classList.toggle('photo-cleared', opacity < .48);
 }
 
 // Ease only the foreground offsets. Native page scrolling remains immediate.

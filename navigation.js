@@ -9,6 +9,9 @@
   const stayMenu = document.getElementById('stay-menu');
   const stayLinks = [...stayMenu.querySelectorAll('a')];
   const desktop = matchMedia('(width > 1024px)');
+  new ResizeObserver(([entry]) => {
+    mast.style.setProperty('--stay-layer-extension', entry.contentRect.height + 'px');
+  }).observe(stayMenu);
   const hero = document.getElementById('n986');
   let stayOpen = false;
 
