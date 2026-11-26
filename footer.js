@@ -1,8 +1,7 @@
 (() => {
   const footer = node(1433);
   const footerStage = footer.firstElementChild;
-  const flowFooter = footer.classList.contains('home-footer') ?
-    matchMedia('(max-width:720px)') : null;
+  const flowFooter = matchMedia('(max-width:720px)');
   new ResizeObserver(() => {
     footer.style.setProperty('--footer-stage-height', footerStage.getBoundingClientRect().height + 'px');
     scheduleFooter();
@@ -82,7 +81,7 @@
     const lead = viewHeight * .70;
     // On phones the full Home footer exceeds the viewport. Complete the
     // reveal as it enters so every row can scroll into view in normal flow.
-    const finish = flowFooter?.matches ? viewHeight * .18 : viewHeight - footer.offsetHeight + 1;
+    const finish = flowFooter.matches ? viewHeight * .18 : viewHeight - footer.offsetHeight + 1;
     footerTarget = reduce.matches ? 1 : clamp((lead - bounds.top) / Math.max(1, lead - finish));
     if (footerProgress === undefined || reduce.matches || travel <= 0) {
       cancelAnimationFrame(footerFrame);

@@ -538,11 +538,6 @@
     --photo-end-gap:64px;
   }
   .site-footer {
-    --footer-padding-block:clamp(24px,calc(15svh - 78px),64px);
-    --footer-gap:clamp(16px,calc(12svh - 67px),48px);
-    --footer-row-gap:clamp(12px,calc(5svh - 23px),24px)
-  }
-  .home-footer {
     --footer-padding-block:64px;
     --footer-gap:48px;
     --footer-row-gap:24px;
@@ -551,12 +546,16 @@
   .footer-insignia img {width:47px}
   .footer-insignia {gap:min(48px,12.8vw)}
   #n1481.footer-wordmark {width:calc(100% + 5px);height:auto}
+  .site-footer :is(.footer-information,.footer-contact,.footer-legal,.footer-legal-items,.footer-address) {
+    display:grid;grid-template-columns:minmax(0,1fr);align-items:start;justify-content:stretch;min-width:0;
+  }
   .footer-information,.footer-contact,.footer-legal,.footer-legal-items {gap:var(--footer-row-gap)}
-  .footer-contact,.footer-legal-items,.footer-address {flex-direction:column}
+  .site-footer .footer-address {gap:16px}
+  .site-footer .footer-contact > div {min-width:0}
+  .site-footer :is(.footer-address,.footer-legal-items) {overflow-wrap:anywhere}
   .footer-separator {display:none}
-  .home-footer::after {display:none}
-  .home-footer .footer-stage {position:relative;top:auto}
-  .home-footer .footer-address {gap:16px}
+  .site-footer::after {display:none}
+  .site-footer .footer-stage {position:relative;top:auto}
 }
 
 @media (max-width:1024px) {

@@ -1,9 +1,10 @@
 (() => {
   const hero = node(986);
-  const video = hero.querySelector('video');
-  if (video) playWhenVisible(video);
-  document.documentElement.classList.add('page-entered');
-  hero.classList.add('entered');
+  const media = hero.querySelector('.stay-hero-media');
+  if (media instanceof HTMLVideoElement) playWhenVisible(media);
+  presentHero(hero, media instanceof HTMLVideoElement ? media.poster : media.currentSrc || media.src);
+  const desktop = matchMedia('(width > 1024px)');
+  const narrow = matchMedia('(max-width:720px)');
 
   const introHeading = document.getElementById('stay-intro-title');
   [...introHeading.children].forEach((line, index) =>
@@ -24,13 +25,15 @@
   let frame = 0;
   function drawStack() {
     frame = 0;
+    updateHeroBooking(desktop.matches ? scrollY : 0, innerHeight);
+    if (narrow.matches || reduce.matches) return;
     const boxes = scenes.map(scene => scene.getBoundingClientRect());
     for (const [index, scene] of scenes.entries()) {
       const next = boxes[index + 1];
       const box = boxes[index];
       const overlap = next ? box.bottom - next.top : 0;
       const covered = next && next.top <= box.top && next.bottom >= box.bottom;
-      const shade = reduce.matches || covered ? 0 : phase(overlap, 0, box.height * .42);
+      const shade = covered ? 0 : phase(overlap, 0, Math.min(box.height * .32, innerHeight * .34));
       scene.style.setProperty('--room-shade', shade);
     }
     cursor.classList.remove('on');
@@ -53,23 +56,23 @@
     const gallery = scene.querySelector('.room-gallery');
     reveal(gallery, 0, 'section-enter', scene);
     const slide = gallery.querySelector('.room-slide');
-    const rtl = scene.classList.contains('room-scene-right');
+    const rtl = () => getComputedStyle(gallery).direction === 'rtl';
     let press = null;
     const physicalDirection = clientX => {
       const left = Math.abs(gallery.scrollLeft);
-      if (left < 2) return rtl ? -1 : 1;
-      if (left >= gallery.scrollWidth - gallery.clientWidth - 2) return rtl ? 1 : -1;
+      if (left < 2) return rtl() ? -1 : 1;
+      if (left >= gallery.scrollWidth - gallery.clientWidth - 2) return rtl() ? 1 : -1;
       const box = gallery.getBoundingClientRect();
       return clientX - box.left < box.width * .32 ? -1 : 1;
     };
     function advance(physical) {
       const offset = Math.abs(gallery.scrollLeft);
       const max = gallery.scrollWidth - gallery.clientWidth;
-      const advanceToEnd = (rtl ? -physical : physical) > 0;
+      const advanceToEnd = (rtl() ? -physical : physical) > 0;
       const width = slide.offsetWidth;
       const step = advanceToEnd ? Math.floor((offset + 2) / width) + 1 : Math.ceil((offset - 2) / width) - 1;
       const target = Math.min(max, Math.max(0, step * width));
-      gallery.scrollTo({left:(rtl ? -1 : 1) * target,behavior:reduce.matches ? 'instant' : 'smooth'});
+      gallery.scrollTo({left:(rtl() ? -1 : 1) * target,behavior:reduce.matches ? 'instant' : 'smooth'});
     }
 
     gallery.addEventListener('keydown', event => {
@@ -112,6 +115,7 @@
       if (!press?.drag) press = null;
     });
     scene.addEventListener('focusin', event => {
+      if (narrow.matches || reduce.matches) return;
       const box = event.target.getBoundingClientRect();
       const following = scene.nextElementSibling?.nextElementSibling;
       if (following && following.getBoundingClientRect().top < box.bottom) {

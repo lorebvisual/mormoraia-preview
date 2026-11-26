@@ -11,21 +11,7 @@ selectHeroPoster();
 compact.addEventListener('change',()=>{selectHeroPoster();film.load()});
 playWhenVisible(film);
 document.querySelectorAll('.stay-media video').forEach(playWhenVisible);
-const poster = new Image();
-poster.src = film.poster;
-const firstPaint = Promise.race([
-  Promise.allSettled([poster.decode(), document.fonts.load('400 96px Boska'), document.fonts.load('400 24px "Satoshi UI"')]),
-  new Promise(resolve => setTimeout(resolve, 1000))
-]);
-function startHero() {
-  if (document.hidden) return;
-  document.removeEventListener('visibilitychange', startHero);
-  requestAnimationFrame(() => { hero.classList.add('entered'); document.documentElement.classList.add('page-entered'); });
-}
-firstPaint.then(() => {
-  document.addEventListener('visibilitychange', startHero);
-  startHero();
-});
+presentHero(hero, film.poster);
 
 const photo=node(1336);
 const photoSlot=document.createElement('div');
@@ -566,10 +552,7 @@ let frame=0;
 function update(){
  frame=0;const y=scrollY,h=innerHeight;
  const reduced=reduce.matches;
- const fade=smooth(clamp(y/Math.min(185,h*.24)));
- node(1051).style.setProperty('--booking-visibility',1-fade);
- node(1051).style.filter=fade>0 && fade<1 && !reduced?'blur('+(fade*9)+'px)':'none';
- node(1050).inert=fade>=.995;
+ updateHeroBooking(y,h);
  const pinned=(el,stage)=>clamp((parseFloat(getComputedStyle(stage).top)-el.getBoundingClientRect().top)/Math.max(1,el.offsetHeight-stage.offsetHeight));
  const staysBox=node(1139).getBoundingClientRect();
  const stagger=reduced||tabletLayout.matches?0:smooth(clamp((h*.72-staysBox.top)/(h*.55+staysBox.height*.45)));

@@ -47,3 +47,30 @@ function animateEditorialPanel(panel, anchor) {
   [...panel.children].forEach((element, index) =>
     reveal(element, 1.04 + index * .25, 'reveal', anchor));
 }
+
+// Start the shared Home and Stay entrance after the first image and fonts settle.
+function presentHero(hero, source) {
+  const poster = new Image();
+  poster.src = source;
+  const firstPaint = Promise.race([
+    Promise.allSettled([poster.decode(), document.fonts.load('400 96px Boska'), document.fonts.load('400 24px "Satoshi UI"')]),
+    new Promise(resolve => setTimeout(resolve, 1000))
+  ]);
+  function startHero() {
+    if (document.hidden) return;
+    document.removeEventListener('visibilitychange', startHero);
+    requestAnimationFrame(() => { hero.classList.add('entered'); document.documentElement.classList.add('page-entered'); });
+  }
+  firstPaint.then(() => {
+    document.addEventListener('visibilitychange', startHero);
+    startHero();
+  });
+}
+
+function updateHeroBooking(distance, viewportHeight) {
+  const fade = smooth(clamp(distance / Math.min(185, viewportHeight * .24)));
+  const booking = node(1051);
+  booking.style.setProperty('--booking-visibility', 1 - fade);
+  booking.style.filter = fade > 0 && fade < 1 && !reduce.matches ? 'blur(' + fade * 9 + 'px)' : 'none';
+  node(1050).inert = fade >= .995;
+}

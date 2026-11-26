@@ -1,7 +1,31 @@
 (() => {
   const preference = matchMedia('(prefers-reduced-motion: reduce)');
   const page = document.scrollingElement;
+  const roomAnchors = [...document.querySelectorAll('.room-sequence > .room-position')];
+  const desktopRooms = matchMedia('(min-width:1025px) and (hover:hover) and (pointer:fine)');
   let frame = 0, target = 0, lastPosition = 0, lastTime = 0;
+  let lastRoomWheel = -Infinity;
+
+  function nextRoom(distance) {
+    if (!desktopRooms.matches || preference.matches || roomAnchors.length === 0) return null;
+    const y = scrollY;
+    const roomStops = roomAnchors.map(anchor => {
+      const roomHeight = anchor.nextElementSibling.offsetHeight;
+      return y + anchor.getBoundingClientRect().top + Math.max(0, (roomHeight - innerHeight) / 2);
+    });
+    const first = roomStops[0];
+    const projected = Math.max(y, frame ? target : y) + distance;
+    if (y < first - 3 && projected < first - 3) return null;
+    return roomStops.find(stop => stop > y + 3) ?? null;
+  }
+
+  function moveTo(destination) {
+    target = Math.max(0, Math.min(page.scrollHeight - innerHeight, destination));
+    if (frame || target === scrollY) return;
+    lastTime = performance.now();
+    lastPosition = scrollY;
+    frame = requestAnimationFrame(animate);
+  }
 
   function stop() {
     cancelAnimationFrame(frame);
@@ -37,17 +61,39 @@
     }
     const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1;
     const gain = event.deltaMode === 2 ? 1 : 1.4;
-    if (!frame || Math.abs(scrollY - lastPosition) > 2 || Math.sign(target - scrollY) !== Math.sign(dy)) target = scrollY;
-    target = Math.max(0, Math.min(page.scrollHeight - innerHeight, target + dy * unit * gain));
-    event.preventDefault();
-    if (!frame && target !== scrollY) {
-      lastTime = performance.now();
-      lastPosition = scrollY;
-      frame = requestAnimationFrame(animate);
+    const distance = dy * unit * gain;
+    const now = performance.now();
+    if (dy < 0) lastRoomWheel = -Infinity;
+    const roomGesture = desktopRooms.matches && dy > 0 && now - lastRoomWheel < 155;
+    if (roomGesture) {
+      lastRoomWheel = now;
+      event.preventDefault();
+      return;
     }
+    const room = dy > 0 ? nextRoom(distance) : null;
+    if (room !== null) {
+      lastRoomWheel = now;
+      event.preventDefault();
+      moveTo(room);
+      return;
+    }
+    if (!frame || Math.abs(scrollY - lastPosition) > 2 || Math.sign(target - scrollY) !== Math.sign(dy)) target = scrollY;
+    event.preventDefault();
+    moveTo(target + distance);
   }, {passive:false});
   for (const event of ['pointerdown','keydown','pagehide','hashchange','blur']) window.addEventListener(event, stop);
   preference.addEventListener('change', stop);
+  desktopRooms.addEventListener('change', () => {lastRoomWheel = -Infinity;});
+  window.addEventListener('keydown', event => {
+    if (event.key !== 'PageDown' || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey ||
+        event.defaultPrevented || document.documentElement.classList.contains('menu-open') ||
+        event.target.closest?.('button,a,input,textarea,select,[contenteditable="true"],.room-gallery')) return;
+    const room = nextRoom(innerHeight * .9);
+    if (room !== null) {
+      event.preventDefault();
+      moveTo(room);
+    }
+  });
 
   const backToTop = document.getElementById('back-to-top');
   const ring = backToTop.querySelector('.back-to-top-ring');
