@@ -40,12 +40,14 @@
     --intro-travel:clamp(36px,8vw,144px);
     translate:calc(-1 * var(--intro-travel)) 0;
     opacity:0;
-    transition:translate 1.04s var(--curtain) var(--delay),opacity .78s var(--ease) var(--delay);
   }
   .stay-intro-line + .stay-intro-line {translate:var(--intro-travel) 0}
-  .stay-intro-line.seen {translate:0;opacity:1}
-  .stay-intro-fade {opacity:0;transition:opacity .86s var(--ease) var(--delay)}
-  .stay-intro-fade.seen {opacity:1}
+  .stay-intro-line.seen {
+    translate:0;opacity:1;
+    transition:translate 1.04s var(--curtain) var(--delay),opacity .78s var(--ease) var(--delay);
+  }
+  .stay-intro-fade {opacity:0}
+  .stay-intro-fade.seen {opacity:1;transition:opacity .86s var(--ease) var(--delay)}
 }
 
 .room-sequence {position:relative;isolation:isolate}
