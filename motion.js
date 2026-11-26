@@ -86,7 +86,7 @@ photo.addEventListener('transitionend', event => {
   }
 });
 reveal(photo, 0, 'mask-right', photoSlot);
-sequence([1102,1104], .24, node(1100));
+sequence([1102,1103], .24, node(1100));
 sequence([1135,1137,1138], .22, node(1134));
 for (const details of [node(1148), document.getElementById('ds11-3180')]) {
   [...details.children].forEach((item, index) =>
@@ -110,7 +110,7 @@ for (const id of [1225,1230]) {
 }
 reveal(node(1239),.12);sequence([1195,1205,1215],.16);
 reveal(node(1677));reveal(node(1660));
-for (const id of [1099,1133,1688,1122,1758,1759,1761,1762,1763,1433]) {
+for (const id of [1099,1133,1688,1122,1758,1759,1761,1762,1763]) {
   reveal(node(id),0,'section-enter');
 }
 const cursor=document.createElement('img');cursor.className='gallery-cursor';cursor.alt='';document.body.append(cursor);
@@ -529,49 +529,37 @@ new ResizeObserver(([entry]) => {
   photoSection.style.setProperty('--photo-caption-height', entry.target.offsetHeight+'px');
   schedule();
 }).observe(node(1123));
+const photoWindow = finale.querySelector('.photo-window');
 let previousPhotoState;
 function photographyMotion() {
-  if(tabletLayout.matches){
-    const distance=finale.offsetHeight-photoStage.offsetHeight;
-    const top=parseFloat(getComputedStyle(photoStage).top)||0;
-    const progress=clamp((top-finale.getBoundingClientRect().top)/Math.max(1,distance));
-    photoSection.style.setProperty('--emblem-opacity',reduce.matches?1:phase(progress,.06,.84));
-    previousPhotoState=undefined;
-    return;
-  }
   const travel = finale.offsetHeight - photoStage.offsetHeight;
-  const progress = reduce.matches || travel <= 0 ? 1 : clamp(-finale.getBoundingClientRect().top / travel);
-  const inset = compact.matches ? 10 : 25;
-  const state = [progress, inset, reduce.matches].join('/');
+  const stickyTop = parseFloat(getComputedStyle(photoStage).top) || 0;
+  const progress = reduce.matches || travel <= 0 ? 1 :
+    clamp((stickyTop - finale.getBoundingClientRect().top) / travel);
+  const stacked = tabletLayout.matches;
+  const state = [progress, stacked, reduce.matches].join('/');
   if (state === previousPhotoState) return;
   previousPhotoState = state;
-  const ease = t => (1 - Math.cos(Math.PI * clamp(t))) / 2;
-  const center = ease(progress / .36);
-  const open = ease((progress - .36) / .40);
-  const finalCrop = ease((open - 352/864) / (1 - 352/864));
-  const style = photoSection.style;
-  style.setProperty('--caption-opacity', reduce.matches ? 1 : 1 - ease(progress / .31));
-  style.setProperty('--emblem-opacity', ease((progress - .76) / .22));
-  style.setProperty('--photo-shift', inset * (1-center) + '%');
-  style.setProperty('--aperture', inset * (1-open) + '%');
-  // The vineyard stays centred during translation and the first widening.
-  // Only the last frame changes the scale and the vertical crop.
-  style.setProperty('--crop-x', (-63 / 1602 * 100 * finalCrop) + '%');
-  style.setProperty('--crop-y', (-42 / 1068 * 100 * finalCrop) + '%');
-  style.setProperty('--crop-scale', 1 + (1728/1602 - 1) * finalCrop);
+
+  const center = phase(progress, 0, .26);
+  const open = phase(progress, .26, .58);
+  photoSection.style.setProperty('--caption-opacity', reduce.matches ? 1 : 1 - phase(progress, 0, .26));
+  photoWindow.style.setProperty('--photo-shift', stacked ? '0%' : 25 * (1 - center) + '%');
+  photoWindow.style.setProperty('--aperture', stacked ? '0%' : 25 * (1 - open) + '%');
+  const emblem = phase(progress, stacked ? .10 : .57, stacked ? .40 : .72);
+  const closingEmblem = stacked || reduce.matches ? 1 : phase(progress, .85, .98);
+  photoWindow.style.setProperty('--emblem-opening-opacity', emblem * (1 - closingEmblem));
+  photoWindow.style.setProperty('--emblem-opacity', reduce.matches ? 1 : emblem * closingEmblem);
+  photoWindow.style.setProperty('--photo-cover', reduce.matches ? 0 :
+    phase(progress, stacked ? .48 : .74, .98));
 }
 
 const footer = node(1433);
-const tail = node(1479);
-const runway = document.createElement('div');
-runway.className = 'footer-runway';
-tail.before(runway);
-runway.append(tail);
-function measureTail() {
-  footer.style.setProperty('--tail-height', tail.offsetHeight+'px');
+const footerStage = footer.firstElementChild;
+new ResizeObserver(() => {
+  footer.style.setProperty('--footer-stage-height', footerStage.offsetHeight + 'px');
   schedule();
-}
-new ResizeObserver(measureTail).observe(tail);
+}).observe(footerStage);
 
 // Clip the original artwork along its inter-letter spaces. The diagonal
 // between the reflected R and A follows the actual gap between their strokes.
@@ -580,15 +568,14 @@ const cuts = [[0,0],[229,229],[428,428],[569,569],[806,806],[1002,1002],
 const percent = n => (n / 16)+'%';
 const phase = (progress,start,end) => smooth(clamp((progress-start)/(end-start)));
 function createWordmark(mark) {
-  const original = mark.querySelector('img');
+  const original = mark.querySelector('picture');
   const letters = cuts.slice(1).map(([rightTop,rightBottom],index) => {
     const [leftTop,leftBottom] = cuts[index];
     const layer = document.createElement('span');
     layer.className = 'wordmark-glyph';
     layer.setAttribute('aria-hidden','true');
-    const art = original.cloneNode(false);
-    art.alt = '';
-    art.removeAttribute('class');
+    const art = original.cloneNode(true);
+    art.querySelector('img').alt = '';
     art.style.clipPath = 'polygon('+percent(leftTop)+' 0,'+percent(rightTop)+' 0,'+
       percent(rightBottom)+' 100%,'+percent(leftBottom)+' 100%)';
     layer.append(art);
@@ -615,19 +602,24 @@ function createWordmark(mark) {
   };
 }
 const drawFooter = createWordmark(node(1481));
-const details = node(1482);
+const footerRows = [...footer.querySelectorAll('[data-footer-row]')];
 let footerProgress, footerTarget, footerFrame = 0, footerTime = 0;
 function paintFooter(progress) {
   footerProgress = progress;
-  drawFooter(progress);
-  const fade = phase(progress,.78,.98);
-  details.style.opacity = fade;
-  details.style.transform = 'translate3d(0,'+((1-fade)*8)+'px,0)';
-  details.inert = fade===0;
+  footer.style.setProperty('--footer-emblem', phase(progress, 0, .22));
+  footer.style.setProperty('--footer-lines', phase(progress, 0, .29));
+  const wordmarkProgress = clamp((progress - .28) / .32);
+  footer.style.setProperty('--footer-wordmark', phase(progress, .28, .34));
+  drawFooter(wordmarkProgress);
+  footer.style.setProperty('--footer-upper-rule', phase(progress, .58, .66));
+  footer.style.setProperty('--footer-lower-rule', phase(progress, .93, 1));
+  footerRows.forEach((row, index) => {
+    const start = .63 + index * .026;
+    row.style.setProperty('--footer-row', phase(progress, start, start + .13));
+  });
 }
 
-// Give each group of letters time to open even if a flick reaches the bottom
-// in one frame. Only the artwork follows this easing, in either direction.
+// Keep the footer sequence legible after a fast flick, including in reverse.
 function easeFooter(now) {
   const elapsed = Math.min(64, now - footerTime);
   const gap = footerTarget - footerProgress;
@@ -638,9 +630,11 @@ function easeFooter(now) {
   footerFrame = settled ? 0 : requestAnimationFrame(easeFooter);
 }
 function footerMotion(viewHeight) {
-  const travel = runway.offsetHeight - tail.offsetHeight * 2;
-  const remaining = footer.getBoundingClientRect().bottom - viewHeight;
-  footerTarget = reduce.matches || travel <= 0 ? 1 : clamp(1 - remaining/travel);
+  const bounds = footer.getBoundingClientRect();
+  const travel = footer.offsetHeight - footerStage.offsetHeight;
+  const lead = viewHeight * .58;
+  const finish = viewHeight - footer.offsetHeight;
+  footerTarget = reduce.matches ? 1 : clamp((lead - bounds.top) / Math.max(1, lead - finish));
   if (footerProgress === undefined || reduce.matches || travel <= 0) {
     cancelAnimationFrame(footerFrame);
     footerFrame = 0;

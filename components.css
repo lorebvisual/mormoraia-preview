@@ -78,7 +78,6 @@
 #n1758 .panel-slot{top:calc(137 * var(--u))}
 #n1434{background:var(--chalk)}
 #n1684{background:white}
-#n1479{min-height:calc(633 * var(--u))}
 #n1141{will-change:auto}
 #n1140:focus-within #n1141{opacity:1!important}
 @media(max-width:900px){.utility span{display:none}}
@@ -94,10 +93,6 @@
  .ds-button,.ds-text-link{min-height:32px}.ds-button span:first-child,.ds-text-link span:first-child{font-size:12px}
  #n1761 .wine-stage{height:auto;min-height:310px;flex-wrap:nowrap;gap:14px;justify-content:flex-start;overflow-x:auto;scroll-snap-type:x proximity;padding-inline:6vw}
  #n1761 .wine-stage>div{--u:clamp(.39px,.12vw,.78px);flex:none;scroll-snap-align:center}
- #n1438{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:24px 16px}
- #n1434{padding:32px 20px;gap:32px}
- #n1684{height:auto}
- #n1438 p{white-space:normal}
  #n1051>a{grid-column:1/-1;justify-self:center}
  #n1051{border-radius:4px}
 }
@@ -124,9 +119,6 @@
 .ds-button>span:first-child,.ds-text-link>span:first-child{font-size:16px;letter-spacing:.08em}
 .ds-button{padding:12px 32px}
 #n1747{font:500 32px/1.4 Boska,serif;letter-spacing:1.28px}
-.footer-insignia{width:100%;display:flex;align-items:center;justify-content:center;gap:clamp(12px,2.778vw,48px)}
-.footer-insignia::before,.footer-insignia::after{content:"";height:1px;transform:scaleY(.5);background:#43505b;flex:1}
-.footer-insignia img{width:clamp(76px,7.987vw,138px);height:auto;display:block}
 #n1050{left:0;right:0;width:100%;transform:none;align-items:center;padding:0 32px clamp(32px,calc(7.143vw - 59.43px),64px);will-change:auto}
 #n1051{width:100%;max-width:1391px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) auto;gap:32px;
  padding:24px 48px;background:rgba(255,255,255,.2);border-radius:4px;
@@ -172,22 +164,10 @@
 .closing-space{height:auto;isolation:isolate}
 .closing-space #n1763{position:relative;z-index:1;margin-top:80svh;background:white;opacity:1}
 .closing-space #n1763.section-enter>:not(.seen){transition:opacity 1.2s var(--ease)}
-#n1433{overflow:clip;--wordmark-travel:clamp(380px,88svh,960px)}
-.footer-runway{position:relative;margin-top:calc(-1 * var(--tail-height,0px))}
-.footer-runway::after{content:"";display:block;height:calc(var(--tail-height,0px) + var(--wordmark-travel))}
-.footer-runway #n1479{position:sticky;top:max(0px,calc(100svh - var(--tail-height,0px)));bottom:auto}
-#n1481{isolation:isolate;overflow:hidden}
-.wordmark-glyph{position:absolute;inset:0;pointer-events:none}
-.wordmark-glyph img{width:100%;height:100%;display:block}
-#n1482{padding-bottom:calc(128 * var(--u))}
-@media(max-width:720px){#n1481{width:100%;height:auto;aspect-ratio:10}}
 @media(prefers-reduced-motion:reduce){
  .page-entered .mast-row>*,.page-entered .mast-row>.mast-logo,.page-entered .mast-rule{animation:none;opacity:1;transform:none}
  .closing-space #n1011{position:relative}
  .closing-space #n1763{margin-top:0}
- #n1433{--wordmark-travel:0px}
- .footer-runway{margin:0}
- .footer-runway::after{display:none}
 }
 
 .masthead:not(.scrolled){transition-property:transform,color}
@@ -209,28 +189,31 @@
 .photo-finale{grid-column:1/-1;grid-row:2;height:calc(max(100svh,var(--photo-height)) + var(--photo-travel))}
 .photo-stage{height:max(100svh,var(--photo-height));position:sticky;top:0;overflow:clip;pointer-events:none}
 .photo-window{height:var(--photo-height);width:100%;position:relative;transform:translate3d(var(--photo-shift,var(--photo-inset)),0,0);clip-path:inset(0 var(--aperture,var(--photo-inset)));overflow:hidden}
-.photo-window .vineyard{position:absolute;width:92.70833%;height:133.5%;max-width:none;left:3.645833%;top:-33.5%;object-fit:cover;transform-origin:0 0;transform:translate3d(var(--crop-x,0%),var(--crop-y,0%),0) scale(var(--crop-scale,1))}
 
-.photo-emblem{position:absolute;left:50%;top:42.5%;transform:translate(-50%,-50%);width:31.9444%;height:auto;opacity:var(--emblem-opacity,0);pointer-events:none}
-@media(max-width:720px){.photo-emblem{width:48%}}
-@media(prefers-reduced-motion:reduce){.photo-emblem{opacity:1}}
+/* The slate cover and emblem sit above the photograph in the pinned aperture. */
+.photo-finale-image {
+  position:absolute;width:110.24%;height:158.75%;max-width:none;
+  left:-10.24%;top:-19.62%;object-fit:cover
+}
+.photo-finale-cover {position:absolute;inset:0;background:#43505b;opacity:var(--photo-cover,0)}
+.photo-emblem {
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:18.671875%;height:auto;opacity:var(--emblem-opacity,1);pointer-events:none
+}
+@media (prefers-reduced-motion:reduce) {
+  .photo-finale-cover {display:none}
+  .photo-emblem {opacity:1}
+}
 .stay-media,.stay-media video{position:absolute;inset:0;width:100%;height:100%}
 .stay-media video{display:block;object-fit:cover;object-position:center}
 
-/* Frame 103 joins the Instagram section directly to the upper footer. */
 .white-sheet{--section-gap:calc(128 * var(--u));gap:var(--section-gap)}
-.closing-space + #n1433{margin-top:calc(-1 * var(--section-gap))}
-@media(min-width:721px){
- #n1684,#n1434{height:calc(584 * var(--u))}
- #n1434{padding-block:calc(64 * var(--u))}
-}
 @media(max-width:720px){
  .white-sheet{--section-gap:64px}
  #n1122{grid-template-columns:minmax(0,1fr);grid-template-rows:var(--photo-caption-height,150px) auto auto;--photo-height:70svh;--photo-inset:10%;--photo-travel:135svh}
  #n1123{grid-row:1/4}
  #n1129{grid-column:1;grid-row:2}
  .photo-finale{grid-row:3}
- .photo-window .vineyard{inset:0;width:100%;height:100%;object-position:center;transform:none}
 }
 @media(prefers-reduced-motion:reduce){
  #n1122{--photo-travel:0px}
@@ -253,22 +236,9 @@
 #n1018 em{font-style:italic;font-weight:300}
 #n1019{margin:0;font:400 clamp(14px,.926vw,20px)/1.4 "Satoshi UI",Satoshi,sans-serif;letter-spacing:.08em}
 #n1020{max-width:100%;justify-content:center;flex-wrap:wrap}
-#n1438{width:100%}
-#n1438 p{font:400 clamp(14px,.926vw,20px)/1.375 "Satoshi UI",Satoshi,sans-serif;color:black;letter-spacing:.04em}
-#n1438 #n1471 a{letter-spacing:normal}
-#n1438 :is(.layout256,.layout259,.layout262){color:#a4b1bd;font:400 clamp(12px,.8102vw,16px)/1.36 Satoshi,sans-serif;text-transform:uppercase;letter-spacing:.44em}
-#n1434,#n1684{background:#f5f4f2}
-@media(min-width:721px){
- #n1434{position:relative;width:100%;height:auto;gap:calc(128 * var(--u));justify-content:start}
- #n1684{height:auto}
-}
 @media(max-width:720px){
  #n1016{width:91%}
  #n1018{font-size:clamp(42px,12vw,80px)}
- #n1438{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 16px}
- #n1438 :is(.layout255,.layout258,.layout261,.layout263){min-width:0;max-width:100%}
- #n1438 #ds11-3328{gap:10px;flex-wrap:wrap}
- #ds11-3328 a{width:22px;height:22px}
 }
 
 @font-face {
@@ -277,7 +247,6 @@
   font-weight:300;
   font-display:swap;
 }
-.closing-break {display:none}
 #n1636 .layout7 {display:none}
 
 .estate-menu {color:white}
@@ -300,28 +269,6 @@
 #booking-dates label {display:grid;grid-template-columns:72px 1fr;align-items:center}
 #booking-dates input,#booking-dates button {font:inherit;color:inherit;border:1px solid #bbb;background:white;min-height:32px;padding:3px 8px;min-width:0}
 #n1051 #booking-dates[hidden] {display:none}
-
-#n1433 {--footer-type:14px;--footer-leading:17px;--caption-type:14px;--caption-leading:19px}
-#n1434 {gap:clamp(72px,7.407vw,128px);padding:64px clamp(32px,3.704vw,64px)}
-#n1438 {gap:clamp(48px,7.407vw,128px);justify-content:flex-start}
-#n1438 p,#n1438 #n1471 a,#n1482 .layout266 {
-  font:300 var(--footer-type)/var(--footer-leading) "Neue Haas Display",sans-serif;
-  letter-spacing:.08em;
-}
-#n1438 :is(.layout256,.layout259,.layout262) {
-  font:400 var(--caption-type)/var(--caption-leading) Satoshi,sans-serif;
-  letter-spacing:.44em;color:#a4b1bd
-}
-#n1439,#n1443 {gap:16px}
-#n1443 > div {gap:8px}
-#n1471 {gap:8px}
-#n1471 > :first-child {margin-bottom:4px}
-#n1454 {gap:12px}
-#n1480 {padding:128px clamp(32px,3.704vw,64px) 64px}
-#n1481 {width:100%;height:auto;aspect-ratio:10}
-#n1482 {gap:48px;padding:64px 16px 128px}
-#n1482 .layout266 {color:#798691}
-#n1493 span {font-size:14px;letter-spacing:.08em}
 
 #back-to-top {
   --button-size:64px;
@@ -350,4 +297,86 @@
 #back-to-top.visible .back-to-top-ring {will-change:transform}
 @media (prefers-reduced-motion:reduce) {
   #back-to-top {transition:none}
+}
+
+/* Editorial copy and image crops from the current homepage frames. */
+:is(.copy-tablet,.copy-mobile,.copy-small-screen,.mobile-copy-break) {display:none}
+#n992 {gap:calc(48 * var(--u))}
+#n1010 {letter-spacing:.08em}
+#n1101 {top:50%;transform:translateY(-50%);gap:calc(64 * var(--u))}
+#n1103,#n1126 {display:flex;flex-direction:column;gap:16px;line-height:22px}
+#n1103 {margin-inline-start:calc(104 * var(--u));width:min(calc(450 * var(--u)),100%)}
+#n1126 {margin-inline-start:calc(64 * var(--u));width:min(calc(422 * var(--u)),100%)}
+#n1136 {text-align:left}
+#n1103 .layout214,#n1126 .layout214 {line-height:22px}
+.experience-lead-photo,.inverted-photo {position:absolute;inset:0}
+#n1617 img,#n1618 img {object-position:center}
+#n1677 {text-transform:uppercase}
+#n1129 .layout101 {inset:50% 0 auto;width:100%;height:200.875%;transform:translateY(-50%);overflow:hidden}
+#n1129 .layout101 img {left:-23.98%;width:124%}
+#n1016 {width:min(94%,calc(1100 * var(--u)))}
+#n1018 {font-size:calc(96 * var(--u))}
+.story-since {
+  position:absolute;top:86.5%;right:9.25%;color:white;
+  font:200 calc(32 * var(--u))/1.4 Zodiak,serif
+}
+.photo-emblem {width:clamp(0px,var(--photo-mark-width,18.671875%),100%)}
+.photo-emblem-opening {width:24.4213%;opacity:var(--emblem-opening-opacity,0)}
+.photo-emblem img {display:block;width:100%;height:auto}
+
+.site-footer {
+  --footer-gap:64px;
+  --footer-gutter:clamp(32px,3.704vw,64px);
+  --footer-travel:clamp(380px,75svh,850px);
+  --footer-leading:17px;
+  --footer-font:14px;
+  position:relative;
+  color:#000;
+  background:#f5f4f2;
+  font:300 var(--footer-font)/var(--footer-leading) "Neue Haas Display",sans-serif;
+  letter-spacing:.08em
+}
+.site-footer::after {content:"";display:block;height:var(--footer-travel)}
+.footer-stage {
+  display:flex;flex-direction:column;gap:var(--footer-gap);
+  position:sticky;top:max(0px,calc(100svh - var(--footer-stage-height,100svh)));
+  padding:64px var(--footer-gutter)
+}
+.footer-insignia {display:flex;align-items:center;justify-content:center;gap:48px;min-width:0}
+.footer-insignia img {display:block;width:138px;height:auto;opacity:var(--footer-emblem,1)}
+.footer-insignia::before,.footer-insignia::after {
+  content:"";flex:1;height:1px;background:#798691;
+  transform:scaleX(var(--footer-lines,1)) scaleY(.5)
+}
+.footer-insignia::before {transform-origin:left center}
+.footer-insignia::after {transform-origin:right center}
+.footer-wordmark {position:relative;aspect-ratio:10;isolation:isolate;overflow:hidden;opacity:var(--footer-wordmark,1)}
+.footer-wordmark picture,.footer-wordmark img {display:block;width:100%;height:100%}
+.wordmark-glyph {position:absolute;inset:0;pointer-events:none}
+.footer-rule {position:relative;height:0;color:#798691}
+.footer-rule::before {content:"";position:absolute;inset:0 0 auto;height:1px;background:currentColor;transform:scaleY(.5)}
+.footer-rule-opening {opacity:var(--footer-upper-rule,1)}
+.footer-rule-ending {opacity:var(--footer-lower-rule,1)}
+.footer-information {display:grid;gap:var(--footer-gap)}
+.footer-contact,.footer-address,.footer-legal,.footer-legal-items {
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px
+}
+.footer-contact > div {display:grid;gap:16px}
+.footer-label {
+  font:400 14px/19px "Satoshi UI",sans-serif;
+  color:#798691;letter-spacing:.44em;text-transform:uppercase
+}
+.footer-address,.footer-legal-items {justify-content:flex-start}
+.footer-contact #ds11-3328 {display:flex;gap:24px}
+.footer-contact #ds11-3328 a {width:16px;height:16px}
+.footer-credit {text-align:right}
+.footer-credit b {font-weight:700}
+.footer-legal .footer-separator {opacity:var(--footer-upper-rule,1)}
+[data-footer-row] {opacity:var(--footer-row,1)}
+[data-footer-row]:focus-within {opacity:1}
+
+@media (prefers-reduced-motion:reduce) {
+  .site-footer {--footer-travel:0px}
+  .footer-stage {position:relative;top:auto}
+  .photo-emblem-opening {display:none}
 }
