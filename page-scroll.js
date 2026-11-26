@@ -3,8 +3,14 @@
   const page = document.scrollingElement;
   const roomAnchors = [...document.querySelectorAll('.room-sequence > .room-position')];
   const desktopRooms = matchMedia('(min-width:1025px) and (hover:hover) and (pointer:fine)');
+  const roomWheelThreshold = 32;
+  const roomWheelQuiet = 180;
   let frame = 0, target = 0, lastPosition = 0, lastTime = 0;
+  let roomMotion = null;
   let lastRoomWheel = -Infinity;
+  let roomWheelDistance = 0;
+  let roomWheelCommitted = false;
+  let pageDownCommitted = false;
 
   function nextRoom(distance) {
     if (!desktopRooms.matches || preference.matches || roomAnchors.length === 0) return null;
@@ -27,9 +33,39 @@
     frame = requestAnimationFrame(animate);
   }
 
+  function moveToRoom(destination) {
+    stop();
+    const from = scrollY;
+    const to = Math.min(page.scrollHeight - innerHeight, destination);
+    const distance = to - from;
+    if (distance <= 0) return;
+    roomMotion = {from, to, start: performance.now(), duration: Math.min(1380, 1010 + distance * .24)};
+    lastPosition = from;
+    frame = requestAnimationFrame(animateRoom);
+  }
+
   function stop() {
     cancelAnimationFrame(frame);
     frame = 0;
+    roomMotion = null;
+  }
+
+  function resetRoomWheel() {
+    lastRoomWheel = -Infinity;
+    roomWheelDistance = 0;
+    roomWheelCommitted = false;
+  }
+
+  function animateRoom(now) {
+    if (Math.abs(scrollY - lastPosition) > 2) { stop(); return; }
+    const {from, to, start, duration} = roomMotion;
+    const progress = Math.max(0, Math.min(1, (now - start) / duration));
+    // Quintic easing keeps both the acceleration and braking smooth at the stops.
+    const ease = progress ** 3 * (progress * (6 * progress - 15) + 10);
+    window.scrollTo({top: from + (to - from) * ease, behavior:'instant'});
+    lastPosition = scrollY;
+    if (progress === 1) stop();
+    else frame = requestAnimationFrame(animateRoom);
   }
 
   function animate(now) {
@@ -47,8 +83,10 @@
   // Wheel distance is continuous. Touch uses the device's own drag and coast.
   window.addEventListener('wheel', event => {
     const dy = event.deltaY;
+    const horizontal = Math.abs(event.deltaX) >= Math.abs(dy);
+    if (roomMotion && horizontal && !event.ctrlKey && !event.metaKey) return;
     if (!event.cancelable || event.defaultPrevented || event.ctrlKey || event.metaKey ||
-        event.shiftKey || Math.abs(event.deltaX) >= Math.abs(dy) || preference.matches ||
+        event.shiftKey || horizontal || preference.matches ||
         document.documentElement.classList.contains('menu-open') || (window.visualViewport?.scale || 1) > 1 ||
         event.target.closest?.('input,textarea,select,[contenteditable="true"],#n1051.expanded,[role="slider"]')) {
       stop();
@@ -63,35 +101,57 @@
     const gain = event.deltaMode === 2 ? 1 : 1.4;
     const distance = dy * unit * gain;
     const now = performance.now();
-    if (dy < 0) lastRoomWheel = -Infinity;
-    const roomGesture = desktopRooms.matches && dy > 0 && now - lastRoomWheel < 155;
-    if (roomGesture) {
-      lastRoomWheel = now;
-      event.preventDefault();
-      return;
-    }
-    const room = dy > 0 ? nextRoom(distance) : null;
-    if (room !== null) {
-      lastRoomWheel = now;
-      event.preventDefault();
-      moveTo(room);
-      return;
+    if (dy < 0) {
+      resetRoomWheel();
+      if (roomMotion) stop();
+    } else if (desktopRooms.matches && roomAnchors.length) {
+      if (now - lastRoomWheel >= roomWheelQuiet) resetRoomWheel();
+      if (roomMotion || roomWheelCommitted) {
+        lastRoomWheel = now;
+        roomWheelCommitted = true;
+        event.preventDefault();
+        return;
+      }
+      const room = nextRoom(distance);
+      if (room !== null) {
+        lastRoomWheel = now;
+        roomWheelDistance += dy * unit;
+        event.preventDefault();
+        if (event.deltaMode !== 0 || roomWheelDistance >= roomWheelThreshold) {
+          roomWheelCommitted = true;
+          moveToRoom(room);
+        }
+        return;
+      }
     }
     if (!frame || Math.abs(scrollY - lastPosition) > 2 || Math.sign(target - scrollY) !== Math.sign(dy)) target = scrollY;
     event.preventDefault();
     moveTo(target + distance);
   }, {passive:false});
-  for (const event of ['pointerdown','keydown','pagehide','hashchange','blur']) window.addEventListener(event, stop);
+  for (const event of ['pointerdown','pagehide','hashchange','blur']) window.addEventListener(event, stop);
   preference.addEventListener('change', stop);
-  desktopRooms.addEventListener('change', () => {lastRoomWheel = -Infinity;});
+  desktopRooms.addEventListener('change', resetRoomWheel);
+  window.addEventListener('resize', () => { if (roomMotion) stop(); });
   window.addEventListener('keydown', event => {
     if (event.key !== 'PageDown' || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey ||
         event.defaultPrevented || document.documentElement.classList.contains('menu-open') ||
-        event.target.closest?.('button,a,input,textarea,select,[contenteditable="true"],.room-gallery')) return;
+        event.target.closest?.('button,a,input,textarea,select,[contenteditable="true"],.room-gallery')) {
+      stop();
+      return;
+    }
+    if (!event.repeat) pageDownCommitted = false;
+    if (roomMotion || pageDownCommitted) {
+      pageDownCommitted = true;
+      event.preventDefault();
+      return;
+    }
     const room = nextRoom(innerHeight * .9);
     if (room !== null) {
+      pageDownCommitted = true;
       event.preventDefault();
-      moveTo(room);
+      moveToRoom(room);
+    } else {
+      stop();
     }
   });
 
