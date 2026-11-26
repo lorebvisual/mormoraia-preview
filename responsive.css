@@ -443,8 +443,9 @@
     translate:none;
     transition:opacity .65s var(--ease) var(--fade-start,var(--delay,0s))
   }
-  #n1137 {--fade-start:.65s}
-  #n1138 {--fade-start:.9s}
+  #n1134 .reveal {transition-duration:.8s}
+  #n1137 {--fade-start:.28s}
+  #n1138 {--fade-start:.52s}
   .stay-detail-fade {opacity:0}
   .stay-detail-fade.seen,.stay-detail-fade:focus-within {opacity:1}
   .stay-detail-fade:focus-within {transition:none}
@@ -452,15 +453,15 @@
 
 @media (width > 1024px) {
   #n1134 {
+    --stay-reveal-inset:calc(128 * var(--u));
     position:relative;inset:auto;width:100%;height:auto;
-    padding:calc(128 * var(--u)) 0;gap:calc(64 * var(--u))
+    padding:var(--stay-reveal-inset) 0;gap:calc(64 * var(--u))
   }
   #n1136 {width:min(100%,calc(600 * var(--u)))}
   #n1135 {width:min(100%,calc(900 * var(--u)));text-align:left}
   #n1174 {left:calc(665 * var(--u))}
   #n1688 {background:#f5f4f2}
   .experience-counter {font-size:calc(96 * var(--u))}
-  .story-since {font-size:32px}
 }
 @media (720px < width <= 1024px) {
   #n1020 {flex-direction:row;align-items:flex-start}
@@ -515,7 +516,6 @@
     width:max(1786px,110.24%);left:calc(50% - max(976px,60.24%) + .5px)
   }
   .photo-emblem {--photo-mark-width:min(74.22%,278.31px)}
-  .story-since {top:73.87%;right:auto;left:clamp(48px,19.2vw,72px)}
   .site-footer {
     --footer-padding-block:clamp(24px,calc(15svh - 78px),64px);
     --footer-gap:clamp(16px,calc(12svh - 67px),48px);

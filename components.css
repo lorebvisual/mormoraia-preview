@@ -317,10 +317,7 @@
 #n1129 .layout101 img {left:-23.98%;width:124%}
 #n1016 {width:min(94%,calc(1100 * var(--u)))}
 #n1018 {font-size:calc(96 * var(--u))}
-.story-since {
-  position:absolute;top:86.5%;right:9.25%;color:white;
-  font:200 calc(32 * var(--u))/1.4 Zodiak,serif
-}
+.stay-intro-trigger {position:absolute;inset:var(--stay-reveal-inset,0px) 0 0;pointer-events:none}
 .site-footer {
   --footer-gap:64px;
   --footer-gutter:clamp(32px,3.704vw,64px);

@@ -87,7 +87,7 @@ photo.addEventListener('transitionend', event => {
 });
 reveal(photo, 0, 'mask-right', photoSlot);
 sequence([1102,1103], .24, node(1100));
-sequence([1135,1137,1138], .22, node(1134));
+sequence([1135,1137,1138], .22, document.querySelector('.stay-intro-trigger'));
 for (const details of [node(1148), document.getElementById('ds11-3180')]) {
   [...details.children].forEach((item, index) =>
     reveal(item, index * .65, 'stay-detail-fade', details));
@@ -195,8 +195,8 @@ function editorialGallery(section, track, slides) {
   }
   function sync() {
     model.active = tabletLayout.matches;
-    if(model.active){
-      const ids = section.id==='n1758' ? (compact.matches?[1563,1566,1564]:[1563,1565,1566]) : [1343,1344];
+    if(model.active && section.id==='n1758'){
+      const ids = compact.matches ? [1563,1566,1564] : [1563,1565,1566];
       activeSlides = ids.map(id => slides.find(slide => slide.id === 'n'+id));
     }else activeSlides = slides;
     track.replaceChildren(...activeSlides);
@@ -384,6 +384,7 @@ function gallery(id,label,icon,onChange) {
   const surface = id === 1340 || id === 1118 ? container.closest('[id="n1758"],[id="n1762"]') : container;
   const editorial = surface === container ? null : editorialGallery(surface,track,slides);
   let index = 0, busy = false, press = null;
+  const story = id === 1118;
   const gap = () => parseFloat(getComputedStyle(track).columnGap) || 0;
   const step = el => el.getBoundingClientRect().width + gap();
   const place = x => { track.style.transform = 'translate3d('+x+'px,0,0)'; };
@@ -425,7 +426,12 @@ function gallery(id,label,icon,onChange) {
     track.style.transition = '';
     place(x);
     const animation = track.getAnimations().find(a=>a.transitionProperty==='transform');
-    const finish = () => {if(editorial?.model.active){busy=false;return}after();rest();};
+    const finish = () => {
+      if(editorial?.model.active){busy=false;return}
+      if(story){place(-storyOffset());busy=false;return}
+      after();
+      rest();
+    };
     if(animation && !reduce.matches) animation.finished.then(finish,finish);
     else finish();
   }
@@ -433,9 +439,22 @@ function gallery(id,label,icon,onChange) {
     index = (index+dir+slides.length)%slides.length;
     if(onChange)onChange(index,true);
   }
+  // The two Story slides are adjacent crops of the same panorama.
+  const storyLimit = () => Math.max(0,track.getBoundingClientRect().width-container.clientWidth);
+  const storyOffset = () => index * storyLimit();
+  if (story) {
+    new ResizeObserver(() => {
+      if (!editorial.model.active && !busy && !press?.drag) place(-storyOffset());
+    }).observe(container);
+  }
   function move(dir){
     if(busy || press) return;
     if(editorial?.model.active){editorial.advance(dir);return}
+    if(story){
+      index = clamp(index + dir);
+      settle(-storyOffset());
+      return;
+    }
     changed(dir);
     if(dir>0){
       settle(-step(track.firstElementChild),()=>track.append(track.firstElementChild));
@@ -477,6 +496,9 @@ function gallery(id,label,icon,onChange) {
       if(editorial?.model.active){
         press.scrub=true;
         press.start=scrollY;
+      } else if (story) {
+        press.start=storyOffset();
+        track.style.transition='none';
       } else {
         press.previous=track.lastElementChild;
         press.nextStep=step(track.firstElementChild);
@@ -488,6 +510,11 @@ function gallery(id,label,icon,onChange) {
     if(press.scrub){
       const {start,distance,travel}=editorial.model;
       scrollTo(0,Math.max(start,Math.min(start+distance,press.start-dx*distance/Math.max(1,travel))));
+      return;
+    }
+    if(story){
+      press.dx=dx;
+      place(-Math.max(0,Math.min(storyLimit(),press.start-dx)));
       return;
     }
     press.dx=Math.max(-press.nextStep,Math.min(press.prevStep,dx));
@@ -504,6 +531,10 @@ function gallery(id,label,icon,onChange) {
     }
     const dir=cancelled || Math.abs(gesture.dx)<Math.min(42,container.clientWidth*.09)
       ? 0 : gesture.dx<0 ? 1 : -1;
+    if(story){
+      move(dir);
+      return;
+    }
     if(dir)changed(dir);
     const target=dir<0?0:-gesture.prevStep-(dir>0?gesture.nextStep:0);
     settle(target,()=>{
