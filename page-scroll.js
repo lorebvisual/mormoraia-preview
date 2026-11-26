@@ -1,6 +1,7 @@
 (() => {
   const preference = matchMedia('(prefers-reduced-motion: reduce)');
   const page = document.scrollingElement;
+  const roomSequence = document.querySelector('.room-sequence');
   const roomAnchors = [...document.querySelectorAll('.room-sequence > .room-position')];
   const desktopRooms = matchMedia('(min-width:1025px) and (hover:hover) and (pointer:fine)');
   const roomWheelThreshold = 32;
@@ -8,6 +9,7 @@
   let frame = 0, target = 0, lastPosition = 0, lastTime = 0;
   let roomMotion = null;
   let lastRoomWheel = -Infinity;
+  let lastRoomUp = -Infinity;
   let roomWheelDistance = 0;
   let roomWheelCommitted = false;
   let pageDownCommitted = false;
@@ -39,7 +41,7 @@
     const to = Math.min(page.scrollHeight - innerHeight, destination);
     const distance = to - from;
     if (distance <= 0) return;
-    roomMotion = {from, to, start: performance.now(), duration: Math.min(1380, 1010 + distance * .24)};
+    roomMotion = {from, to, start: null, duration: Math.min(1380, 1010 + distance * .24)};
     lastPosition = from;
     frame = requestAnimationFrame(animateRoom);
   }
@@ -58,6 +60,7 @@
 
   function animateRoom(now) {
     if (Math.abs(scrollY - lastPosition) > 2) { stop(); return; }
+    roomMotion.start ??= now;
     const {from, to, start, duration} = roomMotion;
     const progress = Math.max(0, Math.min(1, (now - start) / duration));
     // Quintic easing keeps both the acceleration and braking smooth at the stops.
@@ -85,14 +88,14 @@
     const dy = event.deltaY;
     const horizontal = Math.abs(event.deltaX) >= Math.abs(dy);
     if (roomMotion && horizontal && !event.ctrlKey && !event.metaKey) return;
-    if (!event.cancelable || event.defaultPrevented || event.ctrlKey || event.metaKey ||
+    if (event.defaultPrevented || event.ctrlKey || event.metaKey ||
         event.shiftKey || horizontal || preference.matches ||
         document.documentElement.classList.contains('menu-open') || (window.visualViewport?.scale || 1) > 1 ||
         event.target.closest?.('input,textarea,select,[contenteditable="true"],#n1051.expanded,[role="slider"]')) {
       stop();
       return;
     }
-    const panel = event.target.closest?.('.panel-slot');
+    const panel = event.target.closest?.('.panel-slot:not(.room-panel-slot)');
     if (panel && (dy > 0 ? panel.scrollTop + panel.clientHeight < panel.scrollHeight - 1 : panel.scrollTop > 0)) {
       stop();
       return;
@@ -101,10 +104,28 @@
     const gain = event.deltaMode === 2 ? 1 : 1.4;
     const distance = dy * unit * gain;
     const now = performance.now();
+    const canSnapRooms = roomSequence && desktopRooms.matches;
     if (dy < 0) {
       resetRoomWheel();
-      if (roomMotion) stop();
-    } else if (desktopRooms.matches && roomAnchors.length) {
+      // Hand the whole upward gesture back to the browser, even mid-snap.
+      if (canSnapRooms) {
+        const {top, bottom} = roomSequence.getBoundingClientRect();
+        if (roomMotion || (top < innerHeight && bottom > 0) || now - lastRoomUp < roomWheelQuiet) {
+          lastRoomUp = now;
+          stop();
+          return;
+        }
+      }
+    }
+    if (!event.cancelable) {
+      if (!roomMotion) stop();
+      return;
+    }
+    if (dy > 0 && canSnapRooms) {
+      if (now - lastRoomUp < roomWheelQuiet && dy * unit < roomWheelThreshold) {
+        event.preventDefault();
+        return;
+      }
       if (now - lastRoomWheel >= roomWheelQuiet) resetRoomWheel();
       if (roomMotion || roomWheelCommitted) {
         lastRoomWheel = now;

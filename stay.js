@@ -7,15 +7,29 @@
   const narrow = matchMedia('(max-width:720px)');
 
   const introHeading = document.getElementById('stay-intro-title');
-  [...introHeading.children].forEach((line, index) =>
-    reveal(line, index * .14, 'stay-intro-line', introHeading));
-  reveal(document.querySelector('.stay-intro-copy'), 1.12, 'stay-intro-fade', introHeading);
+  const intro = introHeading.closest('.stay-intro');
+  let introTarget = 0, introProgress = null, introFrame = 0, introTime = 0;
+  intro.classList.add('stay-intro-motion');
+
+  function followIntro(now) {
+    const elapsed = introTime ? Math.min(64, now - introTime) : 16.7;
+    const factor = reduce.matches ? 1 : 1 - Math.exp(-elapsed / 155);
+    introProgress += (introTarget - introProgress) * factor;
+    const settled = Math.abs(introTarget - introProgress) < .001;
+    if (settled) introProgress = introTarget;
+    intro.style.setProperty('--intro-first', phase(introProgress, 0, .82));
+    intro.style.setProperty('--intro-second', phase(introProgress, .09, .91));
+    intro.style.setProperty('--intro-copy', phase(introProgress, .58, 1));
+    introTime = settled ? 0 : now;
+    introFrame = settled ? 0 : requestAnimationFrame(followIntro);
+  }
 
   const facilities = document.querySelector('.stay-facilities-content');
   [...facilities.children].forEach((element, index) =>
     reveal(element, index * .2, 'reveal', facilities));
 
   const scenes = [...document.querySelectorAll('.room-scene')];
+  const shades = scenes.map(() => 0);
   const cursor = document.createElement('img');
   cursor.className = 'gallery-cursor';
   cursor.src = 'assets/187b4.svg';
@@ -25,16 +39,26 @@
   let frame = 0;
   function drawStack() {
     frame = 0;
-    updateHeroBooking(desktop.matches ? scrollY : 0, innerHeight);
-    if (narrow.matches || reduce.matches) return;
-    const boxes = scenes.map(scene => scene.getBoundingClientRect());
-    for (const [index, scene] of scenes.entries()) {
-      const next = boxes[index + 1];
-      const box = boxes[index];
-      const overlap = next ? box.bottom - next.top : 0;
-      const covered = next && next.top <= box.top && next.bottom >= box.bottom;
-      const shade = covered ? 0 : phase(overlap, 0, Math.min(box.height * .32, innerHeight * .34));
-      scene.style.setProperty('--room-shade', shade);
+    const height = innerHeight;
+    const stacked = !narrow.matches && !reduce.matches;
+    const boxes = stacked ? scenes.map(scene => scene.getBoundingClientRect()) : [];
+    const progress = clamp((height * .98 - introHeading.getBoundingClientRect().top) / (height * .82));
+    if (introProgress === null || progress !== introTarget) {
+      introTarget = progress;
+      introProgress ??= progress;
+      if (!introFrame) introFrame = requestAnimationFrame(followIntro);
+    }
+    updateHeroBooking(desktop.matches ? scrollY : 0, height);
+    if (stacked) {
+      const fadeLength = height * (desktop.matches ? .54 : .34);
+      for (let index = 0; index < boxes.length - 1; index++) {
+        const overlap = boxes[index].bottom - boxes[index + 1].top;
+        // The overlay fades in and back out with the same overlap curve.
+        const shade = phase(overlap, 0, fadeLength);
+        if (shade === shades[index]) continue;
+        shades[index] = shade;
+        scenes[index].style.setProperty('--room-shade', shade);
+      }
     }
     cursor.classList.remove('on');
   }
@@ -51,10 +75,14 @@
   for (const scene of scenes) {
     const slot = scene.querySelector('.room-panel-slot');
     animateEditorialPanel(slot.firstElementChild, slot);
+    reveal(slot, 0, 'room-info-entrance');
+    const separator = scene.previousElementSibling;
+    if (separator.previousElementSibling) reveal(separator, 0, 'room-separator');
     measureRooms.observe(scene);
 
+    const carousel = scene.querySelector('.room-carousel');
+    reveal(carousel, 0, 'room-photo-entrance');
     const gallery = scene.querySelector('.room-gallery');
-    reveal(gallery, 0, 'section-enter', scene);
     const slide = gallery.querySelector('.room-slide');
     const rtl = () => getComputedStyle(gallery).direction === 'rtl';
     let press = null;
@@ -115,11 +143,11 @@
       if (!press?.drag) press = null;
     });
     scene.addEventListener('focusin', event => {
-      if (narrow.matches || reduce.matches) return;
+      if (narrow.matches || reduce.matches || !event.target.matches(':focus-visible')) return;
       const box = event.target.getBoundingClientRect();
       const following = scene.nextElementSibling?.nextElementSibling;
       if (following && following.getBoundingClientRect().top < box.bottom) {
-        scrollBy({top:scene.previousElementSibling.getBoundingClientRect().top,behavior:'instant'});
+        separator.scrollIntoView({block:'start',behavior:'smooth'});
       }
     });
   }
