@@ -5,11 +5,14 @@
   document.documentElement.classList.add('page-entered');
   hero.classList.add('entered');
 
-  const intro = document.querySelector('.stay-intro');
+  const introHeading = document.getElementById('stay-intro-title');
+  [...introHeading.children].forEach((line, index) =>
+    reveal(line, index * .14, 'stay-intro-line', introHeading));
+  reveal(document.querySelector('.stay-intro-copy'), 1.12, 'stay-intro-fade', introHeading);
+
   const facilities = document.querySelector('.stay-facilities-content');
-  for (const section of [intro, facilities]) {
-    [...section.children].forEach((element, index) => reveal(element, index * .2, 'reveal', section));
-  }
+  [...facilities.children].forEach((element, index) =>
+    reveal(element, index * .2, 'reveal', facilities));
 
   const scenes = [...document.querySelectorAll('.room-scene')];
   const cursor = document.createElement('img');

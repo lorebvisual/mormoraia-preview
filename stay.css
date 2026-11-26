@@ -22,15 +22,30 @@
 .stay-intro {
   display:grid;justify-items:center;gap:clamp(32px,3.7vw,64px);
   padding:clamp(64px,7.41vw,128px) clamp(24px,8.33vw,144px);
+  background:white;overflow-x:clip;
 }
 .stay-intro h2 {
   width:min(100%,900px);margin:0;
   font:700 clamp(34px,3.5vw,60px)/1.4 Boska,serif;text-transform:uppercase;
 }
-.stay-intro h2 em {display:block;font-weight:300;text-align:right}
+.stay-intro h2 > * {display:block}
+.stay-intro h2 em {font-weight:300;text-align:right}
 .stay-intro-copy {
   display:grid;gap:clamp(16px,1.85vw,32px);width:min(100%,650px);
   font:400 16px/1.4 "Satoshi UI",sans-serif;letter-spacing:.04em;
+}
+
+@media (prefers-reduced-motion:no-preference) {
+  .stay-intro-line {
+    --intro-travel:clamp(36px,8vw,144px);
+    translate:calc(-1 * var(--intro-travel)) 0;
+    opacity:0;
+    transition:translate 1.04s var(--curtain) var(--delay),opacity .78s var(--ease) var(--delay);
+  }
+  .stay-intro-line + .stay-intro-line {translate:var(--intro-travel) 0}
+  .stay-intro-line.seen {translate:0;opacity:1}
+  .stay-intro-fade {opacity:0;transition:opacity .86s var(--ease) var(--delay)}
+  .stay-intro-fade.seen {opacity:1}
 }
 
 .room-sequence {position:relative;isolation:isolate}
