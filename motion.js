@@ -546,10 +546,8 @@ function photographyMotion() {
   photoSection.style.setProperty('--caption-opacity', reduce.matches ? 1 : 1 - phase(progress, 0, .26));
   photoWindow.style.setProperty('--photo-shift', stacked ? '0%' : 25 * (1 - center) + '%');
   photoWindow.style.setProperty('--aperture', stacked ? '0%' : 25 * (1 - open) + '%');
-  const emblem = phase(progress, stacked ? .10 : .57, stacked ? .40 : .72);
-  const closingEmblem = stacked || reduce.matches ? 1 : phase(progress, .85, .98);
-  photoWindow.style.setProperty('--emblem-opening-opacity', emblem * (1 - closingEmblem));
-  photoWindow.style.setProperty('--emblem-opacity', reduce.matches ? 1 : emblem * closingEmblem);
+  photoWindow.style.setProperty('--emblem-opacity', reduce.matches ? 1 :
+    phase(progress, stacked ? .10 : .57, stacked ? .40 : .72));
   photoWindow.style.setProperty('--photo-cover', reduce.matches ? 0 :
     phase(progress, stacked ? .48 : .74, .98));
 }
@@ -557,7 +555,7 @@ function photographyMotion() {
 const footer = node(1433);
 const footerStage = footer.firstElementChild;
 new ResizeObserver(() => {
-  footer.style.setProperty('--footer-stage-height', footerStage.offsetHeight + 'px');
+  footer.style.setProperty('--footer-stage-height', footerStage.getBoundingClientRect().height + 'px');
   schedule();
 }).observe(footerStage);
 
@@ -606,6 +604,7 @@ const footerRows = [...footer.querySelectorAll('[data-footer-row]')];
 let footerProgress, footerTarget, footerFrame = 0, footerTime = 0;
 function paintFooter(progress) {
   footerProgress = progress;
+  footer.style.setProperty('--footer-rise', 1 - phase(progress, .05, .96));
   footer.style.setProperty('--footer-emblem', phase(progress, 0, .22));
   footer.style.setProperty('--footer-lines', phase(progress, 0, .29));
   const wordmarkProgress = clamp((progress - .28) / .32);
@@ -632,8 +631,8 @@ function easeFooter(now) {
 function footerMotion(viewHeight) {
   const bounds = footer.getBoundingClientRect();
   const travel = footer.offsetHeight - footerStage.offsetHeight;
-  const lead = viewHeight * .58;
-  const finish = viewHeight - footer.offsetHeight;
+  const lead = viewHeight * .70;
+  const finish = viewHeight - footer.offsetHeight + 1;
   footerTarget = reduce.matches ? 1 : clamp((lead - bounds.top) / Math.max(1, lead - finish));
   if (footerProgress === undefined || reduce.matches || travel <= 0) {
     cancelAnimationFrame(footerFrame);

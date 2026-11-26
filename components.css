@@ -198,8 +198,9 @@
 .photo-finale-cover {position:absolute;inset:0;background:#43505b;opacity:var(--photo-cover,0)}
 .photo-emblem {
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:18.671875%;height:auto;opacity:var(--emblem-opacity,1);pointer-events:none
+  width:var(--photo-mark-width,24.4213%);height:auto;opacity:var(--emblem-opacity,1);pointer-events:none
 }
+.photo-emblem img {display:block;width:100%;height:auto}
 @media (prefers-reduced-motion:reduce) {
   .photo-finale-cover {display:none}
   .photo-emblem {opacity:1}
@@ -320,13 +321,11 @@
   position:absolute;top:86.5%;right:9.25%;color:white;
   font:200 calc(32 * var(--u))/1.4 Zodiak,serif
 }
-.photo-emblem {width:clamp(0px,var(--photo-mark-width,18.671875%),100%)}
-.photo-emblem-opening {width:24.4213%;opacity:var(--emblem-opening-opacity,0)}
-.photo-emblem img {display:block;width:100%;height:auto}
-
 .site-footer {
   --footer-gap:64px;
   --footer-gutter:clamp(32px,3.704vw,64px);
+  --footer-padding-block:64px;
+  --footer-center:max(0px,calc((100dvh - var(--footer-stage-height,100dvh)) / 2));
   --footer-travel:clamp(380px,75svh,850px);
   --footer-leading:17px;
   --footer-font:14px;
@@ -336,11 +335,13 @@
   font:300 var(--footer-font)/var(--footer-leading) "Neue Haas Display",sans-serif;
   letter-spacing:.08em
 }
-.site-footer::after {content:"";display:block;height:var(--footer-travel)}
+.site-footer::after {
+  content:"";display:block;height:calc(var(--footer-travel) + var(--footer-center))
+}
 .footer-stage {
   display:flex;flex-direction:column;gap:var(--footer-gap);
-  position:sticky;top:max(0px,calc(100svh - var(--footer-stage-height,100svh)));
-  padding:64px var(--footer-gutter)
+  position:sticky;top:calc(var(--footer-center) + var(--footer-rise,0) * clamp(80px,18dvh,160px));
+  padding:var(--footer-padding-block) var(--footer-gutter)
 }
 .footer-insignia {display:flex;align-items:center;justify-content:center;gap:48px;min-width:0}
 .footer-insignia img {display:block;width:138px;height:auto;opacity:var(--footer-emblem,1)}
@@ -376,7 +377,7 @@
 [data-footer-row]:focus-within {opacity:1}
 
 @media (prefers-reduced-motion:reduce) {
-  .site-footer {--footer-travel:0px}
+  .site-footer {padding-block:var(--footer-center)}
+  .site-footer::after {display:none}
   .footer-stage {position:relative;top:auto}
-  .photo-emblem-opening {display:none}
 }
