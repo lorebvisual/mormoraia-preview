@@ -83,7 +83,6 @@ button.menu-title {cursor:pointer}
   transition:transform .58s var(--silk);
 }
 .menu-title[aria-expanded="true"]::before {transform:scaleX(1)}
-.menu-winery-mobile {display:none}
 .menu-panel {
   display:grid;
   grid-template-rows:0fr;
@@ -257,8 +256,6 @@ button.menu-title {cursor:pointer}
     background:transparent url(assets/0ed35.svg) center no-repeat;
     transform-origin:center;
   }
-  .menu-title[aria-expanded="false"]:has(.menu-winery-mobile) span:first-child {display:none}
-  .menu-title[aria-expanded="false"] .menu-winery-mobile {display:inline}
   .menu-choices {align-items:center;padding-top:48px}
   .menu-footer {
     flex-direction:column;
