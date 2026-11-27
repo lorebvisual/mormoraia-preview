@@ -49,7 +49,7 @@
 .menu-items {
   display:grid;
   justify-items:start;
-  gap:48px;
+  gap:32px;
   color:var(--menu-label);
 }
 .menu-group {position:relative}
@@ -152,8 +152,9 @@ button.menu-title {cursor:pointer}
 
 @media (width > 1024px) {
   .is-open .masthead .mast-rule {display:none}
-  .menu-items {position:relative;gap:32px}
+  .menu-items {position:relative}
   .menu-title {font-weight:300}
+  .menu-choices {row-gap:8px;padding-top:8px}
   .menu-title::before {content:none}
   .menu-items::before {
     content:"";
