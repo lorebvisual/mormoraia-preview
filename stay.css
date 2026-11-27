@@ -4,7 +4,7 @@
   height:100svh;background:#43505b;isolation:isolate;
 }
 .stay-hero-media {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
-.stay-hero:has(video)::before {content:"";position:absolute;inset:0;background:rgb(0 0 0 / .35);z-index:-1}
+.stay-hero:is(.convent-hero,:has(video))::before {content:"";position:absolute;inset:0;background:rgb(0 0 0 / .35);z-index:-1}
 .stay-page #n992 {gap:clamp(18px,2.78vw,48px)}
 .stay-page #n993 {font-size:clamp(34px,5.56vw,96px)}
 .stay-page #n1010 {font-size:clamp(16px,1.16vw,20px);line-height:1.4;letter-spacing:.04em}
@@ -73,7 +73,7 @@
   grid-area:room;align-self:start;justify-self:end;position:relative;
   width:70.37%;min-width:0;height:var(--room-media-height);
 }
-.room-gallery-title,.room-mobile-link {display:none}
+.room-gallery-counter {display:none}
 .room-gallery {
   width:100%;height:100%;
   overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
@@ -179,7 +179,7 @@
   .stay-intro-paragraph {display:block;margin-top:16px}
   .room-scene,.room-scene:last-child {
     --room-space:0px;--room-bottom:0px;
-    --room-media-height:min(500px,133.334vw);
+    --room-media-height:440px;
     position:relative;top:auto;
   }
   .room-scene::after {display:none}
@@ -187,7 +187,8 @@
   .room-position:not(:first-child) {height:80px;position:relative}
   .room-position:not(:first-child)::before {
     content:"";position:absolute;inset:0;
-    background:url(assets/stay-room-separator.svg) center / 100% 80px no-repeat;
+    /* The Figma line is 311px of a 375px frame. Preserve its 32px insets. */
+    background:url(assets/stay-room-separator.svg) center / calc((100% - 64px) * 375 / 311) 80px no-repeat;
     transform-origin:center;
   }
   .room-carousel {grid-area:photo;width:100%}
@@ -195,28 +196,31 @@
   .room-track {width:100%}
   .room-slide {scroll-snap-align:start;scroll-snap-stop:always}
   .room-slide img[width="1004"] {width:100%;margin:0}
-  .room-gallery-title {
-    display:block;position:absolute;z-index:1;right:24px;bottom:24px;
-    writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;text-transform:uppercase;
-    font:400 clamp(32px,12.8vw,48px)/1.4 Boska,serif;color:white;
-    text-shadow:0 1px 12px rgb(0 0 0 / .4);pointer-events:none;
+  .room-slide picture img {object-position:center top}
+  .room-scene[aria-labelledby="room-7"] .room-slide:first-child img {object-position:center}
+  .room-gallery-counter {
+    display:flex;position:absolute;inset:auto 10px 16px;gap:16px;pointer-events:none;
+  }
+  .room-gallery-counter > span {
+    flex:1;min-width:0;height:2px;
+    background:url(assets/stay-gallery-inactive.svg) center / 100% 2px no-repeat;
+    mix-blend-mode:multiply;
+  }
+  .room-gallery-counter > .current {
+    background-image:url(assets/stay-gallery-active.svg);mix-blend-mode:normal;
   }
   .room-panel-slot {grid-area:copy;width:100%;min-width:0;height:auto}
   .room-panel,.room-scene-right .room-panel {
-    padding:32px;justify-items:start;text-align:left;gap:48px;line-height:22px;
+    padding:32px;justify-items:start;text-align:left;gap:24px;line-height:22px;
   }
   .room-panel.panel-mask {background:white}
   .room-panel.panel-mask::before {display:none}
   .room-panel > .reveal,.room-panel:focus-within > .reveal {opacity:1;translate:none;transition:none}
   .room-panel h2 {font-size:clamp(36px,12.8vw,48px);line-height:1.4}
+  .room-panel > p {font-size:14px;line-height:1.4;letter-spacing:.04em}
   .room-details {gap:16px 32px}
   .room-details span {gap:12px}
-  .room-panel .ds-button {width:100%;margin-top:-6px}
-  .room-mobile-link {
-    display:inline-flex;align-items:center;gap:8px;margin-top:-16px;
-    min-height:0;font:500 16px/22px "Satoshi UI",sans-serif;letter-spacing:.08em;
-  }
-  .room-mobile-link > span:last-child {display:block;width:16px;height:16px}
+  .room-panel .ds-button {width:100%}
   .stay-facilities {min-height:643px;padding:64px 24px}
   .stay-facilities-content {gap:24px}
   .stay-facilities ul {grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row;gap:32px}

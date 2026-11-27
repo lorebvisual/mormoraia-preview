@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Historic Residence | Mormoraia</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="preload" href="assets/c2231.jpg" as="image">
+  <link rel="preload" href="assets/convent-hero.webp" as="image" media="(width > 720px)">
+  <link rel="preload" href="assets/convent-hero-mobile.webp" as="image" media="(max-width:720px)">
   <link rel="stylesheet" href="layout.css?v=10">
   <link rel="stylesheet" href="motion.css?v=29">
   <link rel="stylesheet" href="components.css?v=39">
   <link rel="stylesheet" href="responsive.css?v=56">
-  <link rel="stylesheet" href="stay.css?v=5">
+  <link rel="stylesheet" href="stay.css?v=6">
   <script defer src="entrances.js?v=2"></script>
-  <script defer src="stay.js?v=4"></script>
+  <script defer src="stay.js?v=5"></script>
   <script defer src="booking.js?v=1"></script>
   <script defer src="footer.js?v=3"></script>
   <script defer src="page-scroll.js?v=38"></script>
@@ -54,8 +55,11 @@
 </div>
 <main id="n1780">
   <div class="hero-runway stay-hero-runway">
-  <section id="n986" class="layout2 opening stay-hero" aria-labelledby="n993">
-    <img class="stay-hero-media" src="assets/c2231.jpg" alt="" fetchpriority="high">
+  <section id="n986" class="layout2 opening stay-hero convent-hero" aria-labelledby="n993">
+    <picture>
+      <source media="(max-width:720px)" srcset="assets/convent-hero-mobile.webp">
+      <img class="stay-hero-media" src="assets/convent-hero.webp" alt="" fetchpriority="high">
+    </picture>
     <div id="n992" class="layout8">
       <img class="stay-hero-emblem" src="assets/footer-emblem-45-1632.svg" alt="" width="138" height="71">
       <h1 id="n993" tabindex="-1">HISTORIC RESIDENCE</h1>
@@ -155,13 +159,12 @@
     <div class="room-carousel">
       <div class="room-gallery gallery-window" role="region" tabindex="0" aria-label="Classic photo gallery. Use the left and right arrow keys to browse.">
         <div class="room-track gallery-track">
-          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/c9f18-370.webp"><img src="assets/c9f18.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
+          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/convent-classic-mobile.webp"><img src="assets/convent-classic.webp" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/a88db-130.webp"><img src="assets/a88db.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/e9431-478.webp"><img src="assets/e9431.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/4d74d-198.webp"><img src="assets/4d74d.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
-      <p class="room-gallery-title" aria-hidden="true">CLASSIC</p>
     </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
@@ -172,7 +175,6 @@
         </div>
         <p>Traditional Tuscan furnishings give our Classic Rooms their warmth and character. Modern comforts feel quietly at home here, lending each room an understated elegance and an ease that invites you to settle in.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="https://www.simplebooking.it/ibe/hotelbooking/search?hid=8435&amp;lang=en" aria-label="Book Classic"><span class="layout224">Book</span></a>
-        <a class="room-mobile-link ds-text-link" href="index.html#n1758"><span>Discover our restaurant</span><span aria-hidden="true"><img src="assets/502f6.svg" alt="" width="16" height="16"></span></a>
       </div>
     </div>
   </div>
@@ -189,7 +191,6 @@
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/4d74d-198.webp"><img src="assets/4d74d.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
-      <p class="room-gallery-title" aria-hidden="true">Superior</p>
     </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
@@ -200,7 +201,6 @@
         </div>
         <p>Le camere Classic combinano i tradizionali arredi rustici dal gusto toscano a un&#x27;equilibrata dose di comfort moderno. Un&#x27;atmosfera semplice e autentica caratterizza questi ambienti.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="https://www.simplebooking.it/ibe/hotelbooking/search?hid=8435&amp;lang=en" aria-label="Book Superior"><span class="layout224">Book</span></a>
-        <a class="room-mobile-link ds-text-link" href="index.html#n1758"><span>Discover our restaurant</span><span aria-hidden="true"><img src="assets/502f6.svg" alt="" width="16" height="16"></span></a>
       </div>
     </div>
   </div>
@@ -217,7 +217,6 @@
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/4d74d-190.webp"><img src="assets/4d74d.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
-      <p class="room-gallery-title" aria-hidden="true">Garden</p>
     </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
@@ -228,7 +227,6 @@
         </div>
         <p>Traditional Tuscan furnishings give our Classic Rooms their warmth and character. Modern comforts feel quietly at home here, lending each room an understated elegance and an ease that invites you to settle in.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="https://www.simplebooking.it/ibe/hotelbooking/search?hid=8435&amp;lang=en" aria-label="Book Garden"><span class="layout224">Book</span></a>
-        <a class="room-mobile-link ds-text-link" href="index.html#n1758"><span>Discover our restaurant</span><span aria-hidden="true"><img src="assets/502f6.svg" alt="" width="16" height="16"></span></a>
       </div>
     </div>
   </div>
@@ -245,7 +243,6 @@
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/0102b-0.webp"><img src="assets/0102b.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
-      <p class="room-gallery-title" aria-hidden="true">Deluxe</p>
     </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
@@ -256,7 +253,6 @@
         </div>
         <p>Le camere Classic combinano i tradizionali arredi rustici dal gusto toscano a un&#x27;equilibrata dose di comfort moderno. Un&#x27;atmosfera semplice e autentica caratterizza questi ambienti.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="https://www.simplebooking.it/ibe/hotelbooking/search?hid=8435&amp;lang=en" aria-label="Book Deluxe"><span class="layout224">Book</span></a>
-        <a class="room-mobile-link ds-text-link" href="index.html#n1758"><span>Discover our restaurant</span><span aria-hidden="true"><img src="assets/502f6.svg" alt="" width="16" height="16"></span></a>
       </div>
     </div>
   </div>
@@ -273,7 +269,6 @@
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/795d1-290.webp"><img src="assets/795d1.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
-      <p class="room-gallery-title" aria-hidden="true">SUITE</p>
     </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
@@ -284,7 +279,6 @@
         </div>
         <p>Stone arches and timber ceilings frame the Suites. The generous interiors invite a longer pause between mornings on the estate and evenings in San Gimignano.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="https://www.simplebooking.it/ibe/hotelbooking/search?hid=8435&amp;lang=en" aria-label="Book Suite"><span class="layout224">Book</span></a>
-        <a class="room-mobile-link ds-text-link" href="index.html#n1758"><span>Discover our restaurant</span><span aria-hidden="true"><img src="assets/502f6.svg" alt="" width="16" height="16"></span></a>
       </div>
     </div>
   </div>
@@ -301,7 +295,6 @@
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/2d464-120.webp"><img src="assets/2d464.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
-      <p class="room-gallery-title" aria-hidden="true">SUITE DUPLEX</p>
     </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
@@ -312,7 +305,6 @@
         </div>
         <p>Arranged across two floors, the Duplex Suite gives you room to spread out. Stone and wood carry the character of the former convent through both levels.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="https://www.simplebooking.it/ibe/hotelbooking/search?hid=8435&amp;lang=en" aria-label="Book Suite Duplex"><span class="layout224">Book</span></a>
-        <a class="room-mobile-link ds-text-link" href="index.html#n1758"><span>Discover our restaurant</span><span aria-hidden="true"><img src="assets/502f6.svg" alt="" width="16" height="16"></span></a>
       </div>
     </div>
   </div>
@@ -329,7 +321,6 @@
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/70648-136.webp"><img src="assets/70648.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
-      <p class="room-gallery-title" aria-hidden="true">SUITE EXECUTIVE</p>
     </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
@@ -340,7 +331,6 @@
         </div>
         <p>Old stone, exposed beams and contemporary finishes meet in the Executive Suite. The arrangement makes space for slow mornings and long evenings in.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="https://www.simplebooking.it/ibe/hotelbooking/search?hid=8435&amp;lang=en" aria-label="Book Suite Executive"><span class="layout224">Book</span></a>
-        <a class="room-mobile-link ds-text-link" href="index.html#n1758"><span>Discover our restaurant</span><span aria-hidden="true"><img src="assets/502f6.svg" alt="" width="16" height="16"></span></a>
       </div>
     </div>
   </div>

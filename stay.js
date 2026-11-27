@@ -83,7 +83,29 @@
     const carousel = scene.querySelector('.room-carousel');
     reveal(carousel, 0, 'room-photo-entrance');
     const gallery = scene.querySelector('.room-gallery');
-    const slide = gallery.querySelector('.room-slide');
+    const slides = [...gallery.querySelectorAll('.room-slide')];
+    const counter = document.createElement('div');
+    counter.className = 'room-gallery-counter';
+    counter.setAttribute('aria-hidden', 'true');
+    const bars = slides.map(() => document.createElement('span'));
+    let currentBar = bars[0];
+    currentBar.classList.add('current');
+    counter.append(...bars);
+    carousel.append(counter);
+
+    function syncCounter() {
+      if (!narrow.matches || gallery.clientWidth === 0) return;
+      const index = Math.round(gallery.scrollLeft / gallery.clientWidth);
+      const next = bars[Math.max(0, Math.min(bars.length - 1, index))];
+      if (next === currentBar) return;
+      currentBar.classList.remove('current');
+      next.classList.add('current');
+      currentBar = next;
+    }
+    gallery.addEventListener('scroll', syncCounter, {passive:true});
+    addEventListener('resize', syncCounter);
+    syncCounter();
+
     const rtl = () => getComputedStyle(gallery).direction === 'rtl';
     let press = null;
     const physicalDirection = clientX => {
@@ -97,7 +119,7 @@
       const offset = Math.abs(gallery.scrollLeft);
       const max = gallery.scrollWidth - gallery.clientWidth;
       const advanceToEnd = (rtl() ? -physical : physical) > 0;
-      const width = slide.offsetWidth;
+      const width = slides[0].offsetWidth;
       const step = advanceToEnd ? Math.floor((offset + 2) / width) + 1 : Math.ceil((offset - 2) / width) - 1;
       const target = Math.min(max, Math.max(0, step * width));
       gallery.scrollTo({left:(rtl() ? -1 : 1) * target,behavior:reduce.matches ? 'instant' : 'smooth'});
