@@ -32,12 +32,31 @@ photo.addEventListener('transitionend', event => {
 });
 reveal(photo, 0, 'mask-right', photoSlot);
 sequence([1102,1103], .24, node(1100));
+const stayHeading = node(1135);
 const stayIntroTrigger = document.querySelector('.stay-intro-trigger');
 const stayIntroCopy = node(1138);
-[...node(1135).querySelectorAll('p')].forEach((line, index) =>
+[...stayHeading.querySelectorAll('p')].forEach((line, index) =>
   reveal(line, index * .12, 'stay-heading-reveal', stayIntroTrigger));
 reveal(node(1137), 1.02, 'stay-intro-fade', stayIntroTrigger);
 reveal(stayIntroCopy, 1.18, 'stay-intro-fade', stayIntroTrigger);
+
+function syncMobileStayHeading() {
+  if (!compact.matches || reduce.matches) return;
+  const viewport = window.visualViewport;
+  const height = viewport?.height ?? innerHeight;
+  const top = viewport?.offsetTop ?? 0;
+  const bottom = top + height;
+  const bounds = stayHeading.getBoundingClientRect();
+  // Rearm only when the whole title has left the screen, avoiding flicker at the edges.
+  if (bounds.bottom < top - 16 || bounds.top > bottom + 16) {
+    stayHeading.classList.remove('stay-heading-in-view');
+  } else {
+    const visible = Math.min(bounds.bottom, bottom) - Math.max(bounds.top, top);
+    if (visible >= Math.min(bounds.height, height) - 2) {
+      stayHeading.classList.add('stay-heading-in-view');
+    }
+  }
+}
 
 const stayFrames = [node(1141), node(1159)];
 let residenceWaiting = false;
@@ -594,6 +613,7 @@ let frame=0;
 function update(){
  frame=0;const y=scrollY,h=innerHeight;
  const reduced=reduce.matches;
+ syncMobileStayHeading();
  updateHeroBooking(y,h);
  const pinned=(el,stage)=>clamp((parseFloat(getComputedStyle(stage).top)-el.getBoundingClientRect().top)/Math.max(1,el.offsetHeight-stage.offsetHeight));
  const staysBox=node(1139).getBoundingClientRect();
@@ -649,4 +669,7 @@ function update(){
 
 }
 function schedule(){if(!frame)frame=requestAnimationFrame(update)}
-addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);reduce.addEventListener('change',schedule);update();
+addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);reduce.addEventListener('change',schedule);
+window.visualViewport?.addEventListener('resize',syncMobileStayHeading);
+addEventListener('pageshow',syncMobileStayHeading);
+update();
