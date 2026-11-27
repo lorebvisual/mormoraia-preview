@@ -468,18 +468,52 @@
   }
 }
 
-@media (width > 1024px) {
-  #n1135 .mobile-line {display:block}
-}
-
-@media (width > 1024px) and (prefers-reduced-motion:no-preference) {
-  #n1133.section-enter {opacity:1;transition:none}
-  #n1134 .reveal {
-    translate:none;
-    transition:opacity .8s var(--ease) var(--fade-start,var(--delay,0s))
+#n1134 {overflow-x:clip}
+@media (prefers-reduced-motion:no-preference) {
+  .stay-heading-reveal {
+    --stay-heading-travel:clamp(44px,7vw,112px);
+    opacity:0;translate:calc(-1 * var(--stay-heading-travel)) 0;
   }
-  #n1137 {--fade-start:.28s}
-  #n1138 {--fade-start:.52s}
+  .stay-heading-reveal + .stay-heading-reveal {translate:var(--stay-heading-travel) 0}
+  .stay-heading-reveal.seen {
+    opacity:1;translate:none;
+    transition:translate .96s var(--silk) var(--delay),opacity .78s var(--silk) var(--delay);
+  }
+  .stay-intro-fade {opacity:0}
+  .stay-intro-fade.seen {opacity:1;transition:opacity .68s var(--silk) var(--delay)}
+}
+@media (max-width:720px) {
+  #n1143,#n1161 {padding-inline:32px}
+  #n1143 > p:first-child,#n1161 > p:first-child {font-weight:500}
+  #n1143 .layout62,#n1161 .layout62 {font-size:32px}
+
+  #n1139.stay-mobile-curtains > .reveal {opacity:1;translate:none;transition:none}
+  .stay-mobile-curtains :is(#n1141,#n1159) {
+    height:350px;
+    --stay-curtain-inset:inset(0 100% 0 0);
+    --stay-curtain-hold:1.06s;
+    --stay-stretch-time:.84s;
+  }
+  .stay-mobile-curtains #n1159 {--stay-curtain-inset:inset(0 0 0 100%)}
+  .stay-mobile-curtains :is(#n1142,#n1160) {visibility:hidden}
+  .stay-mobile-curtains .stay-media {opacity:0;clip-path:var(--stay-curtain-inset)}
+  .stay-mobile-curtains #n1159 video {height:650px;top:50%;transform:translateY(-50%)}
+  .stay-mobile-curtains :is(#n1143,#n1161) {opacity:0}
+  .stay-mobile-curtains :is(#n1143,#n1161) > :is(.reveal,.line) {
+    opacity:1;translate:none;scale:none;transition:none;
+  }
+  .stay-mobile-curtains :is(#n1141,#n1159).curtain-open {
+    height:650px;
+    transition:height var(--stay-stretch-time) var(--silk) var(--stay-curtain-hold);
+  }
+  .stay-mobile-curtains .curtain-open .stay-media {
+    opacity:1;clip-path:inset(0);
+    transition:clip-path .94s var(--silk),opacity .65s var(--silk);
+  }
+  .stay-mobile-curtains .curtain-open :is(#n1143,#n1161) {
+    opacity:1;
+    transition:opacity .68s var(--silk) calc(var(--stay-curtain-hold) + var(--stay-stretch-time));
+  }
 }
 @media (width > 720px) and (prefers-reduced-motion:no-preference) {
   .stay-detail-fade {opacity:0;translate:0 7px}

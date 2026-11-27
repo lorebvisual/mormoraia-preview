@@ -32,7 +32,49 @@ photo.addEventListener('transitionend', event => {
 });
 reveal(photo, 0, 'mask-right', photoSlot);
 sequence([1102,1103], .24, node(1100));
-sequence([1135,1137,1138], .22, document.querySelector('.stay-intro-trigger'));
+const stayIntroTrigger = document.querySelector('.stay-intro-trigger');
+const stayIntroCopy = node(1138);
+[...node(1135).children].forEach((line, index) =>
+  reveal(line, index * .12, 'stay-heading-reveal', stayIntroTrigger));
+reveal(node(1137), 1.02, 'stay-intro-fade', stayIntroTrigger);
+reveal(stayIntroCopy, 1.18, 'stay-intro-fade', stayIntroTrigger);
+
+const stayFrames = [node(1141), node(1159)];
+let residenceWaiting = false;
+function openStayCurtain(frame) {
+  frame.classList.add('curtain-open');
+  curtainObserver.unobserve(frame);
+}
+const curtainObserver = new IntersectionObserver(entries => {
+  if (!compact.matches || reduce.matches) return;
+  for (const {target, isIntersecting} of entries) {
+    if (target === stayFrames[0]) {
+      residenceWaiting = isIntersecting && stayIntroCopy.classList.contains('seen') &&
+        stayIntroCopy.getBoundingClientRect().bottom > 0 && Number(getComputedStyle(stayIntroCopy).opacity) < 1;
+      if (residenceWaiting) continue;
+    }
+    if (isIntersecting) openStayCurtain(target);
+  }
+}, {rootMargin: '0px 0px -14% 0px'});
+stayIntroCopy.addEventListener('transitionend', event => {
+  if (!residenceWaiting || event.propertyName !== 'opacity') return;
+  residenceWaiting = false;
+  openStayCurtain(stayFrames[0]);
+});
+function syncStayCurtains() {
+  const enabled = compact.matches && !reduce.matches;
+  node(1139).classList.toggle('stay-mobile-curtains', enabled);
+  curtainObserver.disconnect();
+  residenceWaiting = false;
+  if (enabled) {
+    for (const frame of stayFrames) {
+      if (!frame.classList.contains('curtain-open')) curtainObserver.observe(frame);
+    }
+  }
+}
+compact.addEventListener('change', syncStayCurtains);
+reduce.addEventListener('change', syncStayCurtains);
+syncStayCurtains();
 for (const details of [node(1148), document.getElementById('ds11-3180')]) {
   [...details.children].forEach((item, index) =>
     reveal(item, .12 + index * .18, 'stay-detail-fade', details));
@@ -56,7 +98,7 @@ for (const id of [1225,1230]) {
 }
 reveal(node(1239),.12);sequence([1195,1205,1215],.16);
 reveal(node(1677));reveal(node(1660));
-for (const id of [1099,1133,1688,1122,1758,1759,1761,1762,1763]) {
+for (const id of [1099,1688,1122,1758,1759,1761,1762,1763]) {
   reveal(node(id),0,'section-enter');
 }
 const cursor=document.createElement('img');cursor.className='gallery-cursor';cursor.alt='';document.body.append(cursor);
