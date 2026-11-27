@@ -29,7 +29,7 @@
     });
     let lastProgress;
     return progress => {
-      if (progress === lastProgress) return;
+      if (progress === lastProgress || (progress >= .77 && lastProgress >= .77)) return;
       lastProgress = progress;
       const opening = phase(progress,.015,.73);
       const leftShift = 234.18 * (1-opening);
@@ -48,6 +48,7 @@
   }
   const drawFooter = createWordmark(node(1481));
   const footerRows = [...footer.querySelectorAll('[data-footer-row]')];
+  footerRows.forEach(row => reveal(row, 0, 'footer-row-entrance'));
   let footerProgress, footerTarget, footerFrame = 0, footerTime = 0;
   function paintFooter(progress) {
     footerProgress = progress;
@@ -59,17 +60,21 @@
     drawFooter(wordmarkProgress);
     footer.style.setProperty('--footer-upper-rule', phase(progress, .58, .66));
     footer.style.setProperty('--footer-lower-rule', phase(progress, .93, 1));
-    footerRows.forEach((row, index) => {
-      const start = .63 + index * .026;
-      row.style.setProperty('--footer-row', phase(progress, start, start + .13));
-    });
+    if (!flowFooter.matches) {
+      footerRows.forEach((row, index) => {
+        const start = .63 + index * .026;
+        row.style.setProperty('--footer-row', phase(progress, start, start + .13));
+      });
+    }
   }
 
   // Keep the footer sequence legible after a fast flick, including in reverse.
   function easeFooter(now) {
     const elapsed = Math.min(64, now - footerTime);
     const gap = footerTarget - footerProgress;
-    const advance = Math.min(Math.abs(gap) * (1 - Math.exp(-elapsed / 145)), elapsed / 900);
+    const response = flowFooter.matches ? 112 : 145;
+    const travelTime = flowFooter.matches ? 700 : 900;
+    const advance = Math.min(Math.abs(gap) * (1 - Math.exp(-elapsed / response)), elapsed / travelTime);
     const settled = Math.abs(gap) < .001;
     paintFooter(settled ? footerTarget : footerProgress + Math.sign(gap) * advance);
     footerTime = now;
@@ -77,13 +82,13 @@
   }
   function footerMotion(viewHeight) {
     const bounds = footer.getBoundingClientRect();
-    const travel = footer.offsetHeight - footerStage.offsetHeight;
-    const lead = viewHeight * .70;
-    // On phones the full Home footer exceeds the viewport. Complete the
-    // reveal as it enters so every row can scroll into view in normal flow.
-    const finish = flowFooter.matches ? viewHeight * .18 : viewHeight - footer.offsetHeight + 1;
+    const mobile = flowFooter.matches;
+    const lead = viewHeight * (mobile ? .78 : .70);
+    // On phones the wordmark opens as it enters. Each contact row fades in
+    // as it comes into view farther down the page.
+    const finish = mobile ? viewHeight * .24 : viewHeight - footer.offsetHeight + 1;
     footerTarget = reduce.matches ? 1 : clamp((lead - bounds.top) / Math.max(1, lead - finish));
-    if (footerProgress === undefined || reduce.matches || travel <= 0) {
+    if (footerProgress === undefined || reduce.matches) {
       cancelAnimationFrame(footerFrame);
       footerFrame = 0;
       if (footerProgress !== footerTarget) paintFooter(footerTarget);
@@ -103,6 +108,10 @@
   }
   addEventListener('scroll', scheduleFooter, {passive:true});
   addEventListener('resize', scheduleFooter);
+  flowFooter.addEventListener('change', () => {
+    paintFooter(footerProgress);
+    scheduleFooter();
+  });
   reduce.addEventListener('change', scheduleFooter);
   footerMotion(innerHeight);
 })();

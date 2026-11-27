@@ -42,10 +42,10 @@
 .is-open .masthead{background:transparent;color:white;backdrop-filter:none;transform:none}
 .is-open .scrolled .mast-logo img,.is-open .scrolled .utility img{filter:none}
 .is-open .mast-logo,.is-open .quick-links,.is-open .mast-rule{visibility:hidden;pointer-events:none}
-.menu-items{display:grid;justify-items:center;gap:clamp(7px,2.2vh,24px);padding:84px 16px;color:#939bab}
-.menu-items a{font:400 clamp(25px,min(3.01vw,6vh),52px)/1.4 Boska,Georgia,serif;letter-spacing:.08em;text-transform:uppercase;text-align:center;position:relative}
+.menu-items{--menu-type:clamp(24px,calc((100dvh - 210px) / 9.8),52px);display:grid;justify-items:center;gap:23px;padding:0;color:#a4b1bd}
+.menu-items a{font:400 var(--menu-type)/1.4 "Satoshi UI",Satoshi,sans-serif;letter-spacing:.08em;text-align:center;position:relative}
 .menu-items a{transition:color .75s var(--silk)}
-.menu-items a:is(:hover,:focus-visible,:active){color:#c7bbb0}
+.menu-items a:is(:hover,:focus-visible,:active,[aria-current="page"]){color:#c7bbb0}
 .menu-items a:active{transition-duration:0s}
 .menu-socials,.menu-bottom{display:flex;align-items:center;color:white}
 .menu-socials{position:absolute;left:3.94vw;top:50%;transform:translateY(-50%);flex-direction:column;gap:16px}
@@ -85,7 +85,6 @@
  .mast-row{gap:12px}.nav-right{gap:10px}
  .quick-links,.nav-right .utility:first-child{display:none}
  .masthead,.masthead.scrolled{padding:14px 16px}.mast-rule{margin-top:8px}.mast-logo img{max-height:16px;max-width:48vw}
- .menu-items{gap:14px;padding:72px 10px}.menu-items a{font-size:clamp(24px,6vw,38px)}
  .menu-socials{position:static;transform:none;flex-direction:row;margin-top:-42px}.menu-bottom{bottom:5%;gap:18px}
  #n1758 .panel-slot{top:auto}
  #ds11-3672{width:22%;height:auto;aspect-ratio:281/300}
@@ -96,7 +95,7 @@
  #n1051>a{grid-column:1/-1;justify-self:center}
  #n1051{border-radius:4px}
 }
-@media(max-height:490px){.menu-items{padding:68px 12px 46px;gap:3px}.menu-items a{font-size:clamp(16px,4.6vh,24px)}.menu-bottom{bottom:8px}.menu-socials{position:absolute;left:12px;top:50%;margin:0;transform:translateY(-50%);flex-direction:column}}
+@media(max-height:490px){.menu-bottom{bottom:8px}.menu-socials{position:absolute;left:12px;top:50%;margin:0;transform:translateY(-50%);flex-direction:column}}
 @media(prefers-reduced-motion:reduce){.mast-row>*{opacity:1}.mast-rule{transform:scaleX(1)}}
 .inset-gallery{width:85.1852vw}
 .menu-bottom [aria-disabled="true"]{color:#e6e8ea}
@@ -269,8 +268,6 @@
 
 .estate-menu {color:white}
 .menu-language {display:none}
-.menu-items {padding:0;gap:min(2.667dvh,24px);color:#a4b1bd}
-.menu-items a {font-size:min(3.01vw,5.78dvh,52px)}
 .menu-bottom {left:3.704%;bottom:3.556%;gap:32px;font:300 16px/1.375 "Satoshi UI",sans-serif;letter-spacing:.04em}
 .menu-bottom [aria-disabled=true] {color:inherit}
 .language button {cursor:pointer}

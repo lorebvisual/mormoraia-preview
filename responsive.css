@@ -366,8 +366,7 @@
 @media (max-width:1024px) {
   /* The menu uses normal document flow so every link stays reachable in landscape. */
   .estate-menu {display:flex;justify-content:flex-start;padding:0;align-items:center;overflow-y:auto}
-  .menu-items {flex:none;padding:0;gap:24px;margin:max(96px,calc((100dvh - 628px)/2)) 0 0}
-  .menu-items a {font-size:32px;line-height:45px}
+  .menu-items {--menu-type:32px;flex:none;gap:32px;margin:max(96px,calc((100dvh - 628px)/2)) 0 0}
   .menu-socials {position:static;transform:none;flex-direction:row;gap:16px;margin:max(32px,calc((100dvh - 712px)/2)) 0 0;flex:none}
   .menu-socials img {width:24px;height:24px}
   .menu-bottom {position:static;flex:none;gap:32px;margin:64px 0 32px;font-size:16px}
@@ -416,8 +415,7 @@
   #n1227,#n1232 {opacity:var(--copy-visibility,1)}
 }
 @media (max-width:720px) {
-  .menu-items {margin:96px 0 0;gap:16px}
-  .menu-items a {font-size:24px;line-height:34px}
+  .menu-items {--menu-type:24px;margin:96px 0 0;gap:24px}
   .menu-language {display:flex;align-items:center;flex:none;gap:16px;margin:max(24px,calc((100dvh - 590px)/3)) 0 0}
   .menu-language button {color:white;background:none;border:0;padding:0;min-height:22px}
   .menu-socials {margin:max(24px,calc((100dvh - 590px)/3)) 0 0}
@@ -581,6 +579,11 @@
   .footer-separator {display:none}
   .site-footer::after {display:none}
   .site-footer .footer-stage {position:relative;top:auto}
+}
+@media (max-width:720px) and (prefers-reduced-motion:no-preference) {
+  .footer-row-entrance {opacity:0}
+  .footer-row-entrance.seen {opacity:1;transition:opacity .65s var(--silk)}
+  .footer-row-entrance:focus-within {opacity:1;transition:none}
 }
 
 @media (max-width:1024px) {

@@ -107,7 +107,7 @@
         transform:away?'translate3d(0,-102%,0)':'translate3d(0,0,0)',
         opacity:away?0:1
       }], {
-        duration:away?640:1800,
+        duration:away ? 640 : compact.matches ? 720 : 1800,
         easing:away?'ease-in-out':'cubic-bezier(.42,.02,.32,1)'
       });
     }
