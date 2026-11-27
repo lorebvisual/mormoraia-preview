@@ -254,7 +254,9 @@ button.menu-title {cursor:pointer}
   button.menu-title {appearance:none}
   .menu-title::before {
     inset:auto 0 -24px;
-    width:100%;
+    width:48px;
+    margin-inline:auto;
+    background:transparent url(assets/0ed35.svg) center no-repeat;
     transform-origin:center;
   }
   .menu-title[aria-expanded="false"]:has(.menu-winery-mobile) span:first-child {display:none}
