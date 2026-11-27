@@ -14,13 +14,15 @@
   let roomWheelCommitted = false;
   let pageDownCommitted = false;
 
+  function roomStop(anchor) {
+    const roomHeight = anchor.nextElementSibling.offsetHeight;
+    return scrollY + anchor.getBoundingClientRect().top + Math.max(0, (roomHeight - innerHeight) / 2);
+  }
+
   function nextRoom(distance) {
     if (!desktopRooms.matches || preference.matches || roomAnchors.length === 0) return null;
     const y = scrollY;
-    const roomStops = roomAnchors.map(anchor => {
-      const roomHeight = anchor.nextElementSibling.offsetHeight;
-      return y + anchor.getBoundingClientRect().top + Math.max(0, (roomHeight - innerHeight) / 2);
-    });
+    const roomStops = roomAnchors.map(roomStop);
     const first = roomStops[0];
     const projected = Math.max(y, frame ? target : y) + distance;
     if (y < first - 3 && projected < first - 3) return null;
@@ -35,13 +37,21 @@
     frame = requestAnimationFrame(animate);
   }
 
-  function moveToRoom(destination) {
+  function moveToRoom(destination, onComplete) {
     stop();
     const from = scrollY;
     const to = Math.min(page.scrollHeight - innerHeight, destination);
-    const distance = to - from;
-    if (distance <= 0) return;
-    roomMotion = {from, to, start: null, duration: Math.min(1380, 1010 + distance * .24)};
+    if (preference.matches) {
+      window.scrollTo({top:to, behavior:'instant'});
+      onComplete?.();
+      return;
+    }
+    const distance = Math.abs(to - from);
+    if (distance <= .5) {
+      onComplete?.();
+      return;
+    }
+    roomMotion = {from, to, start: null, duration: Math.min(1380, 1010 + distance * .24), onComplete};
     lastPosition = from;
     frame = requestAnimationFrame(animateRoom);
   }
@@ -61,14 +71,16 @@
   function animateRoom(now) {
     if (Math.abs(scrollY - lastPosition) > 2) { stop(); return; }
     roomMotion.start ??= now;
-    const {from, to, start, duration} = roomMotion;
+    const {from, to, start, duration, onComplete} = roomMotion;
     const progress = Math.max(0, Math.min(1, (now - start) / duration));
     // Quintic easing keeps both the acceleration and braking smooth at the stops.
     const ease = progress ** 3 * (progress * (6 * progress - 15) + 10);
     window.scrollTo({top: from + (to - from) * ease, behavior:'instant'});
     lastPosition = scrollY;
-    if (progress === 1) stop();
-    else frame = requestAnimationFrame(animateRoom);
+    if (progress === 1) {
+      stop();
+      onComplete?.();
+    } else frame = requestAnimationFrame(animateRoom);
   }
 
   function animate(now) {
@@ -81,6 +93,37 @@
     lastPosition = scrollY;
     lastTime = now;
     frame = done ? 0 : requestAnimationFrame(animate);
+  }
+
+  for (const [index, anchor] of roomAnchors.entries()) {
+    const controls = document.createElement('div');
+    controls.className = 'room-controls';
+    controls.setAttribute('role', 'group');
+    controls.setAttribute('aria-label', 'Browse rooms');
+    controls.innerHTML = `
+      <button type="button" data-room-step="-1" aria-label="Previous room">
+        <img src="assets/room-control-prev.svg" width="48" height="48" alt="">
+      </button>
+      <button type="button" data-room-step="1" aria-label="Next room">
+        <img src="assets/room-control-next.svg" width="48" height="48" alt="">
+      </button>`;
+    for (const button of controls.children) {
+      const step = Number(button.dataset.roomStep);
+      const destination = roomAnchors[index + step];
+      if (!destination) {
+        button.setAttribute('aria-disabled', 'true');
+        continue;
+      }
+      button.addEventListener('click', () => {
+        if (!desktopRooms.matches) return;
+        resetRoomWheel();
+        moveToRoom(roomStop(destination), () => {
+          if (document.activeElement !== button) return;
+          destination.nextElementSibling.querySelector(`[data-room-step="${step}"]`).focus({preventScroll:true});
+        });
+      });
+    }
+    anchor.nextElementSibling.append(controls);
   }
 
   // Wheel distance is continuous. Touch uses the device's own drag and coast.

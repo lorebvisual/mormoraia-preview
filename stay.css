@@ -69,6 +69,24 @@
   align-items:center;min-width:0;
 }
 .room-position {height:0;pointer-events:none}
+.room-controls {display:none}
+@media (min-width:1025px) and (hover:hover) and (pointer:fine) {
+  .room-controls {
+    position:absolute;z-index:2;left:calc(50% + 4px);
+    bottom:calc(32px + max(var(--room-bottom), (var(--room-measured-height,var(--room-height)) - 100svh) / 2));
+    translate:-50% 0;
+    display:flex;align-items:center;gap:24px;
+  }
+  .room-controls button {
+    display:block;flex:none;padding:0;border:0;border-radius:50%;
+    background:none;cursor:pointer;
+  }
+  .room-controls img {display:block;rotate:90deg}
+  .room-controls button:first-child img {rotate:-90deg}
+  .room-controls button[aria-disabled="true"] {opacity:.5;cursor:default}
+  .room-controls button:focus-visible {outline:2px solid white;outline-offset:3px}
+}
+
 .room-carousel {
   grid-area:room;align-self:start;justify-self:end;position:relative;
   width:70.37%;min-width:0;height:var(--room-media-height);
