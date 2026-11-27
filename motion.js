@@ -40,23 +40,16 @@ const stayIntroCopy = node(1138);
 reveal(node(1137), 1.02, 'stay-intro-fade', stayIntroTrigger);
 reveal(stayIntroCopy, 1.18, 'stay-intro-fade', stayIntroTrigger);
 
-function syncMobileStayHeading() {
-  if (!compact.matches || reduce.matches) return;
-  const viewport = window.visualViewport;
-  const height = viewport?.height ?? innerHeight;
-  const top = viewport?.offsetTop ?? 0;
-  const bottom = top + height;
-  const bounds = stayHeading.getBoundingClientRect();
-  // Rearm only when the whole title has left the screen, avoiding flicker at the edges.
-  if (bounds.bottom < top - 16 || bounds.top > bottom + 16) {
+// Observe the title itself, including when scroll restoration brings it into view.
+const stayHeadingObserver = new IntersectionObserver(entries => {
+  const entry = entries.at(-1);
+  if (!entry.isIntersecting) {
     stayHeading.classList.remove('stay-heading-in-view');
-  } else {
-    const visible = Math.min(bounds.bottom, bottom) - Math.max(bounds.top, top);
-    if (visible >= Math.min(bounds.height, height) - 2) {
-      stayHeading.classList.add('stay-heading-in-view');
-    }
+  } else if (entry.intersectionRatio >= .8 || entry.boundingClientRect.top < (entry.rootBounds?.top ?? 0)) {
+    stayHeading.classList.add('stay-heading-in-view');
   }
-}
+}, {rootMargin: '0px 0px -5% 0px', threshold: [0, .8]});
+stayHeadingObserver.observe(stayHeading);
 
 const stayFrames = [node(1141), node(1159)];
 let residenceWaiting = false;
@@ -627,7 +620,6 @@ let frame=0;
 function update(){
  frame=0;const y=scrollY,h=innerHeight;
  const reduced=reduce.matches;
- syncMobileStayHeading();
  updateHeroBooking(y,h);
  const pinned=(el,stage)=>clamp((parseFloat(getComputedStyle(stage).top)-el.getBoundingClientRect().top)/Math.max(1,el.offsetHeight-stage.offsetHeight));
  const staysBox=node(1139).getBoundingClientRect();
@@ -684,6 +676,4 @@ function update(){
 }
 function schedule(){if(!frame)frame=requestAnimationFrame(update)}
 addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);reduce.addEventListener('change',schedule);
-window.visualViewport?.addEventListener('resize',syncMobileStayHeading);
-addEventListener('pageshow',syncMobileStayHeading);
 update();

@@ -80,7 +80,7 @@
     --room-pin-offset:max(0px,calc((var(--room-measured-height,var(--room-height)) - 100svh) / 2));
     top:calc(-1 * var(--room-pin-offset));
   }
-  .room-controls {
+  .rooms-v2 .room-controls {
     position:absolute;z-index:2;left:calc(50% + 4px);
     bottom:calc(32px + max(var(--room-bottom), var(--room-pin-offset)));
     translate:-50% 0;
