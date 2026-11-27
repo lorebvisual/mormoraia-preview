@@ -16,9 +16,9 @@
 .scrolled .mast-logo img,.scrolled .utility img{filter:brightness(0)}
 .utility{gap:clamp(4px,.46vw,8px);font-weight:300}
 .utility img{width:clamp(18px,1.39vw,24px);height:auto}
-.quick-links a,.utility span,.ds-text-link{position:relative}
-.quick-links a::after,.utility span::after,.ds-text-link::after{content:"";position:absolute;height:1px;background:currentColor;bottom:-2px;left:0;right:0;transform-origin:left;transform:scaleX(0);transition:transform .62s var(--silk)}
-:is(.quick-links a,.utility,.ds-text-link):is(:hover,:focus-visible)::after,.utility:is(:hover,:focus-visible) span::after{transform:scaleX(1)}
+.utility span,.ds-text-link{position:relative}
+.utility span::after,.ds-text-link::after{content:"";position:absolute;height:1px;background:currentColor;bottom:-2px;left:0;right:0;transform-origin:left;transform:scaleX(0);transition:transform .62s var(--silk)}
+:is(.utility,.ds-text-link):is(:hover,:focus-visible)::after,.utility:is(:hover,:focus-visible) span::after{transform:scaleX(1)}
 .masthead button{color:inherit;background:none;border:0;padding:0;cursor:pointer}
 .masthead :focus-visible,.estate-menu :focus-visible{outline:1px solid currentColor;outline-offset:5px}
 .burger{position:relative;width:32px;height:32px;flex:none}
@@ -37,20 +37,6 @@
 .page-entered .mast-row>*{animation:hero-fade var(--hero-controls-duration) var(--silk) var(--hero-header-duration) both}
 .page-entered .mast-row>.mast-logo{animation:hero-fade var(--hero-header-duration) var(--silk) both}
 .page-entered .mast-rule{animation:hero-line var(--hero-header-duration) var(--silk) both}
-.estate-menu{z-index:51;height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;background:rgba(67,80,91,.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);opacity:0;visibility:hidden;transition:opacity .76s var(--silk),visibility 0s .76s}
-.is-open .estate-menu{opacity:1;visibility:visible;transition-delay:0s}
-.is-open .masthead{background:transparent;color:white;backdrop-filter:none;transform:none}
-.is-open .scrolled .mast-logo img,.is-open .scrolled .utility img{filter:none}
-.is-open .mast-logo,.is-open .quick-links,.is-open .mast-rule{visibility:hidden;pointer-events:none}
-.menu-items{--menu-type:clamp(24px,calc((100dvh - 210px) / 9.8),52px);display:grid;justify-items:center;gap:23px;padding:0;color:#a4b1bd}
-.menu-items a{font:400 var(--menu-type)/1.4 "Satoshi UI",Satoshi,sans-serif;letter-spacing:.08em;text-align:center;position:relative}
-.menu-items a{transition:color .75s var(--silk)}
-.menu-items a:is(:hover,:focus-visible,:active,[aria-current="page"]){color:#c7bbb0}
-.menu-items a:active{transition-duration:0s}
-.menu-socials,.menu-bottom{display:flex;align-items:center;color:white}
-.menu-socials{position:absolute;left:3.94vw;top:50%;transform:translateY(-50%);flex-direction:column;gap:16px}
-.menu-socials img{display:block;width:24px;height:24px}
-.menu-bottom{position:absolute;bottom:4%;gap:32px;font-size:clamp(12px,.926vw,16px);letter-spacing:.04em}
 .ds-button,.ds-text-link{width:max-content;max-width:100%;transition:background-color .42s var(--ease),border-color .42s,color .42s}
 .ds-button[data-name="Button primary dark"]:hover{background:var(--ink)}
 .ds-button[data-name="Button primary light"]:hover{background:#e3e3e3}
@@ -65,7 +51,7 @@
 .ds-text-link:focus-visible{color:#644c36}
 .ds-button[aria-disabled="true"]{background:#e6e8ea;pointer-events:none}
 .ds-button[aria-disabled="true"] span{color:#a4b1bd}
-.ds-text-link[aria-disabled="true"],.quick-links [aria-disabled="true"]{color:#ccd2d7;pointer-events:none}
+.ds-text-link[aria-disabled="true"]{color:#ccd2d7;pointer-events:none}
 #n1196,#n1206,#n1216{
  background:none;
  border:0;
@@ -85,7 +71,6 @@
  .mast-row{gap:12px}.nav-right{gap:10px}
  .quick-links,.nav-right .utility:first-child{display:none}
  .masthead,.masthead.scrolled{padding:14px 16px}.mast-rule{margin-top:8px}.mast-logo img{max-height:16px;max-width:48vw}
- .menu-socials{position:static;transform:none;flex-direction:row;margin-top:-42px}.menu-bottom{bottom:5%;gap:18px}
  #n1758 .panel-slot{top:auto}
  #ds11-3672{width:22%;height:auto;aspect-ratio:281/300}
  .story-mark{top:10%;width:16%}
@@ -95,10 +80,8 @@
  #n1051>a{grid-column:1/-1;justify-self:center}
  #n1051{border-radius:4px}
 }
-@media(max-height:490px){.menu-bottom{bottom:8px}.menu-socials{position:absolute;left:12px;top:50%;margin:0;transform:translateY(-50%);flex-direction:column}}
 @media(prefers-reduced-motion:reduce){.mast-row>*{opacity:1}.mast-rule{transform:scaleX(1)}}
 .inset-gallery{width:85.1852vw}
-.menu-bottom [aria-disabled="true"]{color:#e6e8ea}
 .masthead.scrolled .mast-logo img{content:url(assets/c54de.svg);filter:none}
 @media(max-width:720px){
  .inset-gallery{width:94vw}
@@ -112,7 +95,7 @@
 /* Figma specifies the variable family for controls, including its Regular instance. */
 @font-face{font-family:"Satoshi UI";src:url(assets/Satoshi-Variable.ttf) format("truetype");font-weight:300 900;font-display:swap}
 .mast-row,.language button,.ds-button>span:first-child,.ds-text-link>span:first-child{font-family:"Satoshi UI",sans-serif;font-synthesis:none}
-.quick-links a,.ds-button>span:first-child{font-weight:400}
+.ds-button>span:first-child{font-weight:400}
 .utility,.language button{font-weight:300}
 
 .ds-button>span:first-child,.ds-text-link>span:first-child{font-size:16px;letter-spacing:.08em}
@@ -266,10 +249,6 @@
 }
 #n1636 .layout7 {display:none}
 
-.estate-menu {color:white}
-.menu-language {display:none}
-.menu-bottom {left:3.704%;bottom:3.556%;gap:32px;font:300 16px/1.375 "Satoshi UI",sans-serif;letter-spacing:.04em}
-.menu-bottom [aria-disabled=true] {color:inherit}
 .language button {cursor:pointer}
 
 #booking-fields .date-trigger,#booking-fields .booking-count {font:400 16px/1.4 "Satoshi UI",sans-serif;letter-spacing:.04em;border:0;background:transparent;padding:0}
@@ -301,7 +280,7 @@
 #back-to-top:focus-visible {outline:1px solid currentColor;outline-offset:4px;border-radius:50%}
 #back-to-top img {display:block;height:auto;pointer-events:none}
 #back-to-top.on-dark {color:white}
-#back-to-top.on-dark img,.menu-open #back-to-top img {filter:invert(1)}
+#back-to-top.on-dark img {filter:invert(1)}
 .photo-window {pointer-events:auto}
 .back-to-top-arrow {width:32%}
 .back-to-top-ring {

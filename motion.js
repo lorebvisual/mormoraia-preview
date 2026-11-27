@@ -373,7 +373,12 @@ function nativeFilmstrip(container, track, slides, selection, select, clickDirec
   }
   for (const type of ['pointerup','pointercancel','lostpointercapture']) container.addEventListener(type,release);
   new ResizeObserver(measure).observe(track);
-  return {sync,advance};
+  function jumpTo(index) {
+    interrupt();
+    container.scrollTo({left:origin + offsets[index],behavior:'instant'});
+    select(index);
+  }
+  return {sync,advance,jumpTo};
 }
 
 function gallery(id,label,icon,onChange) {
@@ -425,7 +430,7 @@ function gallery(id,label,icon,onChange) {
       e.preventDefault();
       strip.advance(e.key==='ArrowLeft'?-1:1);
     };
-    return;
+    return strip;
   }
   function settle(x, after){
     busy = true;
@@ -555,7 +560,16 @@ function gallery(id,label,icon,onChange) {
   surface.addEventListener('pointerleave',e=>{if(press && !press.drag && e.pointerType==='mouse')press=null;});
   container.onkeydown=e=>{if(['ArrowRight','ArrowLeft','Enter'].includes(e.key)){e.preventDefault();move(e.key==='ArrowLeft'?-1:1)}};
 }
-gallery(1725,'Experiences','88087.svg',experienceCopy);gallery(1340,'Dining','187b4.svg');gallery(1118,'Our story','187b4.svg');gallery(1652,'Instagram','187b4.svg');
+const experienceGallery = gallery(1725,'Experiences','88087.svg',experienceCopy);
+const experienceAnchors = ['wine-tasting','cooking-class','truffle-hunting','sunset-aperitif','romantic-dinner','elopement-wedding'];
+function selectExperience() {
+  const index = experienceAnchors.findIndex(slug => location.hash === '#experience-' + slug);
+  if (index !== -1) experienceGallery.jumpTo(index);
+}
+addEventListener('hashchange',selectExperience);
+addEventListener('experience-select',selectExperience);
+selectExperience();
+gallery(1340,'Dining','187b4.svg');gallery(1118,'Our story','187b4.svg');gallery(1652,'Instagram','187b4.svg');
 const wine=document.createElement('div');wine.className='wine-pin';const stage=document.createElement('div');stage.className='wine-stage';wine.append(stage);node(1761).append(wine);stage.append(node(1195),node(1205),node(1215));
 const closing=node(1011), closingSpace=document.createElement('div');closingSpace.className='pin-space closing-space';closing.before(closingSpace);closingSpace.append(closing,node(1763));
 const inverse=node(1759);

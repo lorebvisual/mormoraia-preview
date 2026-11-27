@@ -5,63 +5,101 @@
   const menu = document.getElementById('estate-menu');
   const page = document.getElementById('n1780');
   const quick = shell.querySelector('.quick-links');
-  const stayToggle = shell.querySelector('.stay-toggle');
-  const stayMenu = document.getElementById('stay-menu');
-  const stayLinks = [...stayMenu.querySelectorAll('a')];
+  const dropdown = shell.querySelector('.mast-dropdown');
+  const dropdownClip = dropdown.firstElementChild;
   const desktop = matchMedia('(width > 1024px)');
+  const compact = matchMedia('(max-width:720px)');
   const desktopHeroControlsBottom = 72;
   const desktopTopZone = 200;
-  new ResizeObserver(([entry]) => {
-    mast.style.setProperty('--stay-layer-extension', entry.contentRect.height + 'px');
-  }).observe(stayMenu);
   const hero = document.getElementById('n986');
   const sheet = page.querySelector('.white-sheet');
-  let stayOpen = false;
+  const menuContent = menu.querySelector('.menu-content');
+  const menuGroups = new Map([...menu.querySelectorAll('[data-menu-group]')].map(group => [
+    group.dataset.menuGroup, {button:group.querySelector('button'), panel:group.querySelector('.menu-panel')}
+  ]));
+  const sections = new Map();
+  let currentGroup = null;
+  let currentSection = null;
 
-  function positionStayMenu() {
-    stayMenu.style.setProperty('--stay-label-left',
-      stayToggle.getBoundingClientRect().left - mast.getBoundingClientRect().left + 'px');
+  function setExpanded(button, panel, expanded) {
+    button.setAttribute('aria-expanded', String(expanded));
+    panel.inert = !expanded;
+    panel.setAttribute('aria-hidden', String(!expanded));
   }
-  function showStay(next) {
-    if (next === stayOpen || (next && (open || !desktop.matches || mast.inert))) return;
-    stayOpen = next;
-    if (next) positionStayMenu();
-    else stayMenu.classList.remove('has-marker');
-    mast.classList.toggle('stay-open', next);
-    stayToggle.setAttribute('aria-expanded', String(next));
-    stayMenu.inert = !next;
-    stayMenu.setAttribute('aria-hidden', String(!next));
+
+  function showGroup(group) {
+    if (currentGroup) setExpanded(currentGroup.button, currentGroup.panel, false);
+    currentGroup = group;
+    if (group) setExpanded(group.button, group.panel, true);
   }
-  stayToggle.addEventListener('pointerenter', event => {
-    if (event.pointerType === 'mouse') showStay(true);
-  });
-  stayToggle.addEventListener('click', () => showStay(true));
-  stayToggle.addEventListener('keydown', event => {
-    if (event.key !== 'ArrowDown') return;
-    event.preventDefault();
-    showStay(true);
-    if (stayOpen) stayLinks[0].focus();
-  });
+  for (const group of menuGroups.values()) {
+    group.button.addEventListener('click', () => showGroup(currentGroup === group ? null : group));
+  }
+
+  function showDropdown(section) {
+    if (section === currentSection || (section && (open || !desktop.matches || mast.inert))) return;
+    if (currentSection) setExpanded(currentSection.button, currentSection.panel, false);
+    currentSection = section;
+    if (section) {
+      dropdownClip.querySelector('.is-current')?.classList.remove('is-current');
+      section.panel.classList.add('is-current');
+      setExpanded(section.button, section.panel, true);
+    }
+    mast.classList.toggle('dropdown-open', Boolean(section));
+  }
+  for (const button of quick.querySelectorAll('[data-nav-section]')) {
+    const key = button.dataset.navSection;
+    button.dataset.label = button.textContent;
+    const title = document.createElement('p');
+    title.className = 'mast-dropdown-title';
+    title.textContent = button.textContent;
+    title.setAttribute('aria-hidden', 'true');
+    const list = menuGroups.get(key).panel.querySelector('.menu-choices').cloneNode(true);
+    list.className = 'mast-dropdown-links';
+    if (key === 'restaurant') {
+      const reservation = list.querySelector('a');
+      reservation.textContent = 'Book';
+      reservation.href = 'mailto:info@mormoraia.it?subject=Restaurant%20reservation';
+    }
+    const panel = document.createElement('div');
+    panel.className = 'mast-dropdown-panel';
+    panel.id = button.getAttribute('aria-controls');
+    panel.append(title, list);
+    dropdownClip.append(panel);
+    setExpanded(button, panel, false);
+    const section = {button,panel};
+    sections.set(button, section);
+    button.addEventListener('pointerenter', event => {
+      if (event.pointerType === 'mouse') showDropdown(section);
+    });
+    button.addEventListener('click', event => {
+      showDropdown(currentSection === section && event.detail === 0 ? null : section);
+    });
+    button.addEventListener('keydown', event => {
+      if (event.key !== 'ArrowDown') return;
+      event.preventDefault();
+      showDropdown(section);
+      if (currentSection === section) panel.querySelector('a').focus();
+    });
+  }
+  // The backdrop follows the revealed height, including when a list wraps.
+  new ResizeObserver(([entry]) => {
+    mast.style.setProperty('--mast-dropdown-height', entry.contentRect.height + 'px');
+  }).observe(dropdown);
+
   mast.addEventListener('pointerleave', event => {
-    if (event.pointerType === 'mouse') showStay(false);
+    if (event.pointerType !== 'mouse') return;
+    if (currentSection?.panel.contains(document.activeElement)) return;
+    showDropdown(null);
   });
-  for (const [index, link] of stayLinks.entries()) {
-    const mark = () => {
-      stayMenu.style.setProperty('--stay-marker-index', index);
-      stayMenu.classList.add('has-marker');
-    };
-    link.addEventListener('pointerenter', mark);
-    link.addEventListener('focus', mark);
-  }
-  stayMenu.addEventListener('pointerleave', () => stayMenu.classList.remove('has-marker'));
   document.addEventListener('focusin', event => {
-    if (event.target !== stayToggle && !stayMenu.contains(event.target)) showStay(false);
+    if (sections.has(event.target) || dropdown.contains(event.target)) return;
+    showDropdown(null);
   });
   document.addEventListener('pointerdown', event => {
-    if (!mast.contains(event.target)) showStay(false);
+    if (!mast.contains(event.target)) showDropdown(null);
   });
-  addEventListener('resize', () => { if (stayOpen) positionStayMenu(); });
-  desktop.addEventListener('change', () => showStay(false));
+  desktop.addEventListener('change', () => showDropdown(null));
 
   const gentleHeader = matchMedia('(max-width:1024px) and (prefers-reduced-motion:no-preference)');
   let headerMotion = null;
@@ -100,8 +138,7 @@
     mast.classList.toggle('scrolled',sticky);
     mast.classList.toggle('away',away);
     mast.inert = away;
-    if (away) showStay(false);
-    else if (stayOpen) positionStayMenu();
+    if (away) showDropdown(null);
     if (animate) {
       headerMotion = mast.animate([from, {
         transform:away?'translate3d(0,-102%,0)':'translate3d(0,0,0)',
@@ -123,7 +160,8 @@
   function showMenu(next, returnFocus = true) {
     if (next === open) return;
     open = next;
-    if (open) showStay(false);
+    if (open) showDropdown(null);
+    else showGroup(null);
     headerMotion?.cancel();
     if (!open && returnFocus) toggle.focus({preventScroll:true});
     shell.classList.toggle('is-open', open);
@@ -134,16 +172,23 @@
     menu.setAttribute('aria-hidden', String(!open));
     quick.inert = open;
     page.inert = open;
-    if (!open) syncHeader();
+    if (open) menuContent.scrollTop = 0;
+    else syncHeader();
   }
   toggle.addEventListener('click', () => showMenu(!open));
   shell.querySelector('#back-to-top').addEventListener('click', () => showMenu(false, false), {capture:true});
   shell.addEventListener('click', event => {
     const anchor = event.target.closest('a');
-    if (!open || !anchor) return;
-    showMenu(false);
-    if (anchor.hash && anchor.origin === location.origin) {
-      const target = document.getElementById(anchor.hash.slice(1));
+    if (!anchor || (!open && !dropdown.contains(anchor))) return;
+    if (open) showMenu(false);
+    else {
+      currentSection?.button.focus({preventScroll:true});
+      showDropdown(null);
+    }
+    if (anchor.hash && anchor.origin === location.origin && anchor.pathname === location.pathname) {
+      if (anchor.hash === location.hash && anchor.hash.startsWith('#experience-')) window.dispatchEvent(new Event('experience-select'));
+      const destination = document.getElementById(anchor.hash.slice(1));
+      const target = destination?.closest('.experience-anchors')?.parentElement || destination;
       if (target) {
         target.tabIndex = -1;
         target.focus({preventScroll:true});
@@ -151,14 +196,36 @@
     }
   });
   document.addEventListener('keydown', event => {
-    if (stayOpen && event.key === 'Escape') {
-      showStay(false);
-      stayToggle.focus({preventScroll:true});
+    if (event.key === 'Escape') {
+      if (currentSection) {
+        currentSection.button.focus({preventScroll:true});
+        showDropdown(null);
+      } else if (currentGroup) {
+        currentGroup.button.focus({preventScroll:true});
+        showGroup(null);
+      } else if (open) showMenu(false);
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    // The dropdown is laid out beside the mast row but follows its trigger by keyboard.
+    if (currentSection) {
+      const {button, panel} = currentSection;
+      const links = panel.querySelectorAll('a');
+      const focused = document.activeElement;
+      if (!event.shiftKey && focused === button) {
+        event.preventDefault();
+        links[0].focus();
+      } else if (event.shiftKey && focused === links[0]) {
+        event.preventDefault();
+        button.focus();
+      } else if (!event.shiftKey && focused === links[links.length - 1]) {
+        event.preventDefault();
+        (button.nextElementSibling || shell.querySelector('.mast-logo')).focus();
+        showDropdown(null);
+      }
       return;
     }
     if (!open) return;
-    if (event.key === 'Escape') { showMenu(false); return; }
-    if (event.key !== 'Tab') return;
     const items = [...shell.querySelectorAll('a[href],button')].filter(el =>
       !el.closest('[inert]') && el.getClientRects().length && getComputedStyle(el).visibility === 'visible');
     if (event.shiftKey && document.activeElement === items[0]) {
