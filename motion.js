@@ -34,7 +34,7 @@ reveal(photo, 0, 'mask-right', photoSlot);
 sequence([1102,1103], .24, node(1100));
 const stayIntroTrigger = document.querySelector('.stay-intro-trigger');
 const stayIntroCopy = node(1138);
-[...node(1135).children].forEach((line, index) =>
+[...node(1135).querySelectorAll('p')].forEach((line, index) =>
   reveal(line, index * .12, 'stay-heading-reveal', stayIntroTrigger));
 reveal(node(1137), 1.02, 'stay-intro-fade', stayIntroTrigger);
 reveal(stayIntroCopy, 1.18, 'stay-intro-fade', stayIntroTrigger);

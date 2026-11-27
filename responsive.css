@@ -469,6 +469,10 @@
 }
 
 #n1134 {overflow-x:clip}
+.stay-intro-trigger {inset:0}
+@media (720px < width <= 1024px) {
+  .stay-intro-trigger {top:-64px}
+}
 @media (prefers-reduced-motion:no-preference) {
   .stay-heading-reveal {
     --stay-heading-travel:clamp(44px,7vw,112px);
@@ -482,6 +486,13 @@
   .stay-intro-fade {opacity:0}
   .stay-intro-fade.seen {opacity:1;transition:opacity .68s var(--silk) var(--delay)}
 }
+@media (max-width:720px) and (prefers-reduced-motion:no-preference) {
+  /* Start when the full heading has scrolled into view, including its last line. */
+  .stay-intro-trigger {inset:auto 0 0;height:1px}
+  .stay-heading-reveal {--stay-heading-travel:clamp(72px,24vw,112px)}
+  .stay-heading-reveal.seen {transition-duration:1.12s,.96s}
+  .stay-intro-fade.seen {transition-delay:calc(var(--delay) + .22s)}
+}
 @media (max-width:720px) {
   #n1143,#n1161 {padding-inline:32px}
   #n1143 > p:first-child,#n1161 > p:first-child {font-weight:500}
@@ -490,20 +501,23 @@
   #n1139.stay-mobile-curtains > .reveal {opacity:1;translate:none;transition:none}
   .stay-mobile-curtains :is(#n1141,#n1159) {
     height:350px;
+    --stay-video-height:650px;
     --stay-curtain-inset:inset(0 100% 0 0);
     --stay-curtain-hold:1.06s;
     --stay-stretch-time:.84s;
   }
   .stay-mobile-curtains #n1159 {--stay-curtain-inset:inset(0 0 0 100%)}
   .stay-mobile-curtains :is(#n1142,#n1160) {visibility:hidden}
-  .stay-mobile-curtains .stay-media {opacity:0;clip-path:var(--stay-curtain-inset)}
-  .stay-mobile-curtains #n1159 video {height:650px;top:50%;transform:translateY(-50%)}
+  .stay-mobile-curtains .stay-media {
+    inset:0 0 auto;height:var(--stay-video-height);
+    opacity:0;clip-path:var(--stay-curtain-inset);
+  }
   .stay-mobile-curtains :is(#n1143,#n1161) {opacity:0}
   .stay-mobile-curtains :is(#n1143,#n1161) > :is(.reveal,.line) {
     opacity:1;translate:none;scale:none;transition:none;
   }
   .stay-mobile-curtains :is(#n1141,#n1159).curtain-open {
-    height:650px;
+    height:var(--stay-video-height);
     transition:height var(--stay-stretch-time) var(--silk) var(--stay-curtain-hold);
   }
   .stay-mobile-curtains .curtain-open .stay-media {
