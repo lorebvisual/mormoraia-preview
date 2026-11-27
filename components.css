@@ -168,24 +168,18 @@
 #n1122{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;--photo-height:calc(800 * var(--u));--photo-travel:clamp(800px,180svh,1900px);--photo-inset:25%}
 #n1123{grid-column:1;grid-row:1/3;width:100%;opacity:var(--caption-opacity,1);pointer-events:none;z-index:1}
 #n1129{grid-column:2;grid-row:1;width:100%}
-/* The runway keeps a stable length while the photograph dissolves over
-   the emblem. The shorter white frame is only formed once the photo is gone. */
+/* The white frame releases into page scroll as the photo finishes fading. */
 .photo-finale {
   --photo-mark-width:24.4213vw;
-  --photo-mark-height:calc(var(--photo-mark-width) * 217 / 422);
-  --photo-end-top:calc(128 * var(--u));
-  --photo-end-gap:144px;
-  --photo-exit-height:calc(var(--photo-end-top) + var(--photo-mark-height) + var(--photo-end-gap));
-  --photo-scroll-length:calc(var(--photo-travel) + max(0px, var(--photo-height) - var(--photo-exit-height)));
   grid-column:1/-1;grid-row:2;
-  height:calc(var(--photo-exit-height) + var(--photo-scroll-length));
+  height:calc(var(--photo-height) + var(--photo-travel));
 }
 .photo-stage {
-  position:sticky;top:0;height:var(--photo-exit-height);pointer-events:none;
+  position:sticky;top:0;height:var(--photo-height);pointer-events:none;
 }
 .photo-window {
   position:relative;width:100%;overflow:hidden;background:white;
-  height:calc(var(--photo-height) - var(--photo-release,0) * (var(--photo-height) - var(--photo-exit-height)));
+  height:100%;
 }
 .photo-finale-surface {
   position:absolute;inset:0 0 auto;height:var(--photo-height);
@@ -198,9 +192,8 @@
   left:-10.24%;top:-19.62%;object-fit:cover;
 }
 .photo-emblem {
-  --photo-mark-center:calc((var(--photo-height) - var(--photo-mark-height)) / 2);
-  top:calc(var(--photo-mark-center) + var(--photo-release,0) * (var(--photo-end-top) - var(--photo-mark-center)));
-  display:block;position:absolute;left:50%;transform:translateX(-50%);
+  top:calc(50% + var(--photo-mark-offset,0px));
+  display:block;position:absolute;left:50%;transform:translate(-50%,-50%);
   width:var(--photo-mark-width);opacity:var(--photo-mark-opacity,0);pointer-events:none;
 }
 .photo-emblem img {display:block;width:100%;height:auto}
@@ -217,10 +210,10 @@
 }
 @media(prefers-reduced-motion:reduce){
  #n1123{grid-row:1}
- .photo-finale,.photo-stage,.photo-window{height:calc(var(--photo-height) + var(--photo-exit-height))}
+ .photo-finale,.photo-stage{height:calc(2 * var(--photo-height))}
  .photo-stage{position:relative}
  .photo-finale-surface{clip-path:none;transform:none;opacity:1}
- .photo-emblem{top:calc(var(--photo-height) + var(--photo-end-top));opacity:1}
+ .photo-emblem{top:75%;opacity:1}
 }
 
 /* Explicitly select the Regular instance used by Figma's paragraph and CTA styles. */

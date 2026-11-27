@@ -185,7 +185,7 @@
 
   /* The sticky siblings paint in document order, so the next photo covers the
      previous one. The final runway holds the vineyard for the emblem reveal. */
-  #n1122 {display:block;--photo-height:900px}
+  #n1122 {display:block;--photo-height:900px;--photo-travel:82svh}
   #n1123 {position:relative;inset:auto;opacity:1;z-index:auto}
   .photo-stack {display:block;position:relative;width:100%;isolation:isolate}
   #n1129 {display:contents}
@@ -198,9 +198,6 @@
   .photo-finale {
     position:relative;background:white;
     --photo-mark-width:min(63.78vw,475px);
-    --photo-mark-height:calc(var(--photo-mark-width) * 244 / 475);
-    --photo-end-top:64px;
-    --photo-scroll-length:calc(82svh + var(--photo-height) - var(--photo-exit-height));
   }
   .photo-finale-surface {clip-path:none;transform:none}
 
@@ -609,9 +606,7 @@
   }
   .photo-finale {
     --photo-mark-width:min(90.667vw,340px);
-    --photo-mark-height:calc(var(--photo-mark-width) * 175 / 340);
-    --photo-end-top:79px;
-    --photo-end-gap:64px;
+    --photo-mark-offset:-14.5px;
   }
   .site-footer {
     --footer-padding-block:64px;

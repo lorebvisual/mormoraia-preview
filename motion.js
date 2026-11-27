@@ -389,6 +389,7 @@ function gallery(id,label,icon,onChange) {
   const surface = id === 1340 || id === 1118 ? container.closest('[id="n1758"],[id="n1762"]') : container;
   const editorial = surface === container ? null : editorialGallery(surface,track,slides);
   let index = 0, busy = false, press = null;
+  let pendingSteps = 0, slideTransition = null, transitionId = 0;
   const story = id === 1118;
   const gap = () => parseFloat(getComputedStyle(track).columnGap) || 0;
   const step = el => el.getBoundingClientRect().width + gap();
@@ -429,20 +430,31 @@ function gallery(id,label,icon,onChange) {
     };
     return strip;
   }
-  function settle(x, after){
+  function settle(x, after, fast=false){
+    const id = ++transitionId;
     busy = true;
     track.getBoundingClientRect();
     track.style.transition = '';
     place(x);
     const animation = track.getAnimations().find(a=>a.transitionProperty==='transform');
+    slideTransition = animation;
     const finish = () => {
-      if(editorial?.model.active){busy=false;return}
+      if(id!==transitionId) return;
+      slideTransition = null;
+      if(editorial.model.active){busy=false;pendingSteps=0;return}
       if(story){place(-storyOffset());busy=false;return}
       after();
       rest();
+      if(pendingSteps){
+        const dir = Math.sign(pendingSteps);
+        pendingSteps -= dir;
+        move(dir,true);
+      }
     };
-    if(animation && !reduce.matches) animation.finished.then(finish,finish);
-    else finish();
+    if(animation && !reduce.matches){
+      if(fast) animation.updatePlaybackRate(3);
+      animation.finished.then(finish,finish);
+    }else finish();
   }
   function changed(dir){
     index = (index+dir+slides.length)%slides.length;
@@ -456,23 +468,30 @@ function gallery(id,label,icon,onChange) {
       if (!editorial.model.active && !busy && !press?.drag) place(-storyOffset());
     }).observe(container);
   }
-  function move(dir){
-    if(busy || press) return;
+  function move(dir, fast=false){
     if(editorial?.model.active){editorial.advance(dir);return}
     if(story){
-      index = clamp(index + dir);
+      const next = clamp(index + dir);
+      if(busy && next === index) return;
+      index = next;
       settle(-storyOffset());
+      return;
+    }
+    if(busy){
+      // Finish the current rotation from its visible position, then drain the clicks.
+      pendingSteps += dir;
+      slideTransition?.updatePlaybackRate(3);
       return;
     }
     changed(dir);
     if(dir>0){
-      settle(-step(track.firstElementChild),()=>track.append(track.firstElementChild));
+      settle(-step(track.firstElementChild),()=>track.append(track.firstElementChild),fast);
     }else{
       const previous=track.lastElementChild;
       track.style.transition='none';
       track.prepend(previous);
       place(-step(previous));
-      settle(0,()=>{});
+      settle(0,()=>{},fast);
     }
   }
   {
@@ -485,14 +504,14 @@ function gallery(id,label,icon,onChange) {
       const now=performance.now();
       if(now-lastWheel>170){distance=0;consumed=false;}
       lastWheel=now;
-      if(consumed || busy || press)return;
+      if(consumed || press)return;
       distance+=dx*(event.deltaMode===1?16:event.deltaMode===2?container.clientWidth:1);
       if(Math.abs(distance)>=18){consumed=true;move(Math.sign(distance));}
     },{passive:false});
   }
   surface.addEventListener('pointerdown',e=>{
-    if(e.button!==0 || !e.isPrimary || busy || press || e.target.closest('a,button,input'))return;
-    press={id:e.pointerId,x:e.clientX,y:e.clientY,photo:container.contains(e.target),drag:false,dx:0};
+    if(e.button!==0 || !e.isPrimary || press || e.target.closest('a,button,input'))return;
+    press={id:e.pointerId,x:e.clientX,y:e.clientY,photo:container.contains(e.target),drag:false,clickOnly:busy,dx:0};
   });
   surface.addEventListener('pointermove',e=>{
     if(!press || press.id!==e.pointerId)return;
@@ -500,6 +519,7 @@ function gallery(id,label,icon,onChange) {
     if(!press.drag){
       if(Math.abs(dy)>8 && Math.abs(dy)>Math.abs(dx)){press=null;return;}
       if(Math.abs(dx)<5)return;
+      if(press.clickOnly){press=null;return;}
       surface.setPointerCapture(e.pointerId);
       press.drag=true;
       if(editorial?.model.active){
@@ -555,7 +575,7 @@ function gallery(id,label,icon,onChange) {
   surface.addEventListener('pointercancel',e=>release(e,true));
   surface.addEventListener('lostpointercapture',e=>release(e,true));
   surface.addEventListener('pointerleave',e=>{if(press && !press.drag && e.pointerType==='mouse')press=null;});
-  container.onkeydown=e=>{if(['ArrowRight','ArrowLeft','Enter'].includes(e.key)){e.preventDefault();move(e.key==='ArrowLeft'?-1:1)}};
+  container.onkeydown=e=>{if(!press && ['ArrowRight','ArrowLeft','Enter'].includes(e.key)){e.preventDefault();move(e.key==='ArrowLeft'?-1:1)}};
 }
 const experienceGallery = gallery(1725,'Experiences','88087.svg',experienceCopy);
 const experienceAnchors = ['wine-tasting','cooking-class','truffle-hunting','sunset-aperitif','romantic-dinner','elopement-wedding'];
@@ -591,17 +611,13 @@ function photographyMotion() {
   const center = phase(progress, 0, .19);
   const aperture = phase(progress, .19, .43);
   const fadeStart = stacked ? .22 : .46;
-  const fadeEnd = stacked ? .66 : .79;
-  const opacity = animated ? 1 - phase(progress, fadeStart, fadeEnd) : 1;
-  const release = animated ? phase(progress, fadeEnd, .995) : 0;
+  const opacity = animated ? 1 - phase(progress, fadeStart, 1) : 1;
   photoSection.style.setProperty('--caption-opacity', animated ? 1 - center : 1);
   photoSection.style.setProperty('--earlier-photos', stacked && animated && progress > fadeStart ? 'hidden' : 'visible');
   photoWindow.style.setProperty('--photo-shift', stacked || !animated ? '0%' : 25 * (1 - center) + '%');
   photoWindow.style.setProperty('--aperture', stacked || !animated ? '0%' : 25 * (1 - aperture) + '%');
   photoWindow.style.setProperty('--photo-image-opacity', opacity);
-  photoWindow.style.setProperty('--photo-release', release);
   photoWindow.style.setProperty('--photo-mark-opacity', stacked || !animated || progress >= .43 ? 1 : 0);
-  photoWindow.classList.toggle('photo-cleared', opacity < .48);
 }
 
 // Ease only the foreground offsets. Native page scrolling remains immediate.

@@ -115,7 +115,7 @@
     syncCounter();
 
     const rtl = () => getComputedStyle(gallery).direction === 'rtl';
-    let press = null;
+    let press = null, destination = null;
     const physicalDirection = clientX => {
       const isDesktop = desktop.matches;
       if (!isDesktop) {
@@ -128,22 +128,31 @@
       return clientX < box.left + box.width * split ? -1 : 1;
     };
     function advance(physical) {
-      const offset = Math.abs(gallery.scrollLeft);
+      const offset = destination ?? Math.abs(gallery.scrollLeft);
       const max = gallery.scrollWidth - gallery.clientWidth;
       const advanceToEnd = (rtl() ? -physical : physical) > 0;
-      const width = slides[0].offsetWidth;
+      const width = slides[0].getBoundingClientRect().width;
       const step = advanceToEnd ? Math.floor((offset + 2) / width) + 1 : Math.ceil((offset - 2) / width) - 1;
       const target = Math.min(max, Math.max(0, step * width));
+      if (target === offset) return;
+      if (desktop.matches && !reduce.matches) destination = target;
       gallery.scrollTo({left:(rtl() ? -1 : 1) * target,behavior:reduce.matches ? 'instant' : 'smooth'});
     }
 
+    gallery.addEventListener('scrollend', () => { destination = null; });
+    gallery.addEventListener('wheel', event => {
+      if (event.deltaX || event.shiftKey) destination = null;
+    }, {passive:true});
+    addEventListener('resize', () => { destination = null; });
+    reduce.addEventListener('change', () => { destination = null; });
     gallery.addEventListener('keydown', event => {
       if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
       event.preventDefault();
       advance(event.key === 'ArrowRight' ? 1 : -1);
     });
     gallery.addEventListener('pointerdown', event => {
-      if (event.pointerType !== 'mouse' || event.button !== 0) return;
+      if (event.pointerType !== 'mouse') { destination = null; return; }
+      if (event.button !== 0) return;
       press = {x:event.clientX,left:gallery.scrollLeft,id:event.pointerId,drag:false};
     });
     gallery.addEventListener('pointermove', event => {
@@ -156,6 +165,8 @@
       if (!press || press.id !== event.pointerId) return;
       const delta = event.clientX - press.x;
       if (!press.drag && Math.abs(delta) >= 5) {
+        destination = null;
+        press.left = gallery.scrollLeft;
         press.drag = true;
         gallery.classList.add('dragging');
         gallery.setPointerCapture(event.pointerId);
