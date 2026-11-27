@@ -11,12 +11,17 @@
   <link rel="stylesheet" href="components.css?v=41">
   <link rel="stylesheet" href="responsive.css?v=61">
 <link rel="stylesheet" href="navigation.css?v=2">
-  <link rel="stylesheet" href="stay.css?v=8">
+  <script>
+    if (new URLSearchParams(location.search).get('rooms') === 'v2') {
+      document.documentElement.classList.add('rooms-v2');
+    }
+  </script>
+  <link rel="stylesheet" href="stay.css?v=9">
   <script defer src="entrances.js?v=3"></script>
-  <script defer src="stay.js?v=5"></script>
+  <script defer src="stay.js?v=6"></script>
   <script defer src="booking.js?v=1"></script>
   <script defer src="footer.js?v=4"></script>
-  <script defer src="page-scroll.js?v=39"></script>
+  <script defer src="page-scroll.js?v=40"></script>
   <script defer src="navigation.js?v=41"></script>
   <noscript><style>.mast-row>*, .opening :is(#n993,#n1010,.stay-hero-emblem,.stay-hero-rule){opacity:1}.mast-rule{transform:none}.opening #n1051{--booking-entrance:1}</style></noscript>
 </head>

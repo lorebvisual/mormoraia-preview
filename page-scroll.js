@@ -1,8 +1,8 @@
 (() => {
   const preference = matchMedia('(prefers-reduced-motion: reduce)');
   const page = document.scrollingElement;
-  const roomSequence = document.querySelector('.room-sequence');
-  const roomAnchors = [...document.querySelectorAll('.room-sequence > .room-position')];
+  const roomSequence = document.querySelector('.rooms-v2 .room-sequence');
+  const roomAnchors = roomSequence ? [...roomSequence.querySelectorAll(':scope > .room-position')] : [];
   const desktopRooms = matchMedia('(min-width:1025px) and (hover:hover) and (pointer:fine)');
   const roomWheelThreshold = 32;
   const roomWheelQuiet = 180;

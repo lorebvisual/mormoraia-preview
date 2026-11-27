@@ -70,8 +70,12 @@
 }
 .room-position {height:0;pointer-events:none}
 .room-controls {display:none}
+@media (width > 1024px) {
+  .stay-page:not(.rooms-v2) .room-scene {position:relative;top:auto}
+  .stay-page:not(.rooms-v2) .room-scene::after {display:none}
+}
 @media (min-width:1025px) and (hover:hover) and (pointer:fine) {
-  .room-scene {
+  :where(.rooms-v2) .room-scene {
     /* Match the scroll stop, which centers rooms taller than the viewport. */
     --room-pin-offset:max(0px,calc((var(--room-measured-height,var(--room-height)) - 100svh) / 2));
     top:calc(-1 * var(--room-pin-offset));

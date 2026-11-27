@@ -5,6 +5,14 @@
   presentHero(hero, media instanceof HTMLVideoElement ? media.poster : media.currentSrc || media.src);
   const desktop = matchMedia('(width > 1024px)');
   const narrow = matchMedia('(max-width:720px)');
+  const roomsV2 = document.documentElement.classList.contains('rooms-v2');
+
+  if (roomsV2) {
+    for (const link of document.querySelectorAll('a[href="historic-residence.html"],a[href="il-palagio.html"]')) {
+      link.search = '?rooms=v2';
+    }
+  }
+
 
   const introHeading = document.getElementById('stay-intro-title');
   const intro = introHeading.closest('.stay-intro');
@@ -40,7 +48,7 @@
   function drawStack() {
     frame = 0;
     const height = innerHeight;
-    const stacked = !narrow.matches && !reduce.matches;
+    const stacked = !narrow.matches && !reduce.matches && (!desktop.matches || roomsV2);
     const boxes = stacked ? scenes.map(scene => scene.getBoundingClientRect()) : [];
     const progress = clamp((height * .98 - introHeading.getBoundingClientRect().top) / (height * .82));
     if (introProgress === null || progress !== introTarget) {
