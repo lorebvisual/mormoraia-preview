@@ -117,11 +117,15 @@
     const rtl = () => getComputedStyle(gallery).direction === 'rtl';
     let press = null;
     const physicalDirection = clientX => {
-      const left = Math.abs(gallery.scrollLeft);
-      if (left < 2) return rtl() ? -1 : 1;
-      if (left >= gallery.scrollWidth - gallery.clientWidth - 2) return rtl() ? 1 : -1;
+      const isDesktop = desktop.matches;
+      if (!isDesktop) {
+        const left = Math.abs(gallery.scrollLeft);
+        if (left < 2) return rtl() ? -1 : 1;
+        if (left >= gallery.scrollWidth - gallery.clientWidth - 2) return rtl() ? 1 : -1;
+      }
       const box = gallery.getBoundingClientRect();
-      return clientX - box.left < box.width * .32 ? -1 : 1;
+      const split = isDesktop ? .5 : .32;
+      return clientX < box.left + box.width * split ? -1 : 1;
     };
     function advance(physical) {
       const offset = Math.abs(gallery.scrollLeft);

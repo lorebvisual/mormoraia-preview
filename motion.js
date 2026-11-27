@@ -398,7 +398,11 @@ function gallery(id,label,icon,onChange) {
     place(0);
     busy = false;
   }
-  function direction(x){const b=container.getBoundingClientRect();return x<b.left+b.width*.32?-1:1}
+  function direction(clientX) {
+    const box = container.getBoundingClientRect();
+    const split = editorial && !tabletLayout.matches ? .5 : .32;
+    return clientX < box.left + box.width * split ? -1 : 1;
+  }
   const hide=()=>cursor.classList.remove('on');
   container.addEventListener('pointermove',e=>{
     if(e.pointerType!=='mouse' || (tabletLayout.matches && !editorial)){hide();return;}
