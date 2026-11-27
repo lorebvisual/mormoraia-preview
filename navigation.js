@@ -9,11 +9,9 @@
   const dropdownClip = dropdown.firstElementChild;
   const desktop = matchMedia('(width > 1024px)');
   const compact = matchMedia('(max-width:720px)');
-  const desktopHeroControlsBottom = 72;
   const desktopTopZone = 200;
-  const hero = document.getElementById('n986');
-  const sheet = page.querySelector('.white-sheet');
   const menuContent = menu.querySelector('.menu-content');
+  const menuItems = menu.querySelector('.menu-items');
   const menuGroups = new Map([...menu.querySelectorAll('[data-menu-group]')].map(group => [
     group.dataset.menuGroup, {button:group.querySelector('button'), panel:group.querySelector('.menu-panel')}
   ]));
@@ -27,11 +25,27 @@
     panel.setAttribute('aria-hidden', String(!expanded));
   }
 
+  function positionMenuIndicator() {
+    if (!desktop.matches || !currentGroup) return;
+    const gap = parseFloat(getComputedStyle(menuItems).rowGap);
+    let center = currentGroup.button.getBoundingClientRect().height / 2;
+    // The destination is the title's position after the other rows collapse.
+    for (const group of menuGroups.values()) {
+      if (group === currentGroup) break;
+      center += group.button.getBoundingClientRect().height + gap;
+    }
+    menuItems.style.setProperty('--menu-indicator-y', center + 'px');
+  }
+
   function showGroup(group) {
-    if (currentGroup) setExpanded(currentGroup.button, currentGroup.panel, false);
+    const previous = currentGroup;
+    if (previous) setExpanded(previous.button, previous.panel, false);
     currentGroup = group;
     if (group) setExpanded(group.button, group.panel, true);
+    menuItems.dataset.indicator = group ? (previous ? 'move' : 'show') : 'hide';
+    positionMenuIndicator();
   }
+  addEventListener('resize', positionMenuIndicator);
   for (const group of menuGroups.values()) {
     group.button.addEventListener('click', () => showGroup(currentGroup === group ? null : group));
   }
@@ -40,16 +54,11 @@
     if (section === currentSection || (section && (open || !desktop.matches || mast.inert))) return;
     if (currentSection) setExpanded(currentSection.button, currentSection.panel, false);
     currentSection = section;
-    if (section) {
-      dropdownClip.querySelector('.is-current')?.classList.remove('is-current');
-      section.panel.classList.add('is-current');
-      setExpanded(section.button, section.panel, true);
-    }
+    if (section) setExpanded(section.button, section.panel, true);
     mast.classList.toggle('dropdown-open', Boolean(section));
   }
   for (const button of quick.querySelectorAll('[data-nav-section]')) {
     const key = button.dataset.navSection;
-    button.dataset.label = button.textContent;
     const title = document.createElement('p');
     title.className = 'mast-dropdown-title';
     title.textContent = button.textContent;
@@ -112,11 +121,7 @@
   function syncHeader() {
     frame = 0;
     if (open) return;
-    const visibleHeroBottom = Math.min(hero.getBoundingClientRect().bottom, sheet?.getBoundingClientRect().top ?? Infinity);
     const isDesktop = desktop.matches;
-    // Measure against the hero controls, independently of the current header variant.
-    const overHero = visibleHeroBottom > (isDesktop ? desktopHeroControlsBottom : mast.offsetHeight);
-    mast.classList.toggle('over-hero', overHero);
     // Clamp elastic overscroll so releasing at either edge is not a reversal.
     const y = Math.min(Math.max(0, scrollY), Math.max(0,document.scrollingElement.scrollHeight-innerHeight));
     const delta = y - lastScroll;
@@ -126,8 +131,11 @@
     const pastHeader = y > (isDesktop ? desktopTopZone : mast.offsetHeight);
     const away = isDesktop ? pastHeader && (moved ? delta > 0 : wasAway)
       : y >= 6 && delta > 0 && (pastHeader || wasAway);
-    const sticky = isDesktop ? !overHero
-      : y >= 6 && (pastHeader || wasAway || mast.classList.contains('scrolled'));
+    const wasSticky = mast.classList.contains('scrolled');
+    // Desktop stays white until the top. On touch layouts, the hero header
+    // keeps its current styling as it retracts and switches on the return.
+    const sticky = isDesktop ? y > 0 && (wasSticky || pastHeader || delta < 0)
+      : y >= 6 && (wasSticky || (!away && (pastHeader || wasAway)));
     const animate = gentleHeader.matches && wasAway !== away;
     let from;
     if (animate) {

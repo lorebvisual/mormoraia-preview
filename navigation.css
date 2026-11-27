@@ -66,7 +66,10 @@
   transition:color .45s var(--silk);
 }
 button.menu-title {cursor:pointer}
-.menu-title:is(:hover,:focus-visible,[aria-expanded="true"]) {color:var(--menu-selected)}
+.menu-title:is(:focus-visible,[aria-expanded="true"]) {color:var(--menu-selected)}
+@media (hover:hover) {
+  .menu-title:hover {color:var(--menu-selected)}
+}
 .menu-title::before {
   content:"";
   position:absolute;
@@ -109,6 +112,7 @@ button.menu-title {cursor:pointer}
   opacity:0;
   transition:opacity .2s var(--silk);
 }
+.mast-dropdown-links li {transition-duration:.45s}
 .menu-panel[aria-hidden="false"] li,.mast-dropdown-panel[aria-hidden="false"] li {
   opacity:1;
   transition:opacity .46s var(--silk) calc(.13s + var(--choice-order,0) * .065s);
@@ -154,6 +158,32 @@ button.menu-title {cursor:pointer}
 .experience-anchors span {position:absolute;top:0;left:0}
 
 @media (width > 1024px) {
+  .menu-items {position:relative}
+  .menu-title::before {content:none}
+  .menu-items::before {
+    content:"";
+    position:absolute;
+    top:0;
+    left:calc(-1 * var(--menu-inset));
+    width:calc(var(--menu-inset) - 16px);
+    height:1px;
+    background:var(--menu-selected);
+    pointer-events:none;
+    translate:0 var(--menu-indicator-y,0px);
+    scale:0 1;
+    transform-origin:left;
+    transition:scale .58s var(--silk);
+  }
+  .menu-items:is([data-indicator="show"],[data-indicator="move"])::before {scale:1 1}
+  .menu-items[data-indicator="move"]::before {
+    transition:scale .58s var(--silk),translate .65s cubic-bezier(.4,0,.2,1);
+  }
+  .menu-footer {padding:0}
+  .menu-bottom {
+    position:fixed;
+    right:var(--menu-inset);
+    bottom:32px;
+  }
   .menu-socials {
     position:fixed;
     right:var(--menu-inset);
@@ -185,10 +215,16 @@ button.menu-title {cursor:pointer}
 
 @media (max-width:720px) {
   .navigation {--menu-inset:32px;--menu-header-height:48px;--menu-type:24px;--menu-subtype:16px}
-  .is-open .masthead {padding:24px var(--menu-inset) 0}
+  .is-open .masthead {padding:24px 24px 0}
+  .is-open .mast-logo {visibility:visible}
+  .is-open .masthead .language {display:none}
   .menu-content {padding-block:48px 64px}
   .menu-items {justify-items:stretch;text-align:center}
-  .menu-title {width:100%}
+  .menu-title {
+    width:100%;
+    -webkit-tap-highlight-color:transparent;
+  }
+  button.menu-title {appearance:none}
   .menu-title::before {
     inset:auto 0 -24px;
     width:100%;
@@ -212,14 +248,6 @@ button.menu-title {cursor:pointer}
 @media (width > 1024px) {
   .masthead {isolation:isolate}
   .quick-links button {font:inherit;letter-spacing:inherit;white-space:nowrap}
-  .quick-links button::after {
-    content:attr(data-label);
-    display:block;
-    height:0;
-    visibility:hidden;
-    font-weight:700;
-  }
-  .quick-links button[aria-expanded="true"] {font-weight:700}
   .mast-dropdown {
     position:absolute;
     inset:100% 0 auto;
@@ -234,14 +262,25 @@ button.menu-title {cursor:pointer}
     visibility:visible;
     transition:grid-template-rows .58s var(--silk),visibility 0s;
   }
-  .mast-dropdown-clip {min-height:0;overflow:clip}
+  .mast-dropdown-clip {display:grid;min-height:0;overflow:clip}
   .mast-dropdown-panel {
-    display:none;
+    display:flex;
+    grid-area:1 / 1;
     align-items:center;
     gap:clamp(24px,3.7vw,64px);
     padding:16px var(--desktop-nav-inset) 32px;
+    opacity:0;
+    translate:0 5px;
+    visibility:hidden;
+    transition:opacity .42s var(--silk),translate .48s var(--silk),visibility 0s .48s;
   }
-  .mast-dropdown-panel.is-current {display:flex}
+  .mast-dropdown-panel[aria-hidden="false"] {
+    z-index:1;
+    opacity:1;
+    translate:none;
+    visibility:visible;
+    transition:opacity .58s var(--silk) .1s,translate .62s var(--silk) .07s,visibility 0s;
+  }
   .mast-dropdown-title {
     flex:none;
     margin:0;
@@ -268,9 +307,8 @@ button.menu-title {cursor:pointer}
     transition:transform .42s var(--silk);
   }
   .mast-dropdown-links a:is(:hover,:focus-visible)::after {transform:scaleX(1)}
-  .navigation:not(.is-open) .masthead.over-hero {background:transparent;color:white}
-  .masthead.over-hero .mast-dropdown {background:transparent}
-  .masthead.over-hero::before {
+  .masthead:not(.scrolled) .mast-dropdown {background:transparent}
+  .masthead:not(.scrolled)::before {
     content:"";
     position:absolute;
     z-index:-1;
@@ -283,14 +321,14 @@ button.menu-title {cursor:pointer}
     opacity:0;
     transition:opacity .3s var(--silk) .3s;
   }
-  .navigation:not(.is-open) .masthead.over-hero.dropdown-open::before {
+  .navigation:not(.is-open) .masthead:not(.scrolled).dropdown-open::before {
     opacity:1;
     transition-delay:0s;
   }
-  .is-open .masthead.over-hero::before {visibility:hidden}
+  .is-open .masthead:not(.scrolled)::before {visibility:hidden}
 }
 @media (prefers-reduced-motion:reduce) {
-  :is(.estate-menu,.menu-title,.menu-panel,.menu-choices li,.menu-choices a,.mast-dropdown,.mast-dropdown-links li),
-  :is(.menu-title,.masthead.over-hero,.mast-dropdown-links a)::before,
+  :is(.estate-menu,.menu-title,.menu-panel,.menu-choices li,.menu-choices a,.mast-dropdown,.mast-dropdown-panel,.mast-dropdown-links li),
+  :is(.menu-title,.menu-items,.masthead:not(.scrolled))::before,
   .mast-dropdown-links a::after {transition:none!important}
 }

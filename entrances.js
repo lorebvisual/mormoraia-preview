@@ -1,6 +1,7 @@
 const node = id => document.getElementById('n' + id);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 const compact = matchMedia('(max-width:720px)');
+const desktopBooking = matchMedia('(width > 1024px)');
 const clamp = value => Math.min(1, Math.max(0, value));
 // Observe the unmasked layout box. A closed clip-path can have no visible intersection.
 const entrances = new Map();
@@ -71,6 +72,6 @@ function updateHeroBooking(distance, viewportHeight) {
   const fade = smooth(clamp(distance / Math.min(185, viewportHeight * .24)));
   const booking = node(1051);
   booking.style.setProperty('--booking-visibility', 1 - fade);
-  booking.style.filter = fade > 0 && fade < 1 && !reduce.matches ? 'blur(' + fade * 9 + 'px)' : 'none';
+  booking.style.filter = !desktopBooking.matches && fade > 0 && fade < 1 && !reduce.matches ? 'blur(' + fade * 9 + 'px)' : 'none';
   node(1050).inert = fade >= .995;
 }
