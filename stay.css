@@ -109,7 +109,7 @@
 }
 .room-gallery:focus-visible {opacity:1}
 .room-gallery::-webkit-scrollbar {display:none}
-.room-gallery.dragging {scroll-snap-type:none}
+.room-gallery:is(.dragging,.room-advancing) {scroll-snap-type:none}
 .room-scene-right .room-carousel {justify-self:start}
 .room-scene-right .room-gallery {direction:rtl}
 .room-track {height:100%;display:flex}

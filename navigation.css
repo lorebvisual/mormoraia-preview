@@ -219,6 +219,7 @@ button.menu-title {cursor:pointer}
     animation:none;
   }
   .menu-panel-clip {overflow:hidden}
+  .menu-items :is(.menu-title,.menu-choices a) {-webkit-tap-highlight-color:transparent}
   .menu-choices,.menu-group[data-menu-group="experiences"] .menu-choices {
     display:flex;
     flex-direction:column;
@@ -247,10 +248,7 @@ button.menu-title {cursor:pointer}
   .is-open .masthead .mast-rule {background-image:url(assets/27e3c.svg)}
   .menu-content {padding-block:48px 64px}
   .menu-items {justify-items:stretch;text-align:center}
-  .menu-title {
-    width:100%;
-    -webkit-tap-highlight-color:transparent;
-  }
+  .menu-title {width:100%}
   button.menu-title {appearance:none}
   .menu-title::before {
     inset:auto 0 -24px;

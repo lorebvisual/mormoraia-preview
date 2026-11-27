@@ -60,7 +60,7 @@
 #n1761,#n1762{isolation:isolate;overflow:clip}
 #ds11-3672{top:calc(64 * var(--u) + 192px);left:0;right:auto;pointer-events:none;z-index:-1}
 .story-mark{position:absolute;right:0;top:25%;width:min(13.6574vw,236px);height:auto;z-index:1;pointer-events:none}
-#ds11-3384{transform:translateX(100%)}
+#n1118 :where(.layout245){transform:translateX(100%)}
 #n1758 .panel-slot{top:calc(137 * var(--u))}
 #n1434{background:var(--chalk)}
 #n1684{background:white}
@@ -172,14 +172,14 @@
 .photo-finale {
   --photo-mark-width:24.4213vw;
   grid-column:1/-1;grid-row:2;
-  height:calc(var(--photo-height) + var(--photo-travel));
+  height:calc(var(--photo-height) + var(--photo-travel) - var(--photo-trim,0px));
 }
 .photo-stage {
-  position:sticky;top:0;height:var(--photo-height);pointer-events:none;
+  position:sticky;top:0;height:calc(var(--photo-height) - var(--photo-trim,0px));pointer-events:none;
 }
 .photo-window {
   position:relative;width:100%;overflow:hidden;background:white;
-  height:100%;
+  height:calc(var(--photo-height) - var(--photo-trim,0px) * var(--photo-trim-progress,0));
 }
 .photo-finale-surface {
   position:absolute;inset:0 0 auto;height:var(--photo-height);
@@ -192,7 +192,7 @@
   left:-10.24%;top:-19.62%;object-fit:cover;
 }
 .photo-emblem {
-  top:calc(50% + var(--photo-mark-offset,0px));
+  top:calc(var(--photo-height) / 2 + var(--photo-mark-offset,0px));
   display:block;position:absolute;left:50%;transform:translate(-50%,-50%);
   width:var(--photo-mark-width);opacity:var(--photo-mark-opacity,0);pointer-events:none;
 }
@@ -210,10 +210,11 @@
 }
 @media(prefers-reduced-motion:reduce){
  #n1123{grid-row:1}
- .photo-finale,.photo-stage{height:calc(2 * var(--photo-height))}
+ .photo-finale,.photo-stage{height:calc(2 * var(--photo-height) - var(--photo-trim,0px))}
  .photo-stage{position:relative}
+ .photo-window{height:100%}
  .photo-finale-surface{clip-path:none;transform:none;opacity:1}
- .photo-emblem{top:75%;opacity:1}
+ .photo-emblem{top:calc(1.5 * var(--photo-height) + var(--photo-mark-offset,0px));opacity:1}
 }
 
 /* Explicitly select the Regular instance used by Figma's paragraph and CTA styles. */
@@ -240,7 +241,7 @@
   font-weight:300;
   font-display:swap;
 }
-#n1636 .layout7 {display:none}
+#n1118 .layout152 .layout7 {display:none}
 
 .language button {cursor:pointer}
 

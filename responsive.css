@@ -196,8 +196,10 @@
   #n1129 .layout99 {width:227.5%;height:164%;left:-37%;top:-61%}
   #n1129 .layout101 {width:138.9%;height:100%;left:-19.4%;top:0}
   .photo-finale {
-    position:relative;background:white;
+    position:relative;overflow:clip;background:white;
     --photo-mark-width:min(63.78vw,475px);
+    /* Reserve the shorter frame in flow so section links have a stable target. */
+    --photo-trim:256px;
   }
   .photo-finale-surface {clip-path:none;transform:none}
 
@@ -374,7 +376,7 @@
   #n1762 .gallery-track > div {width:max(100vw,1011px)}
   #n1631.layout147,#n1636.layout152 {width:2274px;height:900px;left:-126px}
   #n1636.layout152 {left:-1137px}
-  #n1636 .layout7 {display:block;background:rgb(0 0 0 / .2)}
+  #n1118 .layout152 .layout7 {display:block;background:rgb(0 0 0 / .2)}
   #n1631::after {content:"";position:absolute;inset:0;background:rgb(0 0 0 / .2)}
   #ds11-3367,#ds11-3373 {width:400px;left:417px;top:256px}
   #ds11-3373 {left:411px}

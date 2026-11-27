@@ -141,6 +141,13 @@ experiences[0][1]=node(1748).textContent.trim();node(1747).setAttribute('aria-li
 // keyboard and scroll restoration all share the same reversible position.
 const tabletLayout = matchMedia('(max-width:1024px)');
 const editorialTimelines = [];
+function duplicateSlide(slide) {
+  const copy = slide.cloneNode(true);
+  copy.removeAttribute('id');
+  copy.querySelectorAll('[id]').forEach(child => child.removeAttribute('id'));
+  copy.setAttribute('aria-hidden','true');
+  return copy;
+}
 function editorialGallery(section, track, slides) {
   const runway = document.createElement('div');
   runway.className = 'editorial-runway';
@@ -199,7 +206,10 @@ function editorialGallery(section, track, slides) {
       const ids = compact.matches ? [1563,1566,1564] : [1563,1565,1566];
       activeSlides = ids.map(id => slides.find(slide => slide.id === 'n'+id));
     }else activeSlides = slides;
-    track.replaceChildren(...activeSlides);
+    if(!model.active && section.id==='n1762'){
+      // Repeat the whole panorama so both original framing positions wrap.
+      track.replaceChildren(...slides.map(duplicateSlide), ...slides, ...slides.map(duplicateSlide));
+    }else track.replaceChildren(...activeSlides);
     panel.querySelector('.panel-mask').lastElementChild.inert=false;
     track.style.transform = '';
     track.style.transition = '';
@@ -241,13 +251,6 @@ function nativeFilmstrip(container, track, slides, selection, select, clickDirec
     frame = 0;
     destination = null;
   }
-  function duplicate(slide) {
-    const copy = slide.cloneNode(true);
-    copy.removeAttribute('id');
-    copy.querySelectorAll('[id]').forEach(child => child.removeAttribute('id'));
-    copy.setAttribute('aria-hidden','true');
-    return copy;
-  }
   function measure() {
     interrupt();
     mouse = null;
@@ -269,7 +272,7 @@ function nativeFilmstrip(container, track, slides, selection, select, clickDirec
     container.style.removeProperty('--initial-clip');
     container.classList.add('native-gallery');
     container.classList.remove('edge-to-edge');
-    const copies = () => slides.map(duplicate);
+    const copies = () => slides.map(duplicateSlide);
     track.replaceChildren(...copies(), ...copies(), ...slides, ...copies(), ...copies());
     measure();
   }
@@ -396,7 +399,7 @@ function gallery(id,label,icon,onChange) {
   const place = x => { track.style.transform = 'translate3d('+x+'px,0,0)'; };
   function rest(){
     track.style.transition = 'none';
-    place(0);
+    place(story ? -storyOffset() : 0);
     busy = false;
   }
   function direction(clientX) {
@@ -442,8 +445,7 @@ function gallery(id,label,icon,onChange) {
       if(id!==transitionId) return;
       slideTransition = null;
       if(editorial.model.active){busy=false;pendingSteps=0;return}
-      if(story){place(-storyOffset());busy=false;return}
-      after();
+      after?.();
       rest();
       if(pendingSteps){
         const dir = Math.sign(pendingSteps);
@@ -460,30 +462,39 @@ function gallery(id,label,icon,onChange) {
     index = (index+dir+slides.length)%slides.length;
     if(onChange)onChange(index,true);
   }
-  // The two Story slides are adjacent crops of the same panorama.
-  const storyLimit = () => Math.max(0,track.getBoundingClientRect().width-container.clientWidth);
-  const storyOffset = () => index * storyLimit();
+  const storyWidth = () => slides.reduce((width, slide) => width + step(slide), 0);
+  const storyTravel = () => Math.max(0,storyWidth()-container.clientWidth);
+  const storyOffset = () => storyWidth() + index * storyTravel();
   if (story) {
     new ResizeObserver(() => {
-      if (!editorial.model.active && !busy && !press?.drag) place(-storyOffset());
+      if (!editorial.model.active && !busy && !press?.drag) rest();
     }).observe(container);
+    if(!editorial.model.active) rest();
   }
+  tabletLayout.addEventListener('change',()=>{
+    ++transitionId;
+    busy=false;
+    press=null;
+    slideTransition=null;
+    pendingSteps=0;
+    index=0;
+    if(!editorial.model.active) rest();
+  });
   function move(dir, fast=false){
     if(editorial?.model.active){editorial.advance(dir);return}
-    if(story){
-      const next = clamp(index + dir);
-      if(busy && next === index) return;
-      index = next;
-      settle(-storyOffset());
-      return;
-    }
     if(busy){
       // Finish the current rotation from its visible position, then drain the clicks.
       pendingSteps += dir;
       slideTransition?.updatePlaybackRate(3);
       return;
     }
+    const next = index + dir;
     changed(dir);
+    if(story){
+      const wrap = next < 0 ? -1 : next >= slides.length ? 1 : 0;
+      settle(-(storyOffset() + wrap * storyWidth()),null,fast);
+      return;
+    }
     if(dir>0){
       settle(-step(track.firstElementChild),()=>track.append(track.firstElementChild),fast);
     }else{
@@ -542,8 +553,10 @@ function gallery(id,label,icon,onChange) {
       return;
     }
     if(story){
-      press.dx=dx;
-      place(-Math.max(0,Math.min(storyLimit(),press.start-dx)));
+      const previous = index === 0 ? container.clientWidth : storyTravel();
+      const next = index === 0 ? storyTravel() : container.clientWidth;
+      press.dx=Math.max(-next,Math.min(previous,dx));
+      place(-press.start+press.dx);
       return;
     }
     press.dx=Math.max(-press.nextStep,Math.min(press.prevStep,dx));
@@ -618,6 +631,7 @@ function photographyMotion() {
   photoWindow.style.setProperty('--aperture', stacked || !animated ? '0%' : 25 * (1 - aperture) + '%');
   photoWindow.style.setProperty('--photo-image-opacity', opacity);
   photoWindow.style.setProperty('--photo-mark-opacity', stacked || !animated || progress >= .43 ? 1 : 0);
+  if(stacked) finale.style.setProperty('--photo-trim-progress', animated ? phase(progress,.55,1) : 1);
 }
 
 // Ease only the foreground offsets. Native page scrolling remains immediate.
@@ -670,6 +684,7 @@ function update(){
  const small=vertical?(compact.matches?205/375:438/744):.506;
  node(1108).style.scale=1-(1-small)*swap;
  node(1341).style.scale=vertical?small+(1-small)*swap:1+.974*swap;
+ photographyMotion();
  for(const draw of editorialTimelines)draw();
  const wineBox=node(1761).getBoundingClientRect();
  const wineProgress=reduced?1:smooth(clamp((h*.98-wineBox.top)/(h*.82)));
@@ -680,7 +695,6 @@ function update(){
  if(!followFrame)followFrame=requestAnimationFrame(followScroll);
  node(1205).style.transform=tabletLayout.matches?'none':'translateY('+(-node(1205).offsetTop*(reduced?1:pinned(wine,stage)))+'px)';
  const zoom=reduced?1:clamp(-closingSpace.getBoundingClientRect().top/(closing.offsetHeight*.8));
- photographyMotion();
  const startWidth = tabletLayout.matches ? (compact.matches?148:331) : closing.clientWidth*563/1728;
  const startHeight = tabletLayout.matches ? (compact.matches?257:400) : closing.offsetHeight*293/900;
  const hidden = 1-smooth(zoom);

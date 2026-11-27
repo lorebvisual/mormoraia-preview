@@ -91,7 +91,8 @@
     const carousel = scene.querySelector('.room-carousel');
     reveal(carousel, 0, 'room-photo-entrance');
     const gallery = scene.querySelector('.room-gallery');
-    const slides = [...gallery.querySelectorAll('.room-slide')];
+    const track = gallery.querySelector('.room-track');
+    const slides = [...track.children];
     const counter = document.createElement('div');
     counter.className = 'room-gallery-counter';
     counter.setAttribute('aria-hidden', 'true');
@@ -115,7 +116,59 @@
     syncCounter();
 
     const rtl = () => getComputedStyle(gallery).direction === 'rtl';
-    let press = null, destination = null;
+    const offset = () => Math.abs(gallery.scrollLeft);
+    let press = null, loop = null, destination = null, slideFrame = 0, lastTime = 0;
+    function interrupt() {
+      cancelAnimationFrame(slideFrame);
+      slideFrame = 0;
+      destination = null;
+      gallery.classList.remove('room-advancing');
+    }
+    function syncLoop() {
+      const width = slides[0].getBoundingClientRect().width;
+      const enabled = desktop.matches && slides.length > 1;
+      if (!width || (enabled ? loop?.width === width : !loop)) return;
+      const index = Math.round(offset() / (loop?.width ?? width)) % slides.length;
+      interrupt();
+      if (enabled && !loop) {
+        const copies = () => slides.map(slide => {
+          const copy = slide.cloneNode(true);
+          copy.setAttribute('aria-hidden', 'true');
+          return copy;
+        });
+        track.replaceChildren(...copies(), ...slides, ...copies());
+      } else if (!enabled) {
+        track.replaceChildren(...slides);
+      }
+      loop = enabled ? {width, length:width * slides.length, sign:rtl() ? -1 : 1} : null;
+      const target = (loop?.length ?? 0) + index * width;
+      gallery.scrollLeft = (rtl() ? -1 : 1) * target;
+      syncCounter();
+    }
+    function recenter() {
+      if (!loop) return;
+      const {length, sign} = loop;
+      const current = offset();
+      const shift = length - Math.floor((current + .5) / length) * length;
+      if (!shift) return;
+      gallery.scrollLeft = sign * (current + shift);
+      if (destination !== null) destination += shift;
+      if (press?.drag) press.left += sign * shift;
+    }
+    function animateSlide(time) {
+      const current = offset();
+      const delta = destination - current;
+      const ease = 1 - Math.exp(-Math.min(48, time - lastTime) / 115);
+      lastTime = time;
+      const done = Math.abs(delta) < 1;
+      gallery.scrollLeft = loop.sign * (done ? destination : current + Math.sign(delta) * Math.max(1, Math.abs(delta) * ease));
+      recenter();
+      if (done) interrupt();
+      else slideFrame = requestAnimationFrame(animateSlide);
+    }
+    desktop.addEventListener('change', syncLoop);
+    new ResizeObserver(syncLoop).observe(gallery);
+    syncLoop();
     const physicalDirection = clientX => {
       const isDesktop = desktop.matches;
       if (!isDesktop) {
@@ -128,30 +181,45 @@
       return clientX < box.left + box.width * split ? -1 : 1;
     };
     function advance(physical) {
-      const offset = destination ?? Math.abs(gallery.scrollLeft);
-      const max = gallery.scrollWidth - gallery.clientWidth;
       const advanceToEnd = (rtl() ? -physical : physical) > 0;
+      if (loop) {
+        const start = (destination ?? offset()) / loop.width;
+        const step = advanceToEnd ? Math.floor(start + .002) + 1 : Math.ceil(start - .002) - 1;
+        const target = step * loop.width;
+        if (reduce.matches) {
+          gallery.scrollLeft = loop.sign * target;
+          recenter();
+        } else {
+          destination = target;
+          if (!slideFrame) {
+            lastTime = performance.now();
+            gallery.classList.add('room-advancing');
+            slideFrame = requestAnimationFrame(animateSlide);
+          }
+        }
+        return;
+      }
+      const current = offset();
+      const max = gallery.scrollWidth - gallery.clientWidth;
       const width = slides[0].getBoundingClientRect().width;
-      const step = advanceToEnd ? Math.floor((offset + 2) / width) + 1 : Math.ceil((offset - 2) / width) - 1;
+      const step = advanceToEnd ? Math.floor((current + 2) / width) + 1 : Math.ceil((current - 2) / width) - 1;
       const target = Math.min(max, Math.max(0, step * width));
-      if (target === offset) return;
-      if (desktop.matches && !reduce.matches) destination = target;
+      if (target === current) return;
       gallery.scrollTo({left:(rtl() ? -1 : 1) * target,behavior:reduce.matches ? 'instant' : 'smooth'});
     }
 
-    gallery.addEventListener('scrollend', () => { destination = null; });
+    gallery.addEventListener('scrollend', () => { if (!slideFrame && !press?.drag) recenter(); });
     gallery.addEventListener('wheel', event => {
-      if (event.deltaX || event.shiftKey) destination = null;
+      if (slideFrame && (event.deltaX || event.shiftKey)) interrupt();
     }, {passive:true});
-    addEventListener('resize', () => { destination = null; });
-    reduce.addEventListener('change', () => { destination = null; });
+    reduce.addEventListener('change', interrupt);
     gallery.addEventListener('keydown', event => {
       if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
       event.preventDefault();
       advance(event.key === 'ArrowRight' ? 1 : -1);
     });
     gallery.addEventListener('pointerdown', event => {
-      if (event.pointerType !== 'mouse') { destination = null; return; }
+      if (event.pointerType !== 'mouse') { if (slideFrame) interrupt(); return; }
       if (event.button !== 0) return;
       press = {x:event.clientX,left:gallery.scrollLeft,id:event.pointerId,drag:false};
     });
@@ -165,13 +233,16 @@
       if (!press || press.id !== event.pointerId) return;
       const delta = event.clientX - press.x;
       if (!press.drag && Math.abs(delta) >= 5) {
-        destination = null;
+        if (slideFrame) interrupt();
         press.left = gallery.scrollLeft;
         press.drag = true;
         gallery.classList.add('dragging');
         gallery.setPointerCapture(event.pointerId);
       }
-      if (press.drag) gallery.scrollLeft = press.left - delta;
+      if (press.drag) {
+        gallery.scrollLeft = press.left - delta;
+        recenter();
+      }
     });
     function release(event) {
       if (!press || press.id !== event.pointerId) return;
