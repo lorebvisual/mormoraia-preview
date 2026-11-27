@@ -33,7 +33,7 @@
   opacity:1;
 }
 .is-open .mast-row>* {animation:none;opacity:1}
-.is-open .mast-logo img {filter:none}
+.is-open .masthead .mast-logo img {filter:brightness(0) invert(1)}
 .is-open .masthead :is(.quick-links,.mast-rule,.utility,.sticky-booking),
 .is-open #back-to-top {display:none}
 .menu-content {
@@ -196,7 +196,6 @@ button.menu-title {cursor:pointer}
 @media (max-width:1024px) {
   .navigation {--menu-type:32px;--menu-header-height:84px}
   .is-open .masthead {padding:44px 48px 12px}
-  .is-open .mast-logo {visibility:hidden}
   .menu-panel-clip {overflow:hidden}
   .menu-choices,.menu-group[data-menu-group="experiences"] .menu-choices {
     display:flex;
@@ -216,7 +215,6 @@ button.menu-title {cursor:pointer}
 @media (max-width:720px) {
   .navigation {--menu-inset:32px;--menu-header-height:48px;--menu-type:24px;--menu-subtype:16px}
   .is-open .masthead {padding:24px 24px 0}
-  .is-open .mast-logo {visibility:visible}
   .is-open .masthead .language {display:none}
   .menu-content {padding-block:48px 64px}
   .menu-items {justify-items:stretch;text-align:center}
