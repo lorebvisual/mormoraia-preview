@@ -50,6 +50,8 @@
   addEventListener('resize', positionMenuIndicator);
   document.fonts.ready.then(positionMenuIndicator);
   for (const group of menuGroups.values()) {
+    const choices = group.panel.querySelector('.menu-choices');
+    group.panel.style.setProperty('--menu-choice-count', choices.childElementCount);
     group.button.addEventListener('click', () => showGroup(currentGroup === group ? null : group));
   }
 
