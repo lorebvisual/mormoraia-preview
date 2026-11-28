@@ -35,6 +35,20 @@
 }
 
 @media (width > 1024px) {
+  .palagio-room-link {
+    display: inline-block;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--palagio-room-hover);
+    text-decoration-thickness: 1px;
+    text-underline-offset: .13em;
+  }
+
+  .palagio-room-link:focus-visible {
+    outline: 1px solid var(--palagio-room-hover);
+    outline-offset: 6px;
+  }
+
   .palagio-page :is(.room-carousel:not(.palagio-desktop-cover), .gallery-cursor) {
     display: none;
   }
