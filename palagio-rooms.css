@@ -199,10 +199,10 @@
 
 @media (max-width: 720px) and (prefers-reduced-motion: no-preference) {
   .palagio-room-entrance {
-    --palagio-room-travel: clamp(28px, 11vw, 56px);
+    --palagio-room-travel: clamp(46px, 18vw, 82px);
     --palagio-room-start: calc(-1 * var(--palagio-room-travel));
     opacity: 0;
-    translate: var(--palagio-room-start) 0;
+    translate: var(--palagio-room-start) 12px;
   }
 
   .room-scene-right .palagio-room-entrance {
@@ -215,7 +215,7 @@
   }
 
   .palagio-room-entrance.seen {
-    transition: translate 1.15s cubic-bezier(.22, 1, .36, 1), opacity .95s var(--silk);
+    transition: translate 1.95s cubic-bezier(.35, .56, .27, 1), opacity 1.55s var(--silk);
   }
 
   .palagio-room-entrance :is(.room-photo-entrance, .room-info-entrance) {
