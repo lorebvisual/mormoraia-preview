@@ -35,6 +35,8 @@
 }
 
 @media (width > 1024px) {
+  .palagio-page {--palagio-room-hover: #c7bbb0}
+
   .palagio-page .room-scene {
     --room-space: calc(128 * var(--u));
     --room-card-inset: calc(144 * var(--u));
@@ -268,20 +270,21 @@
   .palagio-page .room-scene .room-panel {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: baseline;
     flex-wrap: wrap;
     gap: 8px 12px;
     padding: 16px var(--palagio-inset);
   }
 
   .palagio-page .room-panel h2 {
-    font: 500 clamp(19px, 6.4vw, 24px)/1.4 "Satoshi UI", sans-serif;
-    text-transform: none;
+    font: 700 24px/1.4 Boska, serif;
+    text-transform: uppercase;
   }
 
   .palagio-page .room-panel > :is(p, .ds-button) {display: none}
-  .palagio-page .palagio-room-specs {gap: 12px; font-size: 16px}
-  .palagio-page .palagio-room-specs > span {gap: 4px}
+  .palagio-page .palagio-room-specs {align-items: baseline; gap: 12px; font-size: 16px}
+  .palagio-page .palagio-room-specs > span {align-items: baseline; gap: 4px}
+  .palagio-page .palagio-room-specs img {align-self: center}
   .palagio-page .stay-facilities {min-height: 575px; padding: 48px var(--palagio-inset)}
   .palagio-page .stay-facilities h2 {font-size: min(48px, 12.8vw)}
 
