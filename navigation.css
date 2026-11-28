@@ -13,7 +13,6 @@
   --menu-diamond-gap: 16px;
   --menu-label: #ccd2d7;
   --menu-selected: #c7bbb0;
-  --menu-hover: #e6e8ea;
 }
 .estate-menu {
   z-index: 51;
@@ -144,7 +143,8 @@ button.menu-title {cursor: pointer; appearance: none}
 :is(.menu-choices, .mast-dropdown-links) li:nth-child(5) {--choice-order: 4}
 :is(.menu-choices, .mast-dropdown-links) li:nth-child(6) {--choice-order: 5}
 .menu-choices a {transition: color .3s var(--silk)}
-.menu-choices a:is(:hover, :focus-visible, [aria-current="page"]) {color: var(--menu-hover)}
+.menu-choices a:is(:focus-visible, [aria-current="page"]) {color: #e6e8ea}
+.menu-choices a:hover {color: var(--menu-selected)}
 .menu-choices a:focus-visible, .mast-dropdown-links a:focus-visible {outline-offset: 1px}
 
 .menu-footer {
