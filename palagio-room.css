@@ -66,6 +66,8 @@
   isolation: isolate;
 }
 
+.room-detail-breadcrumb {display: none}
+
 .room-detail-hero {
   position: sticky;
   top: 0;
@@ -232,6 +234,20 @@
   }
 
   .palagio-room-detail .navigation:not(.is-open) .masthead.scrolled .language {display: flex}
+
+  .room-detail-breadcrumb {
+    position: absolute;
+    top: 84px;
+    left: 24px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 4px;
+    color: var(--room-detail-neutral);
+    font: 400 10px/1.6 "Satoshi UI", sans-serif;
+    letter-spacing: .08em;
+  }
 
   .room-detail-hero {
     padding: 72px var(--room-detail-inset) 0;
