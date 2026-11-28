@@ -88,6 +88,7 @@
 
   .palagio-page .room-panel h2 {overflow-wrap: anywhere}
   .palagio-page .room-panel p {max-width: 500px}
+  .palagio-room-specs .palagio-copy-wide {display: inline}
   .palagio-page .room-details img {filter: invert(1)}
 
   .palagio-page .room-panel .ds-button {
