@@ -11,6 +11,7 @@
   const compact = matchMedia('(max-width:720px)');
   const desktopTopZone = 200;
   const menuContent = menu.querySelector('.menu-content');
+  const menuLayout = menuContent.querySelector('.menu-layout');
   const menuItems = menu.querySelector('.menu-items');
   const menuGroups = new Map([...menu.querySelectorAll('[data-menu-group]')].map(group => [
     group.dataset.menuGroup, {button:group.querySelector('button'), panel:group.querySelector('.menu-panel')}
@@ -26,7 +27,7 @@
   }
 
   function positionMenuIndicator() {
-    if (!desktop.matches || !currentGroup) return;
+    if (!currentGroup) return;
     const gap = parseFloat(getComputedStyle(menuItems).rowGap);
     let center = currentGroup.button.getBoundingClientRect().height / 2;
     // The destination is the title's position after the other rows collapse.
@@ -42,10 +43,12 @@
     if (previous) setExpanded(previous.button, previous.panel, false);
     currentGroup = group;
     if (group) setExpanded(group.button, group.panel, true);
+    menuLayout.toggleAttribute('data-menu-active', Boolean(group));
     menuItems.dataset.indicator = group ? (previous ? 'move' : 'show') : 'hide';
     positionMenuIndicator();
   }
   addEventListener('resize', positionMenuIndicator);
+  document.fonts.ready.then(positionMenuIndicator);
   for (const group of menuGroups.values()) {
     group.button.addEventListener('click', () => showGroup(currentGroup === group ? null : group));
   }

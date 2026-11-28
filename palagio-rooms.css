@@ -35,9 +35,74 @@
 }
 
 @media (width > 1024px) {
+  .palagio-page .room-scene {
+    --room-space: calc(128 * var(--u));
+    --room-card-inset: calc(144 * var(--u));
+  }
+
+  .palagio-page .room-scene-body {
+    margin-inline: var(--room-card-inset);
+    overflow: clip;
+    background: #e6e8ea;
+  }
+
+  .palagio-page .palagio-desktop-cover {
+    width: 100%;
+  }
+
+  .palagio-page .room-panel-slot {
+    align-self: stretch;
+    justify-self: start;
+    width: calc(628 / 1440 * 100%);
+  }
+
+  .palagio-page .room-panel {
+    height: 100%;
+    align-content: center;
+    justify-items: start;
+    gap: clamp(16px, 1.39vw, 24px);
+    padding: calc(64 * var(--u));
+    background: transparent;
+    color: white;
+    text-align: left;
+  }
+
+  .palagio-page .room-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(67 80 91 / .35);
+    -webkit-backdrop-filter: blur(7px);
+    backdrop-filter: blur(7px);
+    transform: none;
+    clip-path: inset(0);
+    transition: clip-path 1s var(--silk) var(--delay, 0s);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .palagio-page .room-panel.panel-mask:not(.seen, :focus-within)::before {
+      clip-path: inset(0 100% 0 0);
+    }
+  }
+
+  .palagio-page .room-panel h2 {overflow-wrap: anywhere}
+  .palagio-page .room-panel p {max-width: 500px}
+  .palagio-page .room-details img {filter: invert(1)}
+
+  .palagio-page .room-panel .ds-button {
+    padding: 12px clamp(32px, 3.704vw, 64px);
+    background: white;
+    color: black;
+  }
+
+  .palagio-page .room-panel .ds-button > span {color: inherit}
+  .palagio-page .room-panel .ds-button:focus-visible {outline-color: white}
+
   .palagio-room-link {
     display: inline-block;
     cursor: pointer;
+    text-decoration: none;
   }
 
   .palagio-room-link:focus-visible {
@@ -45,19 +110,6 @@
     outline-offset: 6px;
   }
 
-  .palagio-page .palagio-desktop-cover {
-    width: 62.5%;
-    margin-inline-end: calc(144 * var(--u));
-  }
-
-  .palagio-page .room-scene-right .palagio-desktop-cover {
-    margin-inline: calc(144 * var(--u)) 0;
-  }
-
-  .palagio-page [aria-labelledby="room-1"] {--cover-position: center 67%}
-  .palagio-page [aria-labelledby="room-2"] {--cover-position: right center}
-  .palagio-page [aria-labelledby="room-5"] {--cover-position: left center}
-  .palagio-page [aria-labelledby="room-6"] {--cover-position: left center}
 }
 
 @media (width > 1024px), (width > 720px) and (hover: hover) and (pointer: fine) {
@@ -78,9 +130,55 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: var(--cover-position, center);
   }
 
+}
+
+@media (width > 1024px) {
+  .palagio-page [aria-labelledby="room-1"] .palagio-desktop-cover img {
+    position: absolute;
+    inset: -124.31% auto auto -11.32%;
+    width: 116.46%;
+    height: 279.5%;
+  }
+
+  .palagio-page [aria-labelledby="room-2"] .palagio-desktop-cover img {
+    position: absolute;
+    inset: 0 auto 0 -11.05%;
+    width: 111.06%;
+  }
+}
+
+.palagio-open-cursor {display: none}
+
+@media (width > 1024px) and (hover: hover) and (pointer: fine) {
+  .palagio-desktop-cover.is-cursor-active {cursor: none}
+  .palagio-open-cursor {
+    position: fixed;
+    z-index: 49;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: url(assets/palagio-open-cursor.svg) center no-repeat;
+    -webkit-backdrop-filter: blur(11px);
+    backdrop-filter: blur(11px);
+    color: white;
+    font: 400 16px/1.4 "Satoshi UI", sans-serif;
+    letter-spacing: .22em;
+    text-indent: .22em;
+    opacity: 0;
+    pointer-events: none;
+    translate: -50% -50%;
+    scale: .92;
+    transition: opacity .3s var(--silk), scale .35s var(--silk);
+  }
+
+  .palagio-open-cursor.on {opacity: 1; scale: 1}
+  .menu-open .palagio-open-cursor {visibility: hidden}
 }
 
 @media (max-width: 720px) {

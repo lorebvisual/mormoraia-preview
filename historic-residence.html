@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="motion.css?v=29">
   <link rel="stylesheet" href="components.css?v=45">
   <link rel="stylesheet" href="responsive.css?v=65">
-<link rel="stylesheet" href="navigation.css?v=8">
+<link rel="stylesheet" href="navigation.css?v=10">
   <script>
     if (new URLSearchParams(location.search).get('rooms') === 'v2') {
       document.documentElement.classList.add('rooms-v2');
@@ -23,7 +23,7 @@
   <script defer src="booking.js?v=1"></script>
   <script defer src="footer.js?v=5"></script>
   <script defer src="page-scroll.js?v=40"></script>
-  <script defer src="navigation.js?v=41"></script>
+  <script defer src="navigation.js?v=42"></script>
   <noscript><style>.mast-row>*, .opening :is(#n993,#n1010,.stay-hero-emblem,.stay-hero-rule){opacity:1}.mast-rule{transform:none}.opening #n1051{--booking-entrance:1}</style></noscript>
 </head>
 <body>
@@ -45,6 +45,7 @@
 </header>
 <div id="estate-menu" class="estate-menu" inert="" aria-hidden="true">
  <div class="menu-content">
+ <div class="menu-layout">
  <nav class="menu-items" aria-label="Full menu">
   <div class="menu-group" data-menu-group="stay">
    <button class="menu-title" type="button" aria-expanded="false" aria-controls="full-stay">Stay</button>
@@ -82,8 +83,9 @@
   <a class="menu-title" href="https://www.mormoraia.it/en/contact-us/">Contact</a>
  </nav>
  <div class="menu-footer">
- <nav class="menu-socials" aria-label="Social media"><a href="https://www.instagram.com/mormoraia/" aria-label="Instagram"><img src="assets/ad9cd.svg" alt=""></a><a href="https://www.facebook.com/Mormoraia" aria-label="Facebook"><img src="assets/94fb9.svg" alt=""></a><a href="https://www.youtube.com/watch?v=IN_PDBi8NO4" aria-label="YouTube"><img src="assets/cb1ec.svg" alt=""></a><a href="https://www.tripadvisor.it/Hotel_Review-g187901-d1177956-Reviews-Mormoraia-San_Gimignano_Tuscany.html" aria-label="Tripadvisor"><picture><source media="(720px &lt; width &lt;= 1024px)" srcset="assets/4553f.svg"><img src="assets/edf27.svg" alt=""></picture></a></nav>
+ <nav class="menu-socials" aria-label="Social media"><a href="https://www.instagram.com/mormoraia/" aria-label="Instagram"><img src="assets/ad9cd.svg" alt=""></a><a href="https://www.facebook.com/Mormoraia" aria-label="Facebook"><img src="assets/94fb9.svg" alt=""></a><a href="https://www.youtube.com/watch?v=IN_PDBi8NO4" aria-label="YouTube"><img src="assets/cb1ec.svg" alt=""></a><a href="https://www.tripadvisor.it/Hotel_Review-g187901-d1177956-Reviews-Mormoraia-San_Gimignano_Tuscany.html" aria-label="Tripadvisor"><img src="assets/4553f.svg" alt=""></a></nav>
  <div class="menu-bottom"><span aria-disabled="true">Cookie policy</span><span aria-disabled="true">FAQ</span><span aria-disabled="true">Privacy Policy</span></div>
+ </div>
  </div>
  </div>
 </div>

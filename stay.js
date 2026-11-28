@@ -42,6 +42,30 @@
   const shades = scenes.map(() => 0);
   const palagioGalleries = document.querySelectorAll('.palagio-page .room-gallery');
   const pendingRoomEntrances = new Map();
+  const desktopPhotoPointer = matchMedia('(width > 1024px) and (hover:hover) and (pointer:fine)');
+  const openCursor = palagioGalleries.length ? document.createElement('span') : null;
+  let activeCover = null;
+  function hideOpenCursor() {
+    activeCover?.classList.remove('is-cursor-active');
+    activeCover = null;
+    openCursor?.classList.remove('on');
+  }
+  function showOpenCursor(event) {
+    if (!desktopPhotoPointer.matches || event.pointerType !== 'mouse') return;
+    activeCover = event.currentTarget;
+    activeCover.classList.add('is-cursor-active');
+    openCursor.style.left = `${event.clientX}px`;
+    openCursor.style.top = `${event.clientY}px`;
+    openCursor.classList.add('on');
+  }
+  if (openCursor) {
+    openCursor.className = 'palagio-open-cursor';
+    openCursor.setAttribute('aria-hidden', 'true');
+    openCursor.textContent = 'OPEN';
+    document.body.append(openCursor);
+    desktopPhotoPointer.addEventListener('change', hideOpenCursor);
+    addEventListener('blur', hideOpenCursor);
+  }
   const cursor = document.createElement('img');
   cursor.className = 'gallery-cursor';
   cursor.src = 'assets/187b4.svg';
@@ -107,6 +131,10 @@
     const cover = scene.querySelector('.palagio-desktop-cover');
     if (cover) {
       reveal(cover, 0, 'room-photo-entrance');
+      cover.addEventListener('pointerenter', showOpenCursor);
+      cover.addEventListener('pointermove', showOpenCursor);
+      cover.addEventListener('pointerleave', hideOpenCursor);
+      cover.addEventListener('pointercancel', hideOpenCursor);
       const card = scene.querySelector('.room-scene-body');
       card.classList.add('palagio-room-entrance');
       pendingRoomEntrances.set(scene, card);
