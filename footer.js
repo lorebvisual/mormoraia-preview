@@ -2,6 +2,7 @@
   const footer = node(1433);
   const footerStage = footer.firstElementChild;
   const flowFooter = matchMedia('(max-width:720px)');
+  const compactFooter = matchMedia('(max-width:1024px)');
   new ResizeObserver(() => {
     footer.style.setProperty('--footer-stage-height', footerStage.getBoundingClientRect().height + 'px');
     scheduleFooter();
@@ -47,23 +48,30 @@
     };
   }
   const drawFooter = createWordmark(node(1481));
-  const footerRows = [...footer.querySelectorAll('[data-footer-row]')];
-  footerRows.forEach(row => reveal(row, 0, 'footer-row-entrance'));
+  const footerRows = [...footer.querySelectorAll('[data-footer-row]')].map(row => {
+    reveal(row, 0, 'footer-row-entrance');
+    const previous = row.previousElementSibling;
+    return {row, separator: previous?.matches('.footer-legal-items > .footer-separator') ? previous : null};
+  });
   let footerProgress, footerTarget, footerFrame = 0, footerTime = 0;
   function paintFooter(progress) {
+    const compact = compactFooter.matches;
     footerProgress = progress;
     footer.style.setProperty('--footer-rise', 1 - phase(progress, .05, .96));
     footer.style.setProperty('--footer-emblem', phase(progress, 0, .22));
     footer.style.setProperty('--footer-lines', phase(progress, 0, .29));
-    const wordmarkProgress = clamp((progress - .28) / .32);
-    footer.style.setProperty('--footer-wordmark', phase(progress, .28, .34));
+    const wordmarkStart = compact ? .22 : .28;
+    const wordmarkProgress = clamp((progress - wordmarkStart) / (compact ? .49 : .32));
+    footer.style.setProperty('--footer-wordmark', phase(progress, wordmarkStart, compact ? .32 : .34));
     drawFooter(wordmarkProgress);
-    footer.style.setProperty('--footer-upper-rule', phase(progress, .58, .66));
+    footer.style.setProperty('--footer-upper-rule', compact ? phase(progress, .60, .68) : phase(progress, .58, .66));
     footer.style.setProperty('--footer-lower-rule', phase(progress, .93, 1));
     if (!flowFooter.matches) {
-      footerRows.forEach((row, index) => {
+      footerRows.forEach(({row, separator}, index) => {
         const start = .63 + index * .026;
-        row.style.setProperty('--footer-row', phase(progress, start, start + .13));
+        const opacity = phase(progress, start, start + .13);
+        row.style.setProperty('--footer-row', opacity);
+        separator?.style.setProperty('--footer-row', opacity);
       });
     }
   }
@@ -72,8 +80,8 @@
   function easeFooter(now) {
     const elapsed = Math.min(64, now - footerTime);
     const gap = footerTarget - footerProgress;
-    const response = flowFooter.matches ? 112 : 145;
-    const travelTime = flowFooter.matches ? 700 : 900;
+    const response = compactFooter.matches ? 180 : 145;
+    const travelTime = compactFooter.matches ? 1020 : 900;
     const advance = Math.min(Math.abs(gap) * (1 - Math.exp(-elapsed / response)), elapsed / travelTime);
     const settled = Math.abs(gap) < .001;
     paintFooter(settled ? footerTarget : footerProgress + Math.sign(gap) * advance);
@@ -83,10 +91,9 @@
   function footerMotion(viewHeight) {
     const bounds = footer.getBoundingClientRect();
     const mobile = flowFooter.matches;
-    const lead = viewHeight * (mobile ? .78 : .70);
-    // On phones the wordmark opens as it enters. Each contact row fades in
-    // as it comes into view farther down the page.
-    const finish = mobile ? viewHeight * .24 : viewHeight - footer.offsetHeight + 1;
+    const lead = viewHeight * (mobile ? .90 : .70);
+    // Extend the opening across the footer's entry while preserving native touch scroll.
+    const finish = mobile ? viewHeight * .07 : viewHeight - footer.offsetHeight + 1;
     footerTarget = reduce.matches ? 1 : clamp((lead - bounds.top) / Math.max(1, lead - finish));
     if (footerProgress === undefined || reduce.matches) {
       cancelAnimationFrame(footerFrame);
@@ -108,10 +115,12 @@
   }
   addEventListener('scroll', scheduleFooter, {passive:true});
   addEventListener('resize', scheduleFooter);
-  flowFooter.addEventListener('change', () => {
+  function refreshFooterLayout() {
     paintFooter(footerProgress);
     scheduleFooter();
-  });
+  }
+  flowFooter.addEventListener('change', refreshFooterLayout);
+  compactFooter.addEventListener('change', refreshFooterLayout);
   reduce.addEventListener('change', scheduleFooter);
   footerMotion(innerHeight);
 })();

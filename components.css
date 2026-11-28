@@ -356,9 +356,8 @@
 .footer-contact #ds11-3328 a {width:16px;height:16px}
 .footer-credit {text-align:right}
 .footer-credit b {font-weight:700}
-.footer-legal .footer-separator {opacity:var(--footer-upper-rule,1)}
-[data-footer-row] {opacity:var(--footer-row,1)}
-[data-footer-row]:focus-within {opacity:1}
+[data-footer-row],.footer-legal-items > .footer-separator {opacity:var(--footer-row,1)}
+[data-footer-row]:focus-within,.footer-legal-items > .footer-separator:has(+ [data-footer-row]:focus-within) {opacity:1}
 
 @media (prefers-reduced-motion:reduce) {
   .site-footer {padding-block:var(--footer-center)}

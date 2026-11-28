@@ -557,6 +557,7 @@
 @media (720px < width <= 1024px) {
   #n1020 {flex-direction:row;align-items:flex-start}
   #n1020 > #ds11-3262 {width:167px}
+  .site-footer {--footer-travel:clamp(430px,86svh,975px)}
 }
 @media (max-width:1280px) and (width > 1024px) {
   .footer-address,.footer-legal-items {flex-wrap:wrap}
