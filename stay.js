@@ -97,7 +97,10 @@
     const carousel = scene.querySelector('.room-carousel');
     reveal(carousel, 0, 'room-photo-entrance');
     const cover = scene.querySelector('.palagio-desktop-cover');
-    if (cover) reveal(cover, 0, 'room-photo-entrance');
+    if (cover) {
+      reveal(cover, 0, 'room-photo-entrance');
+      reveal(scene.querySelector('.room-scene-body'), 0, 'palagio-room-entrance', scene);
+    }
     const gallery = scene.querySelector('.room-gallery');
     const track = gallery.querySelector('.room-track');
     const slides = [...track.children];
