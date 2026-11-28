@@ -58,20 +58,18 @@
     booking.setAttribute('aria-label', `Book ${room.name}`);
   }
 
-  const photoFrames = [];
   const figures = room.photos.map(([file, caption], index) => {
     const figure = template.content.firstElementChild.cloneNode(true);
-    const imageFrame = figure.querySelector('.room-detail-photo-image');
-    const image = imageFrame.firstElementChild;
+    const image = figure.querySelector('.room-detail-photo-image img');
     image.src = `assets/${file}`;
     image.loading = index === 0 ? 'eager' : 'lazy';
     figure.querySelector('.room-photo-caption').textContent = caption;
     figure.querySelector('.room-photo-number > :first-child').textContent = index + 1;
     figure.querySelector('.room-photo-total').textContent = `/${room.photos.length}`;
-    photoFrames.push({frame: imageFrame, image});
     return figure;
   });
   gallery.append(...figures);
+  const photoFrames = gallery.querySelectorAll('.room-detail-photo-image');
 
   for (const part of document.querySelectorAll('.room-detail-explore, .room-detail-specs, .room-detail-gallery, .room-detail-book')) {
     part.hidden = false;
@@ -79,7 +77,6 @@
   stage.classList.add('ready');
 
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const compact = matchMedia('(max-width: 720px)');
   let animationFrame = 0;
   const clamp = value => Math.min(1, Math.max(0, value));
 
@@ -88,16 +85,7 @@
     const viewportHeight = innerHeight;
     const progress = clamp((viewportHeight - gallery.getBoundingClientRect().top) / (viewportHeight * .92));
     stage.style.setProperty('--room-scroll-progress', progress.toFixed(3));
-    if (reduceMotion.matches) return;
-
-    const drift = compact.matches ? 7 : 12;
-    for (const {frame, image} of photoFrames) {
-      const box = frame.getBoundingClientRect();
-      if (box.bottom < 0 || box.top > viewportHeight) continue;
-      const position = clamp((viewportHeight - box.top) / (viewportHeight + box.height));
-      const safeDrift = Math.min(drift, box.height * .02);
-      image.style.setProperty('--room-parallax', `${((position * 2 - 1) * safeDrift).toFixed(1)}px`);
-    }
+    if (!reduceMotion.matches) paintPalagioParallax(photoFrames, viewportHeight);
   }
 
   function queuePaint() {

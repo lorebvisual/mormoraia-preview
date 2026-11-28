@@ -176,7 +176,7 @@
   }
 
   .room-detail-stage.ready .room-detail-photo-image img {
-    transform: translateY(var(--room-parallax, 0px)) scale(1.045);
+    transform: translateY(var(--room-parallax, 0px)) scale(1.18);
   }
 }
 

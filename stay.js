@@ -40,6 +40,7 @@
 
   const scenes = [...document.querySelectorAll('.room-scene')];
   const shades = scenes.map(() => 0);
+  const palagioGalleries = document.querySelectorAll('.palagio-page .room-gallery');
   const cursor = document.createElement('img');
   cursor.className = 'gallery-cursor';
   cursor.src = 'assets/187b4.svg';
@@ -50,6 +51,9 @@
   function drawStack() {
     frame = 0;
     const height = innerHeight;
+    if (palagioGalleries.length && narrow.matches && !reduce.matches) {
+      paintPalagioParallax(palagioGalleries, height);
+    }
     const stacked = !narrow.matches && !reduce.matches && (!desktop.matches || roomsV2);
     const boxes = stacked ? scenes.map(scene => scene.getBoundingClientRect()) : [];
     const progress = clamp((height * .98 - introHeading.getBoundingClientRect().top) / (height * .82));
@@ -97,27 +101,35 @@
     const gallery = scene.querySelector('.room-gallery');
     const track = gallery.querySelector('.room-track');
     const slides = [...track.children];
-    const counter = document.createElement('div');
-    counter.className = 'room-gallery-counter';
-    counter.setAttribute('aria-hidden', 'true');
-    const bars = slides.map(() => document.createElement('span'));
-    let currentBar = bars[0];
-    currentBar.classList.add('current');
-    counter.append(...bars);
-    carousel.append(counter);
+    const photoLink = track.classList.contains('palagio-mobile-photo-link');
+    let syncCounter;
+    if (photoLink) {
+      const syncPhotoLink = () => { track.inert = !narrow.matches; };
+      narrow.addEventListener('change', syncPhotoLink);
+      syncPhotoLink();
+    } else {
+      const counter = document.createElement('div');
+      counter.className = 'room-gallery-counter';
+      counter.setAttribute('aria-hidden', 'true');
+      const bars = slides.map(() => document.createElement('span'));
+      let currentBar = bars[0];
+      currentBar.classList.add('current');
+      counter.append(...bars);
+      carousel.append(counter);
 
-    function syncCounter() {
-      if (!narrow.matches || gallery.clientWidth === 0) return;
-      const index = Math.round(gallery.scrollLeft / gallery.clientWidth);
-      const next = bars[Math.max(0, Math.min(bars.length - 1, index))];
-      if (next === currentBar) return;
-      currentBar.classList.remove('current');
-      next.classList.add('current');
-      currentBar = next;
+      syncCounter = () => {
+        if (!narrow.matches || gallery.clientWidth === 0) return;
+        const index = Math.round(gallery.scrollLeft / gallery.clientWidth);
+        const next = bars[Math.max(0, Math.min(bars.length - 1, index))];
+        if (next === currentBar) return;
+        currentBar.classList.remove('current');
+        next.classList.add('current');
+        currentBar = next;
+      };
+      gallery.addEventListener('scroll', syncCounter, {passive:true});
+      addEventListener('resize', syncCounter);
+      syncCounter();
     }
-    gallery.addEventListener('scroll', syncCounter, {passive:true});
-    addEventListener('resize', syncCounter);
-    syncCounter();
 
     const rtl = () => getComputedStyle(gallery).direction === 'rtl';
     const offset = () => Math.abs(gallery.scrollLeft);
@@ -147,7 +159,7 @@
       loop = enabled ? {width, length:width * slides.length, sign:rtl() ? -1 : 1} : null;
       const target = (loop?.length ?? 0) + index * width;
       gallery.scrollLeft = (rtl() ? -1 : 1) * target;
-      syncCounter();
+      syncCounter?.();
     }
     function recenter() {
       if (!loop) return;
@@ -253,7 +265,9 @@
       const {drag} = press;
       press = null;
       gallery.classList.remove('dragging');
-      if (!drag && event.type === 'pointerup') advance(physicalDirection(event.clientX));
+      if (!drag && event.type === 'pointerup' && !(photoLink && narrow.matches)) {
+        advance(physicalDirection(event.clientX));
+      }
     }
     for (const event of ['pointerup', 'pointercancel', 'lostpointercapture']) {
       gallery.addEventListener(event, release);
