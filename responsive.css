@@ -71,7 +71,8 @@
     margin:0;background:url(assets/51b8b.svg) center / 100% 100% no-repeat;
     transition:opacity .35s var(--ease);
   }
-  .masthead:is(.scrolled,.masthead-light) .mast-rule {opacity:0}
+  .masthead.scrolled .mast-rule {opacity:0}
+  .masthead.masthead-light .mast-rule {display:none}
   .masthead .sticky-booking {
     display:flex;max-inline-size:0;padding:0;margin-inline-start:calc(-1 * var(--desktop-nav-gap));
     opacity:0;visibility:hidden;overflow:hidden;white-space:nowrap;

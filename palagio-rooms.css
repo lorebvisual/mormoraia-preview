@@ -212,7 +212,7 @@
   .palagio-room-entrance.seen {
     opacity: 1;
     translate: none;
-    animation: palagio-room-slide-in 1.95s cubic-bezier(.35, .56, .27, 1), palagio-room-fade-in 1.55s var(--silk);
+    animation: palagio-room-slide-in 1.95s cubic-bezier(.35, .56, .27, 1), palagio-room-fade-in 1.55s cubic-bezier(.32, .24, .28, 1);
   }
 
   .palagio-room-entrance:focus-within {
