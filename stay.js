@@ -1,10 +1,12 @@
 (() => {
   const hero = node(986);
   const media = hero.querySelector('.stay-hero-media');
-  if (media instanceof HTMLVideoElement) playWhenVisible(media);
-  presentHero(hero, media instanceof HTMLVideoElement ? media.poster : media.currentSrc || media.src);
   const desktop = matchMedia('(width > 1024px)');
   const narrow = matchMedia('(max-width:720px)');
+  const mobilePoster = hero.querySelector('.palagio-mobile-hero-image source');
+  if (media instanceof HTMLVideoElement) playWhenVisible(media);
+  const poster = media instanceof HTMLVideoElement ? media.poster : media.currentSrc || media.src;
+  presentHero(hero, narrow.matches && mobilePoster ? mobilePoster.srcset : poster);
   const roomsV2 = document.documentElement.classList.contains('rooms-v2');
 
   if (roomsV2) {
@@ -90,6 +92,8 @@
 
     const carousel = scene.querySelector('.room-carousel');
     reveal(carousel, 0, 'room-photo-entrance');
+    const cover = scene.querySelector('.palagio-desktop-cover');
+    if (cover) reveal(cover, 0, 'room-photo-entrance');
     const gallery = scene.querySelector('.room-gallery');
     const track = gallery.querySelector('.room-track');
     const slides = [...track.children];
@@ -126,7 +130,7 @@
     }
     function syncLoop() {
       const width = slides[0].getBoundingClientRect().width;
-      const enabled = desktop.matches && slides.length > 1;
+      const enabled = desktop.matches && !cover && slides.length > 1;
       if (!width || (enabled ? loop?.width === width : !loop)) return;
       const index = Math.round(offset() / (loop?.width ?? width)) % slides.length;
       interrupt();

@@ -1,0 +1,27 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="stroke0_58_6164" fill="white">
+<path d="M7 11C7 8.79086 8.79086 7 11 7C13.2091 7 15 8.79086 15 11V22H7V11Z"/>
+</mask>
+<path d="M15 22V11C15 8.79086 13.2091 7 11 7C8.79086 7 7 8.79086 7 11V22H15Z" stroke-width="2" stroke="white" mask="url(#stroke0_58_6164)"/>
+<mask id="stroke1_58_6164" fill="white">
+<path d="M5 22C3.34315 22 2 20.6569 2 19C2 17.3431 3.34315 16 5 16L8 16L8 22L5 22Z"/>
+</mask>
+<path d="M8 16L5 16C3.34315 16 2 17.3431 2 19C2 20.6569 3.34315 22 5 22L8 22L8 16Z" stroke-width="2" stroke="white" mask="url(#stroke1_58_6164)"/>
+<mask id="stroke2_58_6164" fill="white">
+<path d="M14 11C14 8.79086 15.7909 7 18 7C20.2091 7 22 8.79086 22 11V22H14V11Z"/>
+</mask>
+<path d="M22 22V11C22 8.79086 20.2091 7 18 7C15.7909 7 14 8.79086 14 11V22H22Z" stroke-width="2" stroke="white" mask="url(#stroke2_58_6164)"/>
+<mask id="stroke3_58_6164" maskUnits="userSpaceOnUse" x="16" y="4" width="4" height="4" fill="black">
+<rect fill="white" x="16" y="4" width="4" height="4"/>
+<path d="M17 6C17 5.44772 17.4477 5 18 5C18.5523 5 19 5.44772 19 6V7H17V6Z"/>
+</mask>
+<path d="M19 7V6C19 5.44772 18.5523 5 18 5C17.4477 5 17 5.44772 17 6V7H19Z" stroke-width="2" stroke="white" mask="url(#stroke3_58_6164)"/>
+<path d="M10 4.5H12V7.5H10V4.5Z" stroke="white"/>
+<mask id="stroke4_58_6164" maskUnits="userSpaceOnUse" x="3" y="1.5" width="12" height="5" fill="black">
+<rect fill="white" x="3" y="1.5" width="12" height="5"/>
+<path d="M13.25 2.5C13.6642 2.5 14 2.83579 14 3.25C14 3.66421 13.6642 4 13.25 4L7.68421 4L4.92946 5.12158C4.76986 5.18656 4.64456 4.97515 4.77819 4.86633L7.25997 2.84545C7.53438 2.62201 7.87743 2.5 8.23131 2.5L13.25 2.5Z"/>
+</mask>
+<path d="M7.68421 4L13.25 4C13.6642 4 14 3.66421 14 3.25C14 2.83579 13.6642 2.5 13.25 2.5L8.23131 2.5C7.87743 2.5 7.53438 2.62201 7.25997 2.84545L4.77819 4.86633C4.64456 4.97515 4.76986 5.18656 4.92946 5.12158L7.68421 4Z" stroke-width="2" stroke="white" mask="url(#stroke4_58_6164)"/>
+<rect x="7.5" y="13.5" width="7" height="4" stroke="white"/>
+<rect x="14.5" y="17.5" width="7" height="4" stroke="white"/>
+</svg>

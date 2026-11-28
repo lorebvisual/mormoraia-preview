@@ -1,0 +1,179 @@
+.palagio-page {
+  --palagio-room-hover: #798691;
+}
+
+.palagio-page #n993 {text-transform: uppercase}
+
+.palagio-page :is(.palagio-copy-mobile, .palagio-mobile-hero-image, .palagio-desktop-cover, .palagio-facilities-mobile),
+.palagio-page #n993 .palagio-copy-mobile {
+  display: none;
+}
+
+.palagio-visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.palagio-room-link {
+  transition: color .4s var(--silk);
+}
+
+.palagio-room-link:is(:hover, :focus-visible) {
+  color: var(--palagio-room-hover);
+}
+
+.palagio-room-specs > span > span {
+  display: inline;
+}
+
+@media (720px < width <= 1024px) {
+  .palagio-page .palagio-room-specs {display: none}
+}
+
+@media (width > 1024px) {
+  .palagio-page :is(.room-carousel:not(.palagio-desktop-cover), .gallery-cursor) {
+    display: none;
+  }
+
+  .palagio-page .palagio-desktop-cover {
+    display: block;
+    width: 62.5%;
+    margin-inline-end: calc(144 * var(--u));
+    overflow: clip;
+  }
+
+  .palagio-page .room-scene-right .palagio-desktop-cover {
+    margin-inline: calc(144 * var(--u)) 0;
+  }
+
+  .palagio-desktop-cover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--cover-position, center);
+  }
+
+  .palagio-page [aria-labelledby="room-1"] {--cover-position: center 67%}
+  .palagio-page [aria-labelledby="room-2"] {--cover-position: right center}
+  .palagio-page [aria-labelledby="room-5"] {--cover-position: left center}
+  .palagio-page [aria-labelledby="room-6"] {--cover-position: left center}
+}
+
+@media (max-width: 720px) {
+  .palagio-page {
+    --palagio-inset: clamp(20px, 8.53vw, 32px);
+  }
+
+  .palagio-page :is(.palagio-copy-wide, .stay-hero-media, .stay-hero-emblem, .stay-hero-rule, .stay-intro-copy, .palagio-facilities-wide),
+  .palagio-page #n993 .palagio-copy-wide {
+    display: none;
+  }
+
+  .palagio-page .palagio-copy-mobile,
+  .palagio-page #n993 .palagio-copy-mobile {
+    display: block;
+  }
+
+  .palagio-page .palagio-mobile-hero-image {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    display: block;
+  }
+
+  .palagio-mobile-hero-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .palagio-page #n992 {gap: 16px}
+  .palagio-page #n993 {font: 400 min(48px, 12.8vw)/1.4 Boska, serif; letter-spacing: .08em; text-transform: uppercase}
+  .palagio-page #n1010 {font-size: 16px; line-height: 1.6; letter-spacing: .08em}
+  .palagio-page #n1051:not(.expanded) {
+    background: rgb(245 244 242 / .16);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .palagio-page #n1051:not(.expanded) > #booking-toggle {font-size: 16px}
+
+  .palagio-page .stay-intro {
+    justify-items: start;
+    padding: 64px var(--palagio-inset);
+    background: var(--chalk);
+  }
+
+  .palagio-page .stay-intro h2 {font-size: min(48px, 13vw)}
+
+  .palagio-page .room-sequence {
+    display: grid;
+    gap: 48px;
+    padding-bottom: 64px;
+    background: var(--chalk);
+  }
+
+  .palagio-page .room-position {display: none}
+  .palagio-page .room-scene {background: transparent}
+
+  .palagio-page .room-carousel:not(.palagio-desktop-cover) {
+    justify-self: center;
+    width: calc(100% - 2 * var(--palagio-inset));
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .palagio-page .room-slide:first-child {overflow: clip}
+
+  .palagio-page .room-slide:first-child img {
+    position: absolute;
+    inset: calc(var(--cover-top, 0) / 311 * 100%) auto auto calc(var(--cover-left) / 311 * 100%);
+    width: calc(var(--cover-width) / 311 * 100%);
+    height: calc(var(--cover-height, 350) / 311 * 100%);
+    object-position: center;
+  }
+
+  .palagio-page [aria-labelledby="room-1"] {--cover-left: -38; --cover-top: -115.25; --cover-width: 350; --cover-height: 524.25}
+  .palagio-page [aria-labelledby="room-2"] {--cover-left: -214; --cover-width: 525}
+  .palagio-page [aria-labelledby="room-3"] {--cover-left: -100; --cover-width: 525}
+  .palagio-page [aria-labelledby="room-4"] {--cover-left: -92; --cover-width: 467}
+  .palagio-page [aria-labelledby="room-5"] {--cover-left: -222; --cover-top: -40; --cover-width: 819; --cover-height: 614}
+  .palagio-page [aria-labelledby="room-6"] {--cover-left: -77; --cover-width: 466}
+  .palagio-page [aria-labelledby="room-7"] {--cover-left: -45; --cover-width: 467}
+  .palagio-page .room-gallery-counter {inset: auto 16px 16px}
+
+  .palagio-page .room-scene .room-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 16px var(--palagio-inset);
+  }
+
+  .palagio-page .room-panel h2 {
+    font: 500 clamp(19px, 6.4vw, 24px)/1.4 "Satoshi UI", sans-serif;
+    text-transform: none;
+  }
+
+  .palagio-page .room-panel > :is(p, .ds-button) {display: none}
+  .palagio-page .palagio-room-specs {gap: 12px; font-size: 16px}
+  .palagio-page .palagio-room-specs > span {gap: 4px}
+  .palagio-page .stay-facilities {min-height: 575px; padding: 48px var(--palagio-inset)}
+  .palagio-page .stay-facilities h2 {font-size: min(48px, 12.8vw)}
+
+  .palagio-page .palagio-facilities-mobile {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 10px;
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .palagio-facilities-mobile li {display: grid; justify-items: center; gap: 10px}
+}

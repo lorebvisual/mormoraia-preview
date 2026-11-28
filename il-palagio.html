@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="stay-page">
+<html lang="en" class="stay-page palagio-page">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,14 +11,10 @@
   <link rel="stylesheet" href="components.css?v=41">
   <link rel="stylesheet" href="responsive.css?v=61">
 <link rel="stylesheet" href="navigation.css?v=8">
-  <script>
-    if (new URLSearchParams(location.search).get('rooms') === 'v2') {
-      document.documentElement.classList.add('rooms-v2');
-    }
-  </script>
   <link rel="stylesheet" href="stay.css?v=11">
+  <link rel="stylesheet" href="palagio-rooms.css?v=1">
   <script defer src="entrances.js?v=3"></script>
-  <script defer src="stay.js?v=9"></script>
+  <script defer src="stay.js?v=10"></script>
   <script defer src="booking.js?v=1"></script>
   <script defer src="footer.js?v=4"></script>
   <script defer src="page-scroll.js?v=40"></script>
@@ -95,11 +91,18 @@
   <div class="hero-runway stay-hero-runway">
   <section id="n986" class="layout2 opening stay-hero" aria-labelledby="n993">
     <video class="stay-hero-media" muted loop playsinline preload="none" poster="assets/palagio-poster.jpg" src="assets/palagio.mp4"></video>
+    <picture class="palagio-mobile-hero-image">
+      <source media="(max-width:720px)" srcset="assets/palagio-rooms/classic.png">
+      <img alt="" fetchpriority="high">
+    </picture>
     <div id="n992" class="layout8">
       <img class="stay-hero-emblem" src="assets/footer-emblem-45-1632.svg" alt="" width="138" height="71">
-      <h1 id="n993" tabindex="-1">IL PALAGIO</h1>
+      <h1 id="n993" tabindex="-1">
+        <span class="palagio-copy-wide">Il Palagio</span>
+        <span class="palagio-copy-mobile"><span class="palagio-visually-hidden">Il Palagio. </span>A Sense<br> of Wonder</span>
+      </h1>
       <img class="stay-rule stay-hero-rule" src="assets/9ee91.svg" alt="" width="96" height="1">
-      <p id="n1010">In the heart of Mormoraia.</p>
+      <p id="n1010"><span class="palagio-copy-wide">In the heart of Mormoraia.</span><span class="palagio-copy-mobile">A different pace<br> starts here.</span></p>
     </div>
     <div data-name="booking-bar" id="n1050" class="layout209">
             <div data-name="Booking Bar" id="n1051" class="layout210">
@@ -181,29 +184,39 @@
   </section>
   </div>
   <section class="stay-intro white-sheet" aria-labelledby="stay-intro-title">
-  <h2 id="stay-intro-title"><span>A house<br class="mobile-copy-break"> with a past.</span><em>A room of your own.</em></h2>
+  <h2 id="stay-intro-title">
+    <span class="palagio-copy-wide">A house with a past.</span><em class="palagio-copy-wide">A room of your own.</em>
+    <span class="palagio-copy-mobile">Rooms<br>&amp; Suites</span><em class="palagio-copy-mobile">With soul.</em>
+  </h2>
   <div class="stay-intro-copy">
     <p><strong>Rooms &amp; Suites.</strong></p>
     <p>Il Palagio brings thirteen rooms to a quieter corner of the Mormoraia estate. <span class="stay-intro-paragraph">The new wing is set to open in 2028 with its own spa and restaurant, and a pool terrace facing San Gimignano.</span></p>
   </div>
 </section>
-  <div class="room-sequence">
+  <div class="room-sequence" id="palagio-rooms">
 <div class="room-position" aria-hidden="true"></div>
 <section class="room-scene" aria-labelledby="room-1">
   <div class="room-scene-body">
     <div class="room-carousel">
       <div class="room-gallery gallery-window" role="region" tabindex="0" aria-label="Classic photo gallery. Use the left and right arrow keys to browse.">
         <div class="room-track gallery-track">
-          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/c9f18-370.webp"><img src="assets/c9f18.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
+          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/palagio-rooms/classic.png"><img src="assets/c9f18.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/a88db-130.webp"><img src="assets/a88db.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/e9431-478.webp"><img src="assets/e9431.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/4d74d-198.webp"><img src="assets/4d74d.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
     </div>
+    <div class="room-carousel palagio-desktop-cover">
+      <img src="assets/palagio-rooms/classic.png" alt="" loading="lazy" decoding="async">
+    </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
-        <h2 id="room-1">CLASSIC</h2>
+        <h2 id="room-1"><a class="palagio-room-link" href="il-palagio-room.html?room=classic"><span class="palagio-copy-wide">CLASSIC</span><span class="palagio-copy-mobile">Classic</span></a></h2>
+        <div class="room-details palagio-room-specs">
+          <span><img src="assets/palagio-rooms/size-dark.svg" alt="" width="22" height="22"> <span>15 m²</span></span>
+          <span><img src="assets/palagio-rooms/bed-dark.svg" alt="" width="22" height="22"> <span><span class="palagio-visually-hidden">Sleeps </span>2<span class="palagio-copy-wide"> people</span></span></span>
+        </div>
         <p>Il Palagio is conceived as a quieter wing of Mormoraia, with interiors that take their cues from the stone, light and landscape of the estate.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="mailto:info@mormoraia.it?subject=Il%20Palagio%20early%20access%20%E2%80%93%20Classic" aria-label="Book Classic"><span class="layout224">Book</span></a>
       </div>
@@ -216,16 +229,23 @@
     <div class="room-carousel">
       <div class="room-gallery gallery-window" role="region" tabindex="0" aria-label="Superior photo gallery. Use the left and right arrow keys to browse.">
         <div class="room-track gallery-track">
-          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/120a4-418.webp"><img src="assets/120a4.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
+          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/ff6a2.jpg"><img src="assets/120a4.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/ffe55-232.webp"><img src="assets/ffe55.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/9fc01-290.webp"><img src="assets/9fc01.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/4d74d-198.webp"><img src="assets/4d74d.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
     </div>
+    <div class="room-carousel palagio-desktop-cover">
+      <img src="assets/120a4.jpg" alt="" loading="lazy" decoding="async">
+    </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
-        <h2 id="room-2">Superior</h2>
+        <h2 id="room-2"><a class="palagio-room-link" href="il-palagio-room.html?room=superior"><span class="palagio-copy-wide">Superior</span><span class="palagio-copy-mobile">Superior</span></a></h2>
+        <div class="room-details palagio-room-specs">
+          <span><img src="assets/palagio-rooms/size-dark.svg" alt="" width="22" height="22"> <span>15 m²</span></span>
+          <span><img src="assets/palagio-rooms/bed-dark.svg" alt="" width="22" height="22"> <span><span class="palagio-visually-hidden">Sleeps </span>2<span class="palagio-copy-wide"> people</span></span></span>
+        </div>
         <p>Le camere Classic combinano i tradizionali arredi rustici dal gusto toscano a un&#x27;equilibrata dose di comfort moderno. Un&#x27;atmosfera semplice e autentica caratterizza questi ambienti.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="mailto:info@mormoraia.it?subject=Il%20Palagio%20early%20access%20%E2%80%93%20Superior" aria-label="Book Superior"><span class="layout224">Book</span></a>
       </div>
@@ -238,16 +258,23 @@
     <div class="room-carousel">
       <div class="room-gallery gallery-window" role="region" tabindex="0" aria-label="Garden photo gallery. Use the left and right arrow keys to browse.">
         <div class="room-track gallery-track">
-          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/c9f18-370.webp"><img src="assets/c9f18.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
+          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/4d74d.jpg"><img src="assets/c9f18.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/6a19b-370.webp"><img src="assets/6a19b.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/ff6a2-376.webp"><img src="assets/ff6a2.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
-          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/4d74d-190.webp"><img src="assets/4d74d.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
+          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/c9f18-370.webp"><img src="assets/4d74d.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
     </div>
+    <div class="room-carousel palagio-desktop-cover">
+      <img src="assets/c9f18.jpg" alt="" loading="lazy" decoding="async">
+    </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
-        <h2 id="room-3">Garden</h2>
+        <h2 id="room-3"><a class="palagio-room-link" href="il-palagio-room.html?room=garden"><span class="palagio-copy-wide">Garden</span><span class="palagio-copy-mobile">Garden</span></a></h2>
+        <div class="room-details palagio-room-specs">
+          <span><img src="assets/palagio-rooms/size-dark.svg" alt="" width="22" height="22"> <span>15 m²</span></span>
+          <span><img src="assets/palagio-rooms/bed-dark.svg" alt="" width="22" height="22"> <span><span class="palagio-visually-hidden">Sleeps </span>2<span class="palagio-copy-wide"> people</span></span></span>
+        </div>
         <p>Traditional Tuscan furnishings give our Classic Rooms their warmth and character. Modern comforts feel quietly at home here, lending each room an understated elegance and an ease that invites you to settle in.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="mailto:info@mormoraia.it?subject=Il%20Palagio%20early%20access%20%E2%80%93%20Garden" aria-label="Book Garden"><span class="layout224">Book</span></a>
       </div>
@@ -260,16 +287,23 @@
     <div class="room-carousel">
       <div class="room-gallery gallery-window" role="region" tabindex="0" aria-label="Deluxe photo gallery. Use the left and right arrow keys to browse.">
         <div class="room-track gallery-track">
-          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/795d1-290.webp"><img src="assets/795d1.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
+          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/70648.jpg"><img src="assets/795d1.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/93e9b-290.webp"><img src="assets/93e9b.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/24450-290.webp"><img src="assets/24450.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/0102b-0.webp"><img src="assets/0102b.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
     </div>
+    <div class="room-carousel palagio-desktop-cover">
+      <img src="assets/795d1.jpg" alt="" loading="lazy" decoding="async">
+    </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
-        <h2 id="room-4">Deluxe</h2>
+        <h2 id="room-4"><a class="palagio-room-link" href="il-palagio-room.html?room=deluxe"><span class="palagio-copy-wide">Deluxe</span><span class="palagio-copy-mobile">Deluxe</span></a></h2>
+        <div class="room-details palagio-room-specs">
+          <span><img src="assets/palagio-rooms/size-dark.svg" alt="" width="22" height="22"> <span>15 m²</span></span>
+          <span><img src="assets/palagio-rooms/bed-dark.svg" alt="" width="22" height="22"> <span><span class="palagio-visually-hidden">Sleeps </span>2<span class="palagio-copy-wide"> people</span></span></span>
+        </div>
         <p>Le camere Classic combinano i tradizionali arredi rustici dal gusto toscano a un&#x27;equilibrata dose di comfort moderno. Un&#x27;atmosfera semplice e autentica caratterizza questi ambienti.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="mailto:info@mormoraia.it?subject=Il%20Palagio%20early%20access%20%E2%80%93%20Deluxe" aria-label="Book Deluxe"><span class="layout224">Book</span></a>
       </div>
@@ -282,14 +316,21 @@
     <div class="room-carousel">
       <div class="room-gallery gallery-window" role="region" tabindex="0" aria-label="Suite photo gallery. Use the left and right arrow keys to browse.">
         <div class="room-track gallery-track">
-          <div class="room-slide"><img src="assets/palagio-suite-render.jpg" alt="Concept rendering of an Il Palagio suite" loading="lazy" decoding="async"></div>
+          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/24450.jpg"><img src="assets/palagio-suite-render.jpg" alt="Concept rendering of an Il Palagio suite" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><img src="assets/palagio-suite-bath-render.jpg" alt="Concept rendering of the suite bathroom" loading="lazy" decoding="async"></div>
         </div>
       </div>
     </div>
+    <div class="room-carousel palagio-desktop-cover">
+      <img src="assets/6b52c.jpg" alt="" loading="lazy" decoding="async">
+    </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
-        <h2 id="room-5">SUITE</h2>
+        <h2 id="room-5"><a class="palagio-room-link" href="il-palagio-room.html?room=suite"><span class="palagio-copy-wide">SUITE</span><span class="palagio-copy-mobile">Suite</span></a></h2>
+        <div class="room-details palagio-room-specs">
+          <span><img src="assets/palagio-rooms/size-dark.svg" alt="" width="22" height="22"> <span>15 m²</span></span>
+          <span><img src="assets/palagio-rooms/bed-dark.svg" alt="" width="22" height="22"> <span><span class="palagio-visually-hidden">Sleeps </span>2<span class="palagio-copy-wide"> people</span></span></span>
+        </div>
         <p>The suite concept pairs warm timber and pale stone with soft, natural light. These renderings offer an early look at the interiors taking shape at Il Palagio.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="mailto:info@mormoraia.it?subject=Il%20Palagio%20early%20access%20%E2%80%93%20Suite" aria-label="Book Suite"><span class="layout224">Book</span></a>
       </div>
@@ -302,16 +343,23 @@
     <div class="room-carousel">
       <div class="room-gallery gallery-window" role="region" tabindex="0" aria-label="Suite Duplex photo gallery. Use the left and right arrow keys to browse.">
         <div class="room-track gallery-track">
-          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/93e9b-290.webp"><img src="assets/93e9b.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
+          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/795d1.jpg"><img src="assets/93e9b.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/2d464-120.webp"><img src="assets/2d464.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/11e1a-400.webp"><img src="assets/11e1a.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/2d464-120.webp"><img src="assets/2d464.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
     </div>
+    <div class="room-carousel palagio-desktop-cover">
+      <img src="assets/93e9b.jpg" alt="" loading="lazy" decoding="async">
+    </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
-        <h2 id="room-6">SUITE<br>DUPLEX</h2>
+        <h2 id="room-6"><a class="palagio-room-link" href="il-palagio-room.html?room=suite-duplex"><span class="palagio-copy-wide">SUITE<br>DUPLEX</span><span class="palagio-copy-mobile">Suite Duplex</span></a></h2>
+        <div class="room-details palagio-room-specs">
+          <span><img src="assets/palagio-rooms/size-dark.svg" alt="" width="22" height="22"> <span>15 m²</span></span>
+          <span><img src="assets/palagio-rooms/bed-dark.svg" alt="" width="22" height="22"> <span><span class="palagio-visually-hidden">Sleeps </span>2<span class="palagio-copy-wide"> people</span></span></span>
+        </div>
         <p>The interiors at Il Palagio draw on the material palette of Mormoraia, interpreted for a more secluded stay on the estate.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="mailto:info@mormoraia.it?subject=Il%20Palagio%20early%20access%20%E2%80%93%20Suite%20Duplex" aria-label="Book Suite Duplex"><span class="layout224">Book</span></a>
       </div>
@@ -324,16 +372,23 @@
     <div class="room-carousel">
       <div class="room-gallery gallery-window" role="region" tabindex="0" aria-label="Suite Executive photo gallery. Use the left and right arrow keys to browse.">
         <div class="room-track gallery-track">
-          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/3543a-290.webp"><img src="assets/3543a.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
+          <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/93e9b.jpg"><img src="assets/3543a.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/782a3-1.webp"><img src="assets/782a3.jpg" alt="" width="1004" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/24450-290.webp"><img src="assets/24450.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
           <div class="room-slide"><picture><source media="(max-width:720px)" srcset="assets/room-mobile/70648-136.webp"><img src="assets/70648.jpg" alt="" width="1080" height="900" loading="lazy" decoding="async"></picture></div>
         </div>
       </div>
     </div>
+    <div class="room-carousel palagio-desktop-cover">
+      <img src="assets/3543a.jpg" alt="" loading="lazy" decoding="async">
+    </div>
     <div class="room-panel-slot panel-slot">
       <div class="room-panel">
-        <h2 id="room-7">SUITE<br>EXECUTIVE</h2>
+        <h2 id="room-7"><a class="palagio-room-link" href="il-palagio-room.html?room=suite-executive"><span class="palagio-copy-wide">SUITE<br>EXECUTIVE</span><span class="palagio-copy-mobile">Suite Executive</span></a></h2>
+        <div class="room-details palagio-room-specs">
+          <span><img src="assets/palagio-rooms/size-dark.svg" alt="" width="22" height="22"> <span>15 m²</span></span>
+          <span><img src="assets/palagio-rooms/bed-dark.svg" alt="" width="22" height="22"> <span><span class="palagio-visually-hidden">Sleeps </span>2<span class="palagio-copy-wide"> people</span></span></span>
+        </div>
         <p>The design of Il Palagio favours generous, quiet spaces and a warm palette drawn from the surrounding countryside.</p>
         <a class="layout70 ds-button" data-name="Button primary dark" href="mailto:info@mormoraia.it?subject=Il%20Palagio%20early%20access%20%E2%80%93%20Suite%20Executive" aria-label="Book Suite Executive"><span class="layout224">Book</span></a>
       </div>
@@ -342,15 +397,25 @@
 </section>
   </div>
   <section id="stay-facilities" class="stay-facilities" aria-labelledby="facilities-title">
-  <div class="stay-facilities-image" aria-hidden="true"><img src="assets/palagio-spa-render.jpg" alt="" loading="lazy"></div>
+  <div class="stay-facilities-image" aria-hidden="true"><picture><source media="(max-width:720px)" srcset="assets/e54a6.png"><img src="assets/palagio-spa-render.jpg" alt="" loading="lazy"></picture></div>
   <div class="stay-facilities-content">
     <h2 id="facilities-title">Facilities</h2>
     <img class="stay-rule" src="assets/9ee91.svg" alt="" width="96" height="1">
-    <ul>
+    <ul class="palagio-facilities-wide">
       <li>Dedicated spa</li>
       <li>Exclusive restaurant</li>
       <li>Pool terrace overlooking San Gimignano</li>
       <li>Opening in 2028</li>
+    </ul>
+    <ul class="palagio-facilities-mobile">
+      <li><img src="assets/palagio-rooms/kettle.svg" alt="" width="24" height="24"><span>Kettle with a selection<br>of beverages</span></li>
+      <li><img src="assets/palagio-rooms/ac.svg" alt="" width="24" height="24"><span>Air conditioning<br>and heating</span></li>
+      <li><img src="assets/palagio-rooms/tv.svg" alt="" width="24" height="24"><span>Satellite TV</span></li>
+      <li><img src="assets/palagio-rooms/safe.svg" alt="" width="24" height="24"><span>Safe box</span></li>
+      <li><img src="assets/palagio-rooms/toiletries.svg" alt="" width="24" height="24"><span>Courtesy toiletries</span></li>
+      <li><img src="assets/palagio-rooms/mini-bar.svg" alt="" width="24" height="24"><span>Mini bar</span></li>
+      <li><img src="assets/palagio-rooms/pool-towels.svg" alt="" width="24" height="24"><span>Pool towels</span></li>
+      <li><img src="assets/palagio-rooms/hair-dryer.svg" alt="" width="24" height="24"><span>Hair dryer</span></li>
     </ul>
   </div>
 </section>
