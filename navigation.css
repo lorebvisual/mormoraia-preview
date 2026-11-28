@@ -330,8 +330,8 @@ button.menu-title {cursor:pointer}
     transition:transform .42s var(--silk);
   }
   .mast-dropdown-links a:is(:hover,:focus-visible)::after {transform:scaleX(1)}
-  .masthead:not(.scrolled) .mast-dropdown {background:transparent}
-  .masthead:not(.scrolled)::before {
+  .masthead:not(.scrolled,.masthead-light) .mast-dropdown {background:transparent}
+  .masthead:not(.scrolled,.masthead-light)::before {
     content:"";
     position:absolute;
     z-index:-1;
@@ -344,11 +344,11 @@ button.menu-title {cursor:pointer}
     opacity:0;
     transition:opacity .3s var(--silk) .3s;
   }
-  .navigation:not(.is-open) .masthead:not(.scrolled).dropdown-open::before {
+  .navigation:not(.is-open) .masthead:not(.scrolled,.masthead-light).dropdown-open::before {
     opacity:1;
     transition-delay:0s;
   }
-  .is-open .masthead:not(.scrolled)::before {visibility:hidden}
+  .is-open .masthead:not(.scrolled,.masthead-light)::before {visibility:hidden}
 }
 @media (prefers-reduced-motion:reduce) {
   :is(.estate-menu,.menu-title,.menu-panel,.menu-choices li,.menu-choices a,.mast-dropdown,.mast-dropdown-panel,.mast-dropdown-links li),

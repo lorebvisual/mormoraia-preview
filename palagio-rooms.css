@@ -209,13 +209,15 @@
     --palagio-room-start: var(--palagio-room-travel);
   }
 
-  .palagio-room-entrance:is(.seen, :focus-within) {
+  .palagio-room-entrance.seen {
     opacity: 1;
     translate: none;
+    animation: palagio-room-slide-in 1.95s cubic-bezier(.35, .56, .27, 1), palagio-room-fade-in 1.55s var(--silk);
   }
 
-  .palagio-room-entrance.seen {
-    transition: translate 1.95s cubic-bezier(.35, .56, .27, 1), opacity 1.55s var(--silk);
+  .palagio-room-entrance:focus-within {
+    opacity: 1 !important;
+    translate: none !important;
   }
 
   .palagio-room-entrance :is(.room-photo-entrance, .room-info-entrance) {
@@ -226,4 +228,12 @@
   .palagio-mobile-photo-link .room-slide img {
     transform: translateY(var(--room-parallax, 0px)) scale(1.18);
   }
+}
+
+@keyframes palagio-room-slide-in {
+  from {translate: var(--palagio-room-start) 12px}
+}
+
+@keyframes palagio-room-fade-in {
+  from {opacity: 0}
 }

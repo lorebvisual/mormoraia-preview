@@ -41,6 +41,7 @@
   const scenes = [...document.querySelectorAll('.room-scene')];
   const shades = scenes.map(() => 0);
   const palagioGalleries = document.querySelectorAll('.palagio-page .room-gallery');
+  const pendingRoomEntrances = new Map();
   const cursor = document.createElement('img');
   cursor.className = 'gallery-cursor';
   cursor.src = 'assets/187b4.svg';
@@ -52,6 +53,13 @@
     frame = 0;
     const height = innerHeight;
     if (palagioGalleries.length && narrow.matches && !reduce.matches) {
+      const revealLine = (window.visualViewport?.height ?? height) * .82;
+      for (const [scene, card] of pendingRoomEntrances) {
+        // A fast scroll can pass the entire card between frames.
+        if (scene.getBoundingClientRect().top > revealLine) continue;
+        card.classList.add('seen');
+        pendingRoomEntrances.delete(scene);
+      }
       paintPalagioParallax(palagioGalleries, height);
     }
     const stacked = !narrow.matches && !reduce.matches && (!desktop.matches || roomsV2);
@@ -99,7 +107,9 @@
     const cover = scene.querySelector('.palagio-desktop-cover');
     if (cover) {
       reveal(cover, 0, 'room-photo-entrance');
-      reveal(scene.querySelector('.room-scene-body'), 0, 'palagio-room-entrance', scene);
+      const card = scene.querySelector('.room-scene-body');
+      card.classList.add('palagio-room-entrance');
+      pendingRoomEntrances.set(scene, card);
     }
     const gallery = scene.querySelector('.room-gallery');
     const track = gallery.querySelector('.room-track');
@@ -290,6 +300,10 @@
   }
   addEventListener('scroll', scheduleStack, {passive:true});
   addEventListener('resize', scheduleStack);
+  if (palagioGalleries.length) {
+    addEventListener('pageshow', scheduleStack);
+    window.visualViewport?.addEventListener('resize', scheduleStack);
+  }
   reduce.addEventListener('change', scheduleStack);
   drawStack();
 })();

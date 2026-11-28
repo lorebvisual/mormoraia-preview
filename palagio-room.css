@@ -16,50 +16,6 @@
 .palagio-room-detail .navigation:not(.is-open) :is(.mast-logo img, .utility img) {filter: brightness(0)}
 .palagio-room-detail .navigation:not(.is-open) .mast-rule {background: currentColor}
 .palagio-room-detail .navigation:not(.is-open) .masthead .sticky-booking {display: flex}
-.palagio-room-detail :is(.palagio-room-back, .palagio-room-mast-title) {display: none}
-
-@media (width > 1024px), (width > 720px) and (hover: hover) and (pointer: fine) {
-  .palagio-room-detail .navigation:not(.is-open) .masthead {
-    padding: 24px 24px 0;
-  }
-
-  .palagio-room-detail .navigation:not(.is-open) .masthead :is(.burger, .quick-links, .mast-logo, .utility, .sticky-booking) {
-    display: none;
-  }
-
-  .palagio-room-detail .navigation:not(.is-open) :is(.palagio-room-back, .palagio-room-mast-title) {
-    display: block;
-  }
-
-  .palagio-room-back {position: relative; width: 42px}
-  .palagio-room-back img {display: block}
-  .palagio-room-back::before {content: ""; position: absolute; inset: -8px 0}
-
-  .palagio-room-mast-title {
-    font: 700 16px/1.6 Boska, serif;
-    letter-spacing: .08em;
-    text-align: center;
-    white-space: nowrap;
-  }
-
-  .palagio-room-detail .navigation:not(.is-open) .masthead .language {display: flex}
-  .palagio-room-detail .language button {
-    width: 17px;
-    min-height: 24px;
-    font-size: 12px;
-    line-height: 16px;
-  }
-  .palagio-room-detail .language::after {left: -4px; width: 25px; height: 20px}
-  .palagio-room-detail .language.italian::after {transform: translate(33px, -50%)}
-
-  .palagio-room-detail .navigation:not(.is-open) .masthead .mast-rule {
-    display: block;
-    position: static;
-    margin-top: 24px;
-    background: url(assets/palagio-rooms/nav-divider.svg) repeat-x left center;
-    opacity: 1;
-  }
-}
 
 .room-detail-stage {
   position: relative;
