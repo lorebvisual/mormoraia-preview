@@ -203,7 +203,6 @@
     --palagio-room-start: calc(-1 * var(--palagio-room-travel));
     opacity: 0;
     translate: var(--palagio-room-start) 0;
-    transition: translate 1.15s cubic-bezier(.22, 1, .36, 1), opacity .95s var(--silk);
   }
 
   .room-scene-right .palagio-room-entrance {
@@ -213,6 +212,10 @@
   .palagio-room-entrance:is(.seen, :focus-within) {
     opacity: 1;
     translate: none;
+  }
+
+  .palagio-room-entrance.seen {
+    transition: translate 1.15s cubic-bezier(.22, 1, .36, 1), opacity .95s var(--silk);
   }
 
   .palagio-room-entrance :is(.room-photo-entrance, .room-info-entrance) {
