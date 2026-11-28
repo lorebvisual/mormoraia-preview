@@ -38,10 +38,6 @@
   .palagio-room-link {
     display: inline-block;
     cursor: pointer;
-    text-decoration: underline;
-    text-decoration-color: var(--palagio-room-hover);
-    text-decoration-thickness: 1px;
-    text-underline-offset: .13em;
   }
 
   .palagio-room-link:focus-visible {
